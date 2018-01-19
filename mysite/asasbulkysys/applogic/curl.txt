@@ -1,0 +1,9 @@
+CURL CALL:
+==========
+curl -i \
+-X POST \
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-H "Authorization: b3itx5JgS-O7nc7xJ9KVlw==" \
+-d '{"content": "Message from ASAS Dairies", "to": ["255742340759"]}' \
+-s https://platform.clickatell.com/messages

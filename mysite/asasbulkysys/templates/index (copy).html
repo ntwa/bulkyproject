@@ -1,0 +1,118 @@
+{% load static %}
+<!Doctype html>
+<html>
+<style>
+#menu { float: left; width: 200px; }
+#main-content { margin-left: 300px; }
+#rcorners1 {
+    border-radius: 15px;
+    background: rgb(227,58,12);;
+    padding: 20px; 
+    width: 200px;
+    height: 350px;    
+}
+
+.content {
+    border-radius: 5px;
+    background:lightblue;
+    padding: 90px; 
+    width: 200px;
+    height: 350px;   
+}
+
+.vertical-menu {
+    width: 200px;
+    
+}
+
+.company-theme {
+   
+    color: rgb(227,58,12);;
+    
+}
+
+.vertical-menu a {
+    background-color:#284e79;
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+}
+
+.vertical-menu a:hover {
+    background-color: #ccc;
+}
+
+.vertical-menu a.active {
+    background-color:rgb(227,58,12);
+    color: white;
+}
+</style>
+<script language="javascript" type="text/javascript" src="{% static "scripts/jquery-3.2.1.min.js" %}">
+</script>
+<script language="javascript" type="text/javascript" src="{% static "scripts/bulkysmssupporting.js" %}">
+</script>
+<body>
+
+<header role="banner" style="background-color:white" >
+
+<div>
+   <table border=0 width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+           <td><img src="{% static "images/logo.png" %}" alt="ASAS LOGO"/></td>
+       
+    	<td align="center" class="company-theme"><h1>Bulky SMS Scheduler</h1></td>
+       </tr>
+   </table>
+</div> 
+  </header>
+
+
+<div id="wrapper">
+    <div id="menu">
+         <div class="vertical-menu" id="rcorners1">
+            <a href="#" class="active">Home</a>
+            <a href="#"><table border=0>
+                  <tr>
+                     <td><img src="{% static "images/addressbook.jpeg" %}" alt="" width="40" height="50" class="menuimage" style="cursor:pointer" value="AddressBook"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="AddressBook">Address Book</td>
+                  </tr>
+              </table>
+            </a>
+
+            <a href="#"><table border=0>
+                  <tr>
+                     <td><img src="{% static "images/groups.jpeg" %}" alt="" width="40" height="50" class="menuimage" style="cursor:pointer" value="Grouping"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="Grouping">Groups</td>
+                  </tr>
+              </table>
+            </a>
+
+            <a href="#"><table border=0>
+                  <tr>
+                     <td><img src="{% static "images/campaign.png" %}" alt="" width="40" height="50" class="menuimage" style="cursor:pointer" value="Campaign"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="Campaign">Campaigns</td>
+                  </tr>
+              </table>
+            </a>
+            <a href="#"><table border=0>
+                  <tr>
+                     <td><img src="{% static "images/scheduler.jpeg" %}" alt="" width="40" height="50" class="menuimage" style="cursor:pointer" value="Scheduler"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="Scheduler">Schedule SMS</td>
+                  </tr>
+              </table>
+            </a>
+  	    <a href="#"><table border=0>
+                  <tr>
+                     <td><img src="{% static "images/settings.jpeg" %}" alt="" width="40" height="50" class="menuimage" style="cursor:pointer" value="Settings"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="Settings">Settings</td>
+                  </tr>
+              </table>
+            </a>
+        </div>
+    </div><!--end of menu-->
+    <div id="main-content">
+   my content here
+
+
+
+   </div>
+</div>
+
+</body>
+</html>

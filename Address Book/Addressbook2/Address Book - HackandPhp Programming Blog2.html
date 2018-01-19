@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<title>Address Book - HackandPhp Programming Blog</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+  <link rel="stylesheet" href="Address%20Book%20-%20HackandPhp%20Programming%20Blog2_files/bootstrap.css">
+
+
+	
+	<link href="Address%20Book%20-%20HackandPhp%20Programming%20Blog2_files/font-awesome.css" rel="stylesheet">
+	
+	<link rel="stylesheet" type="text/css" href="Address%20Book%20-%20HackandPhp%20Programming%20Blog2_files/animate.css">
+	<!-- SLIDENAV -->
+	<link rel="stylesheet" type="text/css" href="Address%20Book%20-%20HackandPhp%20Programming%20Blog2_files/slidernav.css">
+	<!-- FONTS -->
+	<link href="Address%20Book%20-%20HackandPhp%20Programming%20Blog2_files/css.css" rel="stylesheet" type="text/css">
+	<style type="text/css">
+	.box.border.green {
+    border: 1px solid #9db36a;
+}
+.box.border.green > .box-title {
+    color: #FFFFFF !important;
+    background-color: #a8bc7b;
+    border-bottom: 1px solid #9db36a;
+}
+.box.border > .box-title, .box.solid > .box-title {
+    padding: 8px 10px 2px;
+    border-bottom: 1px solid #c4c4c4;
+    min-height: 30px;
+    background-color: #dbdbdb;
+    border-radius: 4px 4px 0 0;
+    margin-bottom: 0;
+}
+.box .box-title {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #c4c4c4;
+    min-height: 30px;
+}
+.box.border .box-body, .box.solid .box-body {
+    border-radius: 0 0 4px 4px;
+    padding: 10px;
+    background-color: #FFFFFF;
+}
+.box.border, .box.solid {
+    border: 1px solid #c4c4c4;
+    border-radius: 4px;
+}
+.box {
+    clear: both;
+    margin-top: 0px;
+    margin-bottom: 25px;
+    padding: 0px;
+}
+* {
+    outline: medium none !important;
+}
+*, *::before, *::after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+</style>
+</head>
+<body>
+<script async="" src="Address%20Book%20-%20HackandPhp%20Programming%20Blog2_files/analytics.js"></script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-72704285-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+	<!-- HEADER -->
+	
+	<!--/HEADER -->
+	
+	<!-- PAGE -->
+	<section id="page">
+				<!-- SIDEBAR -->
+				<!-- /SIDEBAR -->
+				<div class="container">
+<div class="row">
+<h3 align="center">Address Book With Bootstrap and jQuery  - HackandPhp Programming Blog</h3>
+							<div class="col-md-12">
+								<!-- BOX -->
+								<div class="box border green">
+									<div class="box-title">
+										<h4><i class="fa fa-book"></i>Address Book</h4>
+										
+									</div>
+									<div class="box-body">
+										<div class="row">
+											<div class="col-md-4">
+												<div id="address-book" class="slidernav"><div class="slide-up end"><span class="arrow up"></span></div>
+													<div class="slider-content" style="height: 514px;">
+														<ul>
+															<li id="a" class="selected"><a name="a" class="title">A</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">Adam</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Alex</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Ali</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Apple</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Arthur</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Ashley</a></li>
+																</ul>
+															</li>
+															<li id="b"><a name="b" class="title">B</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">Barry</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Becky</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Biff</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Billy</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Bozarking</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Bryan</a></li>
+																</ul>
+															</li>
+															<li id="c"><a name="c" class="title">c</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">Calista</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cathy</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Chris</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cinderella</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Corky</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cypher</a></li>
+																</ul>
+															</li>
+															<li id="d"><a name="d" class="title">d</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">damien</a></li>
+																	<li><a href="http://demo.hackandphp.com/">danny</a></li>
+																	<li><a href="http://demo.hackandphp.com/">denver</a></li>
+																	<li><a href="http://demo.hackandphp.com/">devon</a></li>
+																	<li><a href="http://demo.hackandphp.com/">doug</a></li>
+																	<li><a href="http://demo.hackandphp.com/">dustin</a></li>
+																</ul>
+															</li>
+															<li id="e"><a name="e" class="title">E</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">Barry</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Becky</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Biff</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Billy</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Bozarking</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Bryan</a></li>
+																</ul>
+															</li>
+															<li id="f"><a name="f" class="title">f</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">Calista</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cathy</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Chris</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cinderella</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Corky</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cypher</a></li>
+																</ul>
+															</li>
+															<li id="g"><a name="g" class="title">g</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">damien</a></li>
+																	<li><a href="http://demo.hackandphp.com/">danny</a></li>
+																	<li><a href="http://demo.hackandphp.com/">denver</a></li>
+																	<li><a href="http://demo.hackandphp.com/">devon</a></li>
+																	<li><a href="http://demo.hackandphp.com/">doug</a></li>
+																	<li><a href="http://demo.hackandphp.com/">dustin</a></li>
+																</ul>
+															</li>
+															<li id="h"><a name="h" class="title">h</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">Barry</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Becky</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Biff</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Billy</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Bozarking</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Bryan</a></li>
+																</ul>
+															</li>
+															<li id="i"><a name="i" class="title">i</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">Calista</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cathy</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Chris</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cinderella</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Corky</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cypher</a></li>
+																</ul>
+															</li>
+															<li id="j"><a name="j" class="title">j</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">damien</a></li>
+																	<li><a href="http://demo.hackandphp.com/">danny</a></li>
+																	<li><a href="http://demo.hackandphp.com/">denver</a></li>
+																	<li><a href="http://demo.hackandphp.com/">devon</a></li>
+																	<li><a href="http://demo.hackandphp.com/">doug</a></li>
+																	<li><a href="http://demo.hackandphp.com/">dustin</a></li>
+																</ul>
+															</li>
+															<li id="k"><a name="k" class="title">k</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">Barry</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Becky</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Biff</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Billy</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Bozarking</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Bryan</a></li>
+																</ul>
+															</li>
+															<li id="l"><a name="l" class="title">l</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">Calista</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cathy</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Chris</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cinderella</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Corky</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cypher</a></li>
+																</ul>
+															</li>
+															<li id="m"><a name="m" class="title">m</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">damien</a></li>
+																	<li><a href="http://demo.hackandphp.com/">danny</a></li>
+																	<li><a href="http://demo.hackandphp.com/">denver</a></li>
+																	<li><a href="http://demo.hackandphp.com/">devon</a></li>
+																	<li><a href="http://demo.hackandphp.com/">doug</a></li>
+																	<li><a href="http://demo.hackandphp.com/">dustin</a></li>
+																</ul>
+															</li>
+															<li id="n"><a name="n" class="title">n</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">damien</a></li>
+																	<li><a href="http://demo.hackandphp.com/">danny</a></li>
+																	<li><a href="http://demo.hackandphp.com/">denver</a></li>
+																	<li><a href="http://demo.hackandphp.com/">devon</a></li>
+																	<li><a href="http://demo.hackandphp.com/">doug</a></li>
+																	<li><a href="http://demo.hackandphp.com/">dustin</a></li>
+																</ul>
+															</li>
+															<li id="o"><a name="o" class="title">o</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">damien</a></li>
+																	<li><a href="http://demo.hackandphp.com/">danny</a></li>
+																	<li><a href="http://demo.hackandphp.com/">denver</a></li>
+																	<li><a href="http://demo.hackandphp.com/">devon</a></li>
+																	<li><a href="http://demo.hackandphp.com/">doug</a></li>
+																	<li><a href="http://demo.hackandphp.com/">dustin</a></li>
+																</ul>
+															</li>
+															<li id="p"><a name="p" class="title">p</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">Barry</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Becky</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Biff</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Billy</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Bozarking</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Bryan</a></li>
+																</ul>
+															</li>
+															<li id="q"><a name="q" class="title">q</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">Calista</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cathy</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Chris</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cinderella</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Corky</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cypher</a></li>
+																</ul>
+															</li>
+															<li id="r"><a name="r" class="title">r</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">damien</a></li>
+																	<li><a href="http://demo.hackandphp.com/">danny</a></li>
+																	<li><a href="http://demo.hackandphp.com/">denver</a></li>
+																	<li><a href="http://demo.hackandphp.com/">devon</a></li>
+																	<li><a href="http://demo.hackandphp.com/">doug</a></li>
+																	<li><a href="http://demo.hackandphp.com/">dustin</a></li>
+																</ul>
+															</li>
+															<li id="s"><a name="s" class="title">s</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">Barry</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Becky</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Biff</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Billy</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Bozarking</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Bryan</a></li>
+																</ul>
+															</li>
+															<li id="t"><a name="t" class="title">t</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">Calista</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cathy</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Chris</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cinderella</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Corky</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cypher</a></li>
+																</ul>
+															</li>
+															<li id="u"><a name="u" class="title">u</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">damien</a></li>
+																	<li><a href="http://demo.hackandphp.com/">danny</a></li>
+																	<li><a href="http://demo.hackandphp.com/">denver</a></li>
+																	<li><a href="http://demo.hackandphp.com/">devon</a></li>
+																	<li><a href="http://demo.hackandphp.com/">doug</a></li>
+																	<li><a href="http://demo.hackandphp.com/">dustin</a></li>
+																</ul>
+															</li>
+															<li id="v"><a name="v" class="title">v</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">Barry</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Becky</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Biff</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Billy</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Bozarking</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Bryan</a></li>
+																</ul>
+															</li>
+															<li id="w"><a name="w" class="title">w</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">Calista</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cathy</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Chris</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cinderella</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Corky</a></li>
+																	<li><a href="http://demo.hackandphp.com/">Cypher</a></li>
+																</ul>
+															</li>
+															<li id="x"><a name="x" class="title">x</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">damien</a></li>
+																	<li><a href="http://demo.hackandphp.com/">danny</a></li>
+																	<li><a href="http://demo.hackandphp.com/">denver</a></li>
+																	<li><a href="http://demo.hackandphp.com/">devon</a></li>
+																	<li><a href="http://demo.hackandphp.com/">doug</a></li>
+																	<li><a href="http://demo.hackandphp.com/">dustin</a></li>
+																</ul>
+															</li>
+															<li id="y"><a name="y" class="title">y</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">damien</a></li>
+																	<li><a href="http://demo.hackandphp.com/">danny</a></li>
+																	<li><a href="http://demo.hackandphp.com/">denver</a></li>
+																	<li><a href="http://demo.hackandphp.com/">devon</a></li>
+																	<li><a href="http://demo.hackandphp.com/">doug</a></li>
+																	<li><a href="http://demo.hackandphp.com/">dustin</a></li>
+																</ul>
+															</li>
+															<li id="z"><a name="z" class="title">z</a>
+																<ul>
+																	<li><a href="http://demo.hackandphp.com/">damien</a></li>
+																	<li><a href="http://demo.hackandphp.com/">danny</a></li>
+																	<li><a href="http://demo.hackandphp.com/">denver</a></li>
+																	<li><a href="http://demo.hackandphp.com/">devon</a></li>
+																	<li><a href="http://demo.hackandphp.com/">doug</a></li>
+																	<li><a href="http://demo.hackandphp.com/">dustin</a></li>
+																</ul>
+															</li>
+														</ul>
+													</div>
+												<div class="slider-nav" style="height: 514px; top: 20px;"><ul><li><a alt="#a">a</a></li><li><a alt="#b">b</a></li><li><a alt="#c">c</a></li><li><a alt="#d">d</a></li><li><a alt="#e">e</a></li><li><a alt="#f">f</a></li><li><a alt="#g">g</a></li><li><a alt="#h">h</a></li><li><a alt="#i">i</a></li><li><a alt="#j">j</a></li><li><a alt="#k">k</a></li><li><a alt="#l">l</a></li><li><a alt="#m">m</a></li><li><a alt="#n">n</a></li><li><a alt="#o">o</a></li><li><a alt="#p">p</a></li><li><a alt="#q">q</a></li><li><a alt="#r">r</a></li><li><a alt="#s">s</a></li><li><a alt="#t">t</a></li><li><a alt="#u">u</a></li><li><a alt="#v">v</a></li><li><a alt="#w">w</a></li><li><a alt="#x">x</a></li><li><a alt="#y">y</a></li><li><a alt="#z">z</a></li></ul></div><div class="slide-down"><span class="arrow down"></span></div></div>
+											</div>
+											<div class="col-md-8">
+												<div id="contact-card" class="panel panel-default">
+												  <div class="panel-heading">
+													<h2 class="panel-title">John Doe</h2>
+												  </div>
+												  <div class="panel-body">
+													<div id="card" class="row">
+														<div class="col-md-6 headshot">
+															<img src="Address%20Book%20-%20HackandPhp%20Programming%20Blog2_files/1.jpg" alt="" width="200" height="200">
+														</div>
+														<div class="col-md-6">
+															<table class="table table-hover">
+																<tbody>
+																  <tr>					
+																	<td><i class="fa fa-font"></i> Name</td>
+																	<td id="card-name">John Doe</td>
+																  </tr>
+																  <tr>
+																	<td><i class="fa fa-home"></i> Address</td>
+																	<td>795 Folsom Ave, Suite 600
+																		San Francisco, CA 94107
+																		P: (123) 456-7890 </td>
+																  </tr>
+																  <tr>
+																	<td><i class="fa fa-phone"></i> Phone</td>
+																	<td>+001 8753-3648-002</td>
+																  </tr>
+																  <tr>
+																	<td><i class="fa fa-envelope"></i> Email</td>
+																	<td>sampleemail@gmail.com</td>
+																  </tr>
+																</tbody>
+														  </table>
+														</div>
+													</div>
+												  </div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /BOX -->
+							</div>
+						</div>
+						</div>
+</section>
+	<!--/PAGE -->
+	<!-- JAVASCRIPTS -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<!-- JQUERY -->
+	<script src="Address%20Book%20-%20HackandPhp%20Programming%20Blog2_files/jquery-2.js"></script>
+	<!-- JQUERY UI-->
+	<!-- BOOTSTRAP -->
+	<script src="Address%20Book%20-%20HackandPhp%20Programming%20Blog2_files/bootstrap.js"></script>
+	<!-- SLIDENAV -->
+	<script type="text/javascript" src="Address%20Book%20-%20HackandPhp%20Programming%20Blog2_files/slidernav.js"></script>
+
+
+	<script>
+		jQuery(document).ready(function() {	
+		handleSliderNav();	
+		
+		});
+			var handleSliderNav = function () {
+		$('#address-book').sliderNav();
+		
+		$('#address-book .slider-content ul li ul li a').click(function(e){
+			e.preventDefault();
+			var contact_card = $('#contact-card');
+			//Get the name clicked on
+			var name = $(this).text();
+			//Set the name
+			$('#contact-card .panel-title').html(name);
+			$('#contact-card #card-name').html(name);
+			//Randomize the image
+			var img_id = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+			//Set the image
+			$('#contact-card .headshot img').attr('src', 'img/addressbook/'+img_id+'.jpg');
+			contact_card.removeClass('animated fadeInUp').addClass('animated fadeInUp');
+			var wait = window.setTimeout( function(){
+				contact_card.removeClass('animated fadeInUp')},
+				1300
+			);
+		});
+	}
+	</script>
+	<!-- /JAVASCRIPTS -->
+
+</body></html>

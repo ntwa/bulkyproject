@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html itemscope="" itemtype="http://schema.org/QAPage"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+        <title>python - sqlalchemy add child in one-to-many relationship - Stack Overflow</title>
+        <link rel="shortcut icon" href="https://cdn.sstatic.net/Sites/stackoverflow/img/favicon.ico?v=4f32ecc8f43d">
+        <link rel="apple-touch-icon image_src" href="https://cdn.sstatic.net/Sites/stackoverflow/img/apple-touch-icon.png?v=c78bd457575a">
+        <link rel="search" type="application/opensearchdescription+xml" title="Stack Overflow" href="https://stackoverflow.com/opensearch.xml">
+
+
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://stackoverflow.com/questions/8839211/sqlalchemy-add-child-in-one-to-many-relationship">
+        <meta property="og:image" itemprop="image primaryImageOfPage" content="https://cdn.sstatic.net/Sites/stackoverflow/img/apple-touch-icon@2.png?v=73d79a89bded">
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:domain" content="stackoverflow.com">
+        <meta name="twitter:title" property="og:title" itemprop="title name" content="sqlalchemy add child in one-to-many relationship">
+        <meta name="twitter:description" property="og:description" itemprop="description" content="This is the first time I've used ORM, so I'm not sure the best way to handle this. I have a one-to-many relationship where each Parent can have many Children:
+
+class Parent(Base):
+    __tablename__...">
+        <script src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/osd.js"></script><script src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/pubads_impl_rendering_170.js"></script><script src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/ads"></script><script src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/rules-p-c1rF4kxgLUzNc.js" async=""></script><script async="" src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/quant.js"></script><script async="" src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/beacon.js"></script><script async="" src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/analytics.js"></script><script src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/jquery.js"></script>
+        <script src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/stub.js"></script>
+    
+        <link rel="stylesheet" type="text/css" href="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/all.css">
+    
+            <link rel="alternate" type="application/atom+xml" title="Feed for question 'sqlalchemy add child in one-to-many relationship'" href="https://stackoverflow.com/feeds/question/8839211">
+            <meta name="twitter:app:country" content="US">
+            <meta name="twitter:app:name:iphone" content="Stack Exchange iOS">
+            <meta name="twitter:app:id:iphone" content="871299723">
+            <meta name="twitter:app:url:iphone" content="se-zaphod://stackoverflow.com/questions/8839211/sqlalchemy-add-child-in-one-to-many-relationship">
+            <meta name="twitter:app:name:ipad" content="Stack Exchange iOS">
+            <meta name="twitter:app:id:ipad" content="871299723">
+            <meta name="twitter:app:url:ipad" content="se-zaphod://stackoverflow.com/questions/8839211/sqlalchemy-add-child-in-one-to-many-relationship">
+            <meta name="twitter:app:name:googleplay" content="Stack Exchange Android">
+            <meta name="twitter:app:url:googleplay" content="http://stackoverflow.com/questions/8839211/sqlalchemy-add-child-in-one-to-many-relationship">
+            <meta name="twitter:app:id:googleplay" content="com.stackexchange.marvin">
+        <script>
+
+            StackExchange.ready(function () {
+                                    
+                    StackExchange.using("snippets", function () {
+                        StackExchange.snippets.initSnippetRenderer();
+                    });
+                    
+
+                StackExchange.using("postValidation", function () {
+                    StackExchange.postValidation.initOnBlurAndSubmit($('#post-form'), 2, 'answer');
+                });
+
+                
+                StackExchange.question.init({showAnswerHelp:true,totalCommentCount:0,shownCommentCount:0,highlightColor:'#F4A83D',backgroundColor:'#FFF',questionId:8839211});
+
+                styleCode();
+
+                    StackExchange.realtime.subscribeToQuestion('1', '8839211');
+                                                                    StackExchange.using("gps", function () { StackExchange.gps.trackOutboundClicks('#content', '.post-text'); });
+
+            });
+        </script>
+
+        
+        
+        
+        
+             
+        
+        
+        
+            <script>
+                StackExchange.ready(function () {
+                    try {
+                        if (!document.createElementNS('http://www.w3.org/2000/svg', "svg").createSVGTransform)
+                            return;
+                    } catch (ex) {
+                        return;
+                    }
+                    var d = 100;
+                    $.ajax({url:"https://cdn-prom.sstatic.net/WinterBash/js/wb-core-incl.js?v=8",cache:true,dataType:"script"}).done(function tryInit() {
+                        if (window.WinterBash) {
+                            WinterBash.core.init('winterbash2017.stackexchange.com', 'https://cdn-prom.sstatic.net/WinterBash/', '6', false);
+                        } else {
+                            if (d <= 800)
+                                setTimeout(tryInit, d);
+                            d *= 2;
+                        }
+                    });
+                });
+            </script>
+                <script>
+        StackExchange.init({"locale":"en","serverTime":1514562278,"routeName":"Questions/Show","stackAuthUrl":"https://stackauth.com","networkMetaHostname":"meta.stackexchange.com","site":{"name":"Stack Overflow","description":"Q&A for professional and enthusiast programmers","isNoticesTabEnabled":true,"recaptchaPublicKey":"6LdchgIAAAAAAJwGpIzRQSOFaO0pU6s44Xt8aTwc","recaptchaAudioLang":"en","enableNewTagCreationWarning":true,"insertSpaceAfterNameTabCompletion":false,"id":1,"childUrl":"https://meta.stackoverflow.com","enableSocialMediaInSharePopup":true,"protocol":"https"},"user":{"fkey":"15acbeae347a437040b0d8f7ec5fbf53","tid":"6fb78beb-b043-f30e-dd74-59d4e98d5b45","rep":0,"isAnonymous":true,"isAnonymousNetworkWide":true,"canSeeNewHeaderDesign":true},"events":{"postType":{"question":1},"postEditionSection":{"title":1,"body":2,"tags":3}},"story":{"minCompleteBodyLength":75,"likedTagsMaxLength":300,"dislikedTagsMaxLength":300},"jobPreferences":{"maxNumDeveloperRoles":2,"maxNumIndustries":4}}, {"site":{"allowImageUploads":true,"enableUserHovercards":true,"styleCode":true,"enableImgurHttps":true,"forceHttpsImages":true},"comments":{},"userProfile":{"openGraphAPIKey":"58740831ad23540e00c58987"},"tags":{},"accounts":{"currentPasswordRequiredForChangingStackIdPassword":true},"flags":{"allowRetractingFlags":true},"topBar":{"showNewFeatureNotice":true},"snippets":{"snippetsEnabled":true,"renderDomain":"stacksnippets.net"},"paths":{},"markdown":{"asteriskIntraWordEmphasis":true},"monitoring":{"clientTimingsAbsoluteTimeout":30000,"clientTimingsDebounceTimeout":1000}});
+        StackExchange.using.setCacheBreakers({"js/prettify-full.en.js":"e3bc051e903c","js/moderator.en.js":"b704f2140d03","js/full-anon.en.js":"627b3a4084b2","js/full.en.js":"451a2d8dcbce","js/wmd.en.js":"1528eb33a007","js/third-party/jquery.autocomplete.min.js":"d3b8fa7fdf74","js/third-party/jquery.autocomplete.min.en.js":"","js/mobile.en.js":"935bb6d346ae","js/help.en.js":"118cb359bcc6","js/tageditor.en.js":"17e735d9a8ba","js/tageditornew.en.js":"5ebc10a0ba5b","js/inline-tag-editing.en.js":"4658e713d8e9","js/revisions.en.js":"8f22ba768cac","js/review.en.js":"513387524941","js/tagsuggestions.en.js":"b278f9a0b23b","js/post-validation.en.js":"a65d55dbb4a5","js/explore-qlist.en.js":"e71f14781288","js/events.en.js":"0eac10b34a9c","js/keyboard-shortcuts.en.js":"727602976716","js/external-editor.en.js":"b46c950d6c5a","js/adops.en.js":"9a6a7812a212","js/external-editor.en.js":"b46c950d6c5a","js/snippet-javascript.en.js":"a1c023b11d4d","js/snippet-javascript-codemirror.en.js":"976e15ba3828"});
+        StackExchange.using("gps", function() {
+             StackExchange.gps.init(true);
+        });
+    </script>
+    <noscript id="noscript-css"><style>body,.top-bar{margin-top:1.9em}</style></noscript>
+    <link rel="preload" href="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/integrator_002.js"><script type="text/javascript" src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/integrator_002.js"></script><link rel="preload" href="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/integrator.js"><script type="text/javascript" src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/integrator.js"></script><script src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/pubads_impl_170.js" async=""></script><link rel="prefetch" href="https://tpc.googlesyndication.com/safeframe/1-0-14/html/container.html"><script async="" src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/full-anon.js"></script><script async="" src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/snippet-javascript.js"></script><script async="" src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/post-validation.js"></script><script async="" src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/prettify-full.js"></script><script async="" src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/external-editor.js"></script><link rel="stylesheet" type="text/css" href="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/wb-core-incl.css"><link rel="stylesheet" href="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/clc.css" type="text/css"></head>
+    <body class="question-page new-topbar">
+        <script async="" src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/185901-159836282584097.js"></script>
+
+    <div id="notify-container"></div>
+    <div id="custom-header"></div>
+
+
+
+
+<header class="top-bar js-top-bar _fixed _scrolling">
+    <div class="-container">
+        <div class="-main">
+            
+                <a href="https://stackoverflow.com/" class="-logo js-gps-track" data-gps-track="top_nav.click({is_current:false, location:2, destination:8})">
+                   <span class="-img">Stack Overflow</span>
+                </a>
+
+
+                <nav class="navigation" role="navigation" aria-label="site navigation">
+                    <ol class="-list">
+    <li class="-item _current">
+        <a id="nav-questions" href="https://stackoverflow.com/questions" class="-link js-gps-track" data-gps-track="top_nav.click({is_current:true, location:2, destination:1})">Questions</a>
+    </li>
+    <li class="-item">
+        <a id="nav-jobs" href="https://stackoverflow.com/jobs?med=site-ui&amp;ref=jobs-tab" class="-link js-gps-track" data-gps-track="top_nav.click({is_current:false, location:2, destination:6})">Developer Jobs</a>
+    </li>
+    <li class="-item">
+        <a id="nav-tags" href="https://stackoverflow.com/tags" class="-link js-gps-track" data-gps-track="top_nav.click({is_current:false, location:2, destination:2})">Tags</a>
+    </li>
+    <li class="-item">
+        <a id="nav-users" href="https://stackoverflow.com/users" class="-link js-gps-track" data-gps-track="top_nav.click({is_current:false, location:2, destination:3})">Users</a>
+    </li>
+                    </ol>
+                </nav>
+
+        </div>
+        
+            <form id="search" action="/search" method="get" class="searchbar" autocomplete="off" role="search">
+                <input name="q" placeholder="Search…" tabindex="1" autocomplete="off" maxlength="240" class="f-input js-search-field" type="text">
+                <button type="submit" aria-label="Search..." class="btn-topbar-primary js-search-submit"><svg aria-hidden="true" class="svg-icon iconSearch" width="18" height="18" viewBox="0 0 18 18"><path d="M12.86 11.32L18 16.5 16.5 18l-5.18-5.14v-.35a7 7 0 1 1 1.19-1.19h.35zM7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10z"></path></svg></button>
+            </form>
+
+        
+
+
+    
+
+<div class="-actions">
+    <nav class="secondary-nav">
+        <div class="-dialog-container js-topbar-dialog-corral">
+
+
+    <div class="topbar-dialog siteSwitcher-dialog dno">
+        <div class="header">
+            <h3><a href="https://stackoverflow.com/">current community</a>
+            </h3>
+        </div>
+        <div class="modal-content current-site-container">
+            <ul class="current-site">
+                    <li>
+                            <div class="related-links">
+            <a href="https://stackoverflow.com/help" class="js-gps-track" data-gps-track="site_switcher.click({ item_type:14 })">help</a>
+                    <a href="https://chat.stackoverflow.com/" class="js-gps-track" data-gps-track="site_switcher.click({ item_type:6 })">chat</a>
+            </div>
+    <a href="https://stackoverflow.com/" class="current-site-link site-link js-gps-track" data-id="1" data-gps-track="site_switcher.click({ item_type:3 })">
+        <div class="favicon favicon-stackoverflow site-icon" title="Stack Overflow"></div>
+        Stack Overflow
+    </a>
+
+                    </li>
+                    <li class="related-site">
+                            <div class="L-shaped-icon-container">
+        <span class="L-shaped-icon"></span>
+    </div>
+
+                            <a href="https://meta.stackoverflow.com/" class="site-link js-gps-track" data-id="552" data-gps-track="site.switch({ target_site:552, item_type:3 }),site_switcher.click({ item_type:4 })">
+        <div class="favicon favicon-stackoverflowmeta site-icon" title="Meta Stack Overflow"></div>
+        Meta Stack Overflow
+    </a>
+
+                    </li>
+            </ul>
+        </div>
+
+        <div class="header" id="your-communities-header">
+            <h3>
+your communities            </h3>
+
+        </div>
+        <div class="modal-content" id="your-communities-section">
+
+                <div class="call-to-login">
+<a href="https://stackoverflow.com/users/signup?ssrc=site_switcher&amp;returnurl=%2fusers%2fstory%2fcurrent&amp;amp;utm_source=stackoverflow.com&amp;amp;utm_medium=dev-story&amp;amp;utm_campaign=signup-redirect" class="login-link js-gps-track" data-gps-track="site_switcher.click({ item_type:10 })">Sign up</a> or <a href="https://stackoverflow.com/users/login?ssrc=site_switcher&amp;returnurl=https%3a%2f%2fstackoverflow.com%2fquestions%2f8839211%2fsqlalchemy-add-child-in-one-to-many-relationship" class="login-link js-gps-track" data-gps-track="site_switcher.click({ item_type:11 })">log in</a> to customize your list.
+                </div>
+        </div>
+
+        <div class="header">
+            <h3><a href="https://stackexchange.com/sites">more stack exchange communities</a>
+            </h3>
+            <a href="https://stackoverflow.blog/" class="fr">company blog</a>
+        </div>
+        <div class="modal-content">
+                <div class="child-content"></div>
+        </div>        
+    </div>
+                <div class="topbar-dialog help-dialog js-help-dialog dno">
+        <div class="modal-content">
+            <ul>
+                                    <li>
+                        <a href="https://stackoverflow.com/tour" class="js-gps-track" data-gps-track="help_popup.click({ item_type:1 })">
+                            Tour
+                            <span class="item-summary">
+                                Start here for a quick overview of the site
+                            </span>
+                        </a>
+                    </li>
+                <li>
+                    <a href="https://stackoverflow.com/help" class="js-gps-track" data-gps-track="help_popup.click({ item_type:4 })">
+                        Help Center
+                        <span class="item-summary">
+                            Detailed answers to any questions you might have
+                        </span>
+                    </a>
+                </li>
+                        <li>
+                            <a href="https://meta.stackoverflow.com/" class="js-gps-track" data-gps-track="help_popup.click({ item_type:2 })">
+                                Meta
+                                <span class="item-summary">
+                                    Discuss the workings and policies of this site
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://stackoverflow.com/company/about" class="js-gps-track" data-gps-track="help_popup.click({ item_type:6 })">
+                                About Us
+                                <span class="item-summary">
+                                    Learn more about Stack Overflow the company
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.stackoverflowbusiness.com/?ref=topbar_help" class="js-gps-track" data-gps-track="help_popup.click({ item_type:7 })">
+                                Business
+                                <span class="item-summary">
+                                    Learn more about hiring developers or posting ads with us
+                                </span>
+                            </a>
+                        </li>
+            </ul>
+        </div>
+    </div>
+        </div>
+        <ol class="-list">
+    <li class="-item">
+        <a href="https://stackexchange.com/users/?tab=inbox" class="-link js-inbox-button" title="Recent inbox messages">
+            <svg aria-hidden="true" class="svg-icon iconInbox" width="20" height="18" viewBox="0 0 20 18"><path d="M15.19 1H4.63c-.85 0-1.6.54-1.85 1.35L0 10.79V15c0 1.1.9 2 2 2h16a2 2 0 0 0 2-2v-4.21l-2.87-8.44A2 2 0 0 0 15.19 1zm-.28 10l-2 2h-6l-2-2H1.96L4.4 3.68A1 1 0 0 1 5.35 3h9.12a1 1 0 0 1 .95.68L17.86 11h-2.95z"></path></svg>
+            <span class="indicator-badge js-unread-count _important" style="display: none;"></span>
+        </a>
+    </li>
+    <li class="-item">
+        <a href="https://stackexchange.com/users/?tab=reputation" class="-link js-achievements-button" title="Recent achievements: reputation, badges, and privileges earned" data-unread-class="_highlighted-positive">
+            <svg aria-hidden="true" class="svg-icon iconAchievements" width="18" height="18" viewBox="0 0 18 18"><path d="M15 2V1H3v1H0v4c0 1.6 1.4 3 3 3v1c.4 1.5 3 2.6 5 3v2H5s-1 1.5-1 2h10c0-.4-1-2-1-2h-3v-2c2-.4 4.6-1.5 5-3V9c1.6-.2 3-1.4 3-3V2h-3zM3 7c-.5 0-1-.5-1-1V4h1v3zm8.4 2.5L9 8 6.6 9.4l1-2.7L5 5h3l1-2.7L10 5h2.8l-2.3 1.8 1 2.7h-.1zM16 6c0 .5-.5 1-1 1V4h1v2z"></path></svg>
+            <span class="indicator-badge js-unread-count _positive" style="display: none;"></span>
+        </a>
+    </li>
+
+    <li class="-item"><a href="#" class="-link js-help-button" title="Help Center and other resources">
+        <svg aria-hidden="true" class="svg-icon iconHelp" width="18" height="18" viewBox="0 0 18 18"><path d="M9 1a8 8 0 1 0 0 16A8 8 0 0 0 9 1zm.81 12.13c-.02.71-.55 1.15-1.24 1.13-.66-.02-1.17-.49-1.15-1.2.02-.72.56-1.18 1.22-1.16.7.03 1.2.51 1.17 1.23zM11.77 8a5.8 5.8 0 0 1-1.02.91l-.53.37c-.26.2-.42.43-.5.69a4 4 0 0 0-.09.75c0 .05-.03.16-.18.16H7.88c-.16 0-.18-.1-.18-.15.03-.66.12-1.21.4-1.66a5.29 5.29 0 0 1 1.43-1.22c.16-.12.28-.25.38-.39a1.34 1.34 0 0 0 .02-1.71c-.24-.31-.51-.46-1.03-.46-.51 0-.8.26-1.02.6-.21.33-.18.73-.18 1.1H5.75c0-1.38.35-2.25 1.1-2.76.52-.35 1.17-.5 1.93-.5 1 0 1.79.18 2.49.71.64.5.98 1.18.98 2.12 0 .57-.2 1.05-.48 1.44z"></path></svg>
+    </a></li>
+
+                <li class="-item">
+        <a href="https://stackexchange.com/" class="-link js-site-switcher-button js-gps-track" data-gps-track="site_switcher.show" title="A list of all 171 Stack Exchange sites">
+            <svg aria-hidden="true" class="svg-icon iconStackExchange" width="18" height="18" viewBox="0 0 18 18"><path d="M1 13c0 1.1.9 2 2 2h8v3l3-3h1a2 2 0 0 0 2-2v-2H1v2zM15 1H3a2 2 0 0 0-2 2v2h16V3a2 2 0 0 0-2-2zM1 6h16v4H1V6z"></path></svg>
+        </a>
+    </li>
+
+        </ol>
+    </nav>
+        <div class="-ctas">
+                <a href="https://stackoverflow.com/users/login?ssrc=head&amp;returnurl=https%3a%2f%2fstackoverflow.com%2fquestions%2f8839211%2fsqlalchemy-add-child-in-one-to-many-relationship" class="login-link btn-clear" rel="nofollow">Log In</a>
+                    <a href="https://stackoverflow.com/users/signup?ssrc=head&amp;returnurl=%2fusers%2fstory%2fcurrent&amp;utm_source=stackoverflow.com&amp;utm_medium=dev-story&amp;utm_campaign=signup-redirect" class="login-link btn-topbar-primary" rel="nofollow">Sign Up</a>
+
+        </div>
+</div>
+    </div>
+</header>
+
+    <script>
+        StackExchange.ready(function() { StackExchange.topbar.init(); });
+        StackExchange.scrollPadding.setPaddingTop(60, 10);     </script>
+
+
+
+    <div class="container _full ">
+        
+
+
+        <div id="content" class="snippet-hidden">
+
+
+            
+
+<div itemscope="" itemtype="http://schema.org/Question">
+    <link itemprop="image" href="https://cdn.sstatic.net/Sites/stackoverflow/img/apple-touch-icon.png?v=c78bd457575a">
+
+
+
+
+
+<div class="s-hero hero-container _fixed js-dismissable-hero" data-campaign-name="stk">
+    <div class="-container g-row jc-sp-between ai-center">
+        <div class="g-col6">
+            <p class="-title"><strong>Join Stack Overflow</strong> to learn, share knowledge, and build your career.</p>
+        </div>
+
+        <div class="s-signup _hero g-col6">
+            <div id="openid-buttons" class="-social">
+                <a class="btn-outlined -white _medium _block" href="https://stackoverflow.com/users/signup?ssrc=hero&amp;returnurl=https%3a%2f%2fstackoverflow.com%2fquestions%2f8839211%2fsqlalchemy-add-child-in-one-to-many-relationship" rel="nofollow">Email Sign Up</a>
+                <span class="-or">or sign in with</span>
+                    <div class="major-provider btn _block _medium _google" data-provider="google" data-oauthserver="https://accounts.google.com/o/oauth2/auth" data-oauthversion="2.0">
+<svg aria-hidden="true" class="svg-icon native iconGoogle" width="18" height="18" viewBox="0 0 18 18"><g><path d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z" fill="#4285F4"></path><path d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z" fill="#34A853"></path><path d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z" fill="#FBBC05"></path><path d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z" fill="#EA4335"></path></g></svg>                                                Google
+                    </div>
+                    <div class="major-provider btn _block _medium _facebook" data-provider="facebook" data-oauthserver="https://www.facebook.com/v2.0/dialog/oauth" data-oauthversion="2.0">
+                        <svg aria-hidden="true" class="svg-icon iconFacebook" width="18" height="18" viewBox="0 0 18 18"><path d="M1.88 1C1.4 1 1 1.4 1 1.88v14.24c0 .48.4.88.88.88h7.67v-6.2H7.46V8.4h2.09V6.61c0-2.07 1.26-3.2 3.1-3.2.88 0 1.64.07 1.87.1v2.16h-1.29c-1 0-1.19.48-1.19 1.18V8.4h2.39l-.31 2.42h-2.08V17h4.08c.48 0 .88-.4.88-.88V1.88c0-.48-.4-.88-.88-.88H1.88z" fill="#3C5A96"></path></svg>                        Facebook
+                    </div>
+                                    <a id="close" href="#" class="js-dismiss js-hero-mini-disabled -dismiss" title="dismiss"><svg aria-hidden="true" class="svg-icon iconClear" width="18" height="18" viewBox="0 0 18 18"><path d="M15 4.41L13.59 3 9 7.59 4.41 3 3 4.41 7.59 9 3 13.59 4.41 15 9 10.41 13.59 15 15 13.59 10.41 9z"></path></svg></a>
+            </div>
+
+            <form id="login-form" action="/users/signup?ssrc=hero&amp;returnurl=https%3a%2f%2fstackoverflow.com%2fquestions%2f8839211%2fsqlalchemy-add-child-in-one-to-many-relationship" method="POST">
+
+                <input name="fkey" value="15acbeae347a437040b0d8f7ec5fbf53" type="hidden">
+
+                <input name="ssrc" value="" type="hidden">
+
+                <input id="oauth_version" name="oauth_version" value="" type="hidden">
+                <input id="oauth_server" name="oauth_server" value="" type="hidden">
+
+                <div id="se-login-fields">
+                    <input name="legalLinksShown" value="0" type="hidden">
+                </div>
+            </form>
+            <script>
+                StackExchange.ready(function () {
+                    StackExchange.InlineAuth.init();
+                })
+            </script>
+        </div>
+    </div>
+</div><script>
+    StackExchange.ready(function () {
+
+        StackExchange.Hero.init("stk", "a");
+
+        var location = 0;
+        if ($("body").hasClass("questions-page")) {
+            location = 1;
+        } else if ($("body").hasClass("question-page")) {
+            location = 1;
+        } else if ($("body").hasClass("faq-page")) {
+            location = 5;
+        } else if ($("body").hasClass("home-page")) {
+            location = 3;
+        }
+
+        $('#tell-me-more').click(function () {
+            StackExchange.using("gps", function () {
+                StackExchange.gps.track("hero.action", { hero_action_type: 'cta', location: location }, true);
+            });
+        });
+
+        $('.js-dismissable-hero #close').click(function () {
+            StackExchange.using("gps", function () {
+                StackExchange.gps.track("hero.action", { hero_action_type: "minimize", location: location }, true);
+              });
+
+            StackExchange.Hero.dismiss();
+
+            $.ajax({
+                url: "/hero-mini",
+                success: function (data) {
+                    $(".js-dismissable-hero").fadeOut("fast", function () {
+                        $(".js-dismissable-hero").replaceWith(data);
+                        $("#herobox-mini").fadeIn("fast");
+                    });
+                }
+            });
+            return false;
+        });
+    });
+</script>    <div class="inner-content">
+            <div id="question-header">
+                <h1 itemprop="name"><a href="https://stackoverflow.com/questions/8839211/sqlalchemy-add-child-in-one-to-many-relationship" class="question-hyperlink">sqlalchemy add child in one-to-many relationship</a></h1>
+
+            
+<div class="aside-cta" role="navigation" aria-label="ask new question">
+        <a href="https://stackoverflow.com/questions/ask" class="btn-outlined">Ask Question</a>
+
+</div>
+
+        </div>
+            <div id="mainbar" role="main" aria-label="question and answers">
+
+            
+
+<div class="question" data-questionid="8839211" id="question">
+
+    <div id="dfp-tlb" class="everyonelovesstackoverflow" data-google-query-id="COTusZbIr9gCFdYh0wodaNUMfg" data-clc-prefilled="true" data-clc-ready="true"><div id="google_ads_iframe_/248424177/stackoverflow.com/lb/question-pages_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/248424177/stackoverflow.com/lb/question-pages_0" title="3rd party ad content" name="google_ads_iframe_/248424177/stackoverflow.com/lb/question-pages_0" scrolling="no" marginwidth="0" marginheight="0" style="border: 0px none; vertical-align: bottom;" srcdoc="" width="728" height="90" frameborder="0"></iframe></div></div>    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+        <input name="_id_" value="8839211" type="hidden">
+        <a class="vote-up-off" title="This question shows research effort; it is useful and clear">up vote</a>
+        <span itemprop="upvoteCount" class="vote-count-post ">11</span>
+        <a class="vote-down-off" title="This question does not show any research effort; it is unclear or not useful">down vote</a>
+
+        <a class="star-off" href="#">favorite</a>
+        <div class="favoritecount"><b>7</b></div>
+
+
+</div>
+
+            </td>
+            
+<td class="postcell">
+<div>
+    <div class="post-text" itemprop="text">
+
+<p>This is the first time I've used ORM, so I'm not sure the best way to
+ handle this. I have a one-to-many relationship where each Parent can 
+have many Children:</p>
+
+<pre class="lang-py prettyprint prettyprinted" style=""><code><span class="kwd">class</span><span class="pln"> </span><span class="typ">Parent</span><span class="pun">(</span><span class="typ">Base</span><span class="pun">):</span><span class="pln">
+    __tablename__ </span><span class="pun">=</span><span class="pln"> </span><span class="str">'Parent'</span><span class="pln">
+
+    name </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Column</span><span class="pun">(</span><span class="typ">String</span><span class="pun">(</span><span class="lit">50</span><span class="pun">))</span><span class="pln">
+    gid </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Column</span><span class="pun">(</span><span class="typ">String</span><span class="pun">(</span><span class="lit">16</span><span class="pun">),</span><span class="pln"> primary_key </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">True</span><span class="pun">)</span><span class="pln">
+    lastUpdate </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Column</span><span class="pun">(</span><span class="typ">DateTime</span><span class="pun">)</span><span class="pln">
+
+    </span><span class="kwd">def</span><span class="pln"> __init__</span><span class="pun">(</span><span class="pln">self</span><span class="pun">,</span><span class="pln">name</span><span class="pun">,</span><span class="pln"> gid</span><span class="pun">):</span><span class="pln">
+        self</span><span class="pun">.</span><span class="pln">name </span><span class="pun">=</span><span class="pln"> name
+        self</span><span class="pun">.</span><span class="pln">gid </span><span class="pun">=</span><span class="pln"> gid
+        self</span><span class="pun">.</span><span class="pln">lastUpdate </span><span class="pun">=</span><span class="pln"> datetime</span><span class="pun">.</span><span class="pln">datetime</span><span class="pun">.</span><span class="pln">now</span><span class="pun">()</span><span class="pln">
+
+
+</span><span class="kwd">class</span><span class="pln"> </span><span class="typ">Child</span><span class="pun">(</span><span class="typ">Base</span><span class="pun">):</span><span class="pln">
+    __tablename__ </span><span class="pun">=</span><span class="pln"> </span><span class="str">'Child'</span><span class="pln">
+
+    id </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Column</span><span class="pun">(</span><span class="typ">Integer</span><span class="pun">,</span><span class="pln"> primary_key </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">True</span><span class="pun">)</span><span class="pln">
+    loc </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Column</span><span class="pun">(</span><span class="typ">String</span><span class="pun">(</span><span class="lit">50</span><span class="pun">))</span><span class="pln">
+    status </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Column</span><span class="pun">(</span><span class="typ">String</span><span class="pun">(</span><span class="lit">50</span><span class="pun">))</span><span class="pln">
+
+    parent_gid </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Column</span><span class="pun">(</span><span class="typ">String</span><span class="pun">(</span><span class="lit">16</span><span class="pun">),</span><span class="pln"> </span><span class="typ">ForeignKey</span><span class="pun">(</span><span class="str">'Parent.gid'</span><span class="pun">))</span><span class="pln">
+
+    parent </span><span class="pun">=</span><span class="pln"> relationship</span><span class="pun">(</span><span class="str">"Parent"</span><span class="pun">,</span><span class="pln"> backref</span><span class="pun">=</span><span class="pln">backref</span><span class="pun">(</span><span class="str">'children'</span><span class="pun">))</span></code></pre>
+
+<p>Now, updates are coming in over the network. When an update comes in,
+ I want to UPDATE the appropriate Parent row (updating lastUpdate 
+column) and INSERT new children rows into the database. I don't know how
+ to do that with ORM. Here is my failed attempt:</p>
+
+<pre class="lang-py prettyprint prettyprinted" style=""><code><span class="pln">engine </span><span class="pun">=</span><span class="pln"> create_engine</span><span class="pun">(</span><span class="str">'sqlite+pysqlite:///file.db'</span><span class="pun">,</span><span class="pln">
+                       module</span><span class="pun">=</span><span class="pln">dbapi2</span><span class="pun">)</span><span class="pln">
+</span><span class="typ">Base</span><span class="pun">.</span><span class="pln">metadata</span><span class="pun">.</span><span class="pln">create_all</span><span class="pun">(</span><span class="pln">engine</span><span class="pun">)</span><span class="pln">
+session </span><span class="pun">=</span><span class="pln"> sessionmaker</span><span class="pun">(</span><span class="pln">bind</span><span class="pun">=</span><span class="pln">engine</span><span class="pun">)()</span><span class="pln">
+
+</span><span class="kwd">def</span><span class="pln"> addChildren</span><span class="pun">(</span><span class="pln">parent</span><span class="pun">):</span><span class="pln">
+    p </span><span class="pun">=</span><span class="pln"> session</span><span class="pun">.</span><span class="pln">query</span><span class="pun">(</span><span class="typ">Parent</span><span class="pun">).</span><span class="pln">filter</span><span class="pun">(</span><span class="typ">Parent</span><span class="pun">.</span><span class="pln">gid </span><span class="pun">==</span><span class="pln"> p1</span><span class="pun">.</span><span class="pln">gid</span><span class="pun">).</span><span class="pln">all</span><span class="pun">()</span><span class="pln">
+    </span><span class="kwd">if</span><span class="pln"> len</span><span class="pun">(</span><span class="pln">p</span><span class="pun">)</span><span class="pln"> </span><span class="pun">==</span><span class="pln"> </span><span class="lit">0</span><span class="pun">:</span><span class="pln">
+        session</span><span class="pun">.</span><span class="pln">add</span><span class="pun">(</span><span class="pln">p1</span><span class="pun">)</span><span class="pln">
+        session</span><span class="pun">.</span><span class="pln">commit</span><span class="pun">()</span><span class="pln">
+    </span><span class="kwd">else</span><span class="pun">:</span><span class="pln">
+        updateChildren </span><span class="pun">=</span><span class="pln"> parent</span><span class="pun">.</span><span class="pln">children</span><span class="pun">[:]</span><span class="pln">
+        parent</span><span class="pun">.</span><span class="pln">chlidren </span><span class="pun">=</span><span class="pln"> </span><span class="pun">[]</span><span class="pln">
+        </span><span class="kwd">for</span><span class="pln"> c </span><span class="kwd">in</span><span class="pln"> updateChildren</span><span class="pun">:</span><span class="pln">
+            c</span><span class="pun">.</span><span class="pln">parent_gid </span><span class="pun">=</span><span class="pln"> parent</span><span class="pun">.</span><span class="pln">gid
+
+        session</span><span class="pun">.</span><span class="pln">add_all</span><span class="pun">(</span><span class="pln">updateChildren</span><span class="pun">)</span><span class="pln">
+        session</span><span class="pun">.</span><span class="pln">commit</span><span class="pun">()</span><span class="pln">
+
+</span><span class="kwd">if</span><span class="pln"> __name__ </span><span class="pun">==</span><span class="pln"> </span><span class="str">'__main__'</span><span class="pun">:</span><span class="pln">
+
+    </span><span class="com">#first update from the 'network'</span><span class="pln">
+    p1 </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Parent</span><span class="pun">(</span><span class="pln">name</span><span class="pun">=</span><span class="str">'team1'</span><span class="pun">,</span><span class="pln"> gid</span><span class="pun">=</span><span class="str">'t1'</span><span class="pun">)</span><span class="pln">
+    p1</span><span class="pun">.</span><span class="pln">children </span><span class="pun">=</span><span class="pln"> </span><span class="pun">[</span><span class="typ">Child</span><span class="pun">(</span><span class="pln">loc</span><span class="pun">=</span><span class="str">'x'</span><span class="pun">,</span><span class="pln"> status</span><span class="pun">=</span><span class="str">'a'</span><span class="pun">),</span><span class="pln"> </span><span class="typ">Child</span><span class="pun">(</span><span class="pln">loc</span><span class="pun">=</span><span class="str">'y'</span><span class="pun">,</span><span class="pln"> status</span><span class="pun">=</span><span class="str">'b'</span><span class="pun">)]</span><span class="pln">
+    addChildren</span><span class="pun">(</span><span class="pln">p1</span><span class="pun">)</span><span class="pln">
+
+    </span><span class="kwd">import</span><span class="pln"> time
+    time</span><span class="pun">.</span><span class="pln">sleep</span><span class="pun">(</span><span class="lit">1</span><span class="pun">)</span><span class="pln">
+
+    </span><span class="com">#here comes another network update</span><span class="pln">
+    p1 </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Parent</span><span class="pun">(</span><span class="pln">name</span><span class="pun">=</span><span class="str">'team1'</span><span class="pun">,</span><span class="pln"> gid</span><span class="pun">=</span><span class="str">'t1'</span><span class="pun">)</span><span class="pln">
+    p1</span><span class="pun">.</span><span class="pln">children </span><span class="pun">=</span><span class="pln"> </span><span class="pun">[</span><span class="typ">Child</span><span class="pun">(</span><span class="pln">loc</span><span class="pun">=</span><span class="str">'z'</span><span class="pun">,</span><span class="pln"> status</span><span class="pun">=</span><span class="str">'a'</span><span class="pun">),</span><span class="pln"> </span><span class="typ">Child</span><span class="pun">(</span><span class="pln">loc</span><span class="pun">=</span><span class="str">'k'</span><span class="pun">,</span><span class="pln"> status</span><span class="pun">=</span><span class="str">'b'</span><span class="pun">)]</span><span class="pln">
+    </span><span class="com">#this fails</span><span class="pln">
+    addChildren</span><span class="pun">(</span><span class="pln">p1</span><span class="pun">)</span></code></pre>
+
+<p>I initially tried to do a merge, but that caused the old children to 
+be disassociated with the parent (the foreign IDs were set to null). 
+What is the best way to approach this with ORM? Thanks</p>
+
+<p><strong>EDIT</strong></p>
+
+<p>I guess it doesn't really make sense to create entirely new objects 
+when updates come in over the network. I should just query the session 
+for the appropriate parent, then create new children if necessary and 
+merge? E.g.</p>
+
+<pre class="lang-py prettyprint prettyprinted" style=""><code><span class="kwd">def</span><span class="pln"> addChildren</span><span class="pun">(</span><span class="pln">pname</span><span class="pun">,</span><span class="pln"> pid</span><span class="pun">,</span><span class="pln"> cloc</span><span class="pun">,</span><span class="pln"> cstat</span><span class="pun">):</span><span class="pln">
+    p </span><span class="pun">=</span><span class="pln"> session</span><span class="pun">.</span><span class="pln">query</span><span class="pun">(</span><span class="typ">Parent</span><span class="pun">).</span><span class="pln">filter</span><span class="pun">(</span><span class="typ">Parent</span><span class="pun">.</span><span class="pln">gid </span><span class="pun">==</span><span class="pln"> pid</span><span class="pun">).</span><span class="pln">all</span><span class="pun">()</span><span class="pln">
+    </span><span class="kwd">if</span><span class="pln"> len</span><span class="pun">(</span><span class="pln">p</span><span class="pun">)</span><span class="pln"> </span><span class="pun">==</span><span class="pln"> </span><span class="lit">0</span><span class="pun">:</span><span class="pln">
+        p </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Parent</span><span class="pun">(</span><span class="pln">pname</span><span class="pun">,</span><span class="pln"> pid</span><span class="pun">)</span><span class="pln">
+        p</span><span class="pun">.</span><span class="pln">children </span><span class="pun">=</span><span class="pln"> </span><span class="pun">[</span><span class="typ">Child</span><span class="pun">(</span><span class="pln">loc</span><span class="pun">=</span><span class="pln">cloc</span><span class="pun">,</span><span class="pln"> status</span><span class="pun">=</span><span class="pln">cstat</span><span class="pun">)]</span><span class="pln">
+        session</span><span class="pun">.</span><span class="pln">add</span><span class="pun">(</span><span class="pln">p</span><span class="pun">)</span><span class="pln">
+        session</span><span class="pun">.</span><span class="pln">commit</span><span class="pun">()</span><span class="pln">
+    </span><span class="kwd">else</span><span class="pun">:</span><span class="pln">
+        p </span><span class="pun">=</span><span class="pln"> p</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]</span><span class="pln">
+        p</span><span class="pun">.</span><span class="pln">children</span><span class="pun">.</span><span class="pln">append</span><span class="pun">(</span><span class="typ">Child</span><span class="pun">(</span><span class="pln">loc</span><span class="pun">=</span><span class="pln">cloc</span><span class="pun">,</span><span class="pln"> status</span><span class="pun">=</span><span class="pln">cstat</span><span class="pun">))</span><span class="pln">
+        session</span><span class="pun">.</span><span class="pln">merge</span><span class="pun">(</span><span class="pln">p</span><span class="pun">)</span><span class="pln">
+        session</span><span class="pun">.</span><span class="pln">commit</span><span class="pun">()</span></code></pre>
+    </div>
+    <div class="post-taglist">
+        <a href="https://stackoverflow.com/questions/tagged/python" class="post-tag js-gps-track" title="show questions tagged 'python'" rel="tag">python</a> <a href="https://stackoverflow.com/questions/tagged/orm" class="post-tag js-gps-track" title="show questions tagged 'orm'" rel="tag">orm</a> <a href="https://stackoverflow.com/questions/tagged/sqlalchemy" class="post-tag js-gps-track" title="show questions tagged 'sqlalchemy'" rel="tag">sqlalchemy</a> 
+    </div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+<div class="post-menu"><a href="https://stackoverflow.com/q/8839211" title="short permalink to this question" class="short-link" id="link-post-8839211">share</a><span class="lsep">|</span><a href="https://stackoverflow.com/posts/8839211/edit" class="suggest-edit-post" title="">improve this question</a></div>        
+    </td>
+    <td class="post-signature" align="right">
+<div class="user-info ">
+    <div class="user-action-time">
+        <a href="https://stackoverflow.com/posts/8839211/revisions" title="show all edits to this post">edited <span title="2012-01-12 17:20:22Z" class="relativetime">Jan 12 '12 at 17:20</span></a>
+    </div>
+    <div class="user-gravatar32 wb-hat-checked">
+        
+    </div>
+    <div class="user-details">
+        
+        <div class="-flair">
+            
+        </div>
+    </div>
+</div>    </td>
+    <td class="post-signature owner">
+        <div class="user-info user-hover">
+    <div class="user-action-time">
+        asked <span title="2012-01-12 17:11:44Z" class="relativetime">Jan 12 '12 at 17:11</span>
+    </div>
+    <div class="user-gravatar32 wb-hat-checked">
+        <a href="https://stackoverflow.com/users/723/neal"><div class="gravatar-wrapper-32"><img src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/7b62dca909c54e9e152df0590dcdb256.jpeg" alt="" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="https://stackoverflow.com/users/723/neal">Neal</a>
+        <div class="-flair">
+            <span class="reputation-score" title="reputation score " dir="ltr">2,690</span><span title="3 gold badges"><span class="badge1"></span><span class="badgecount">3</span></span><span title="23 silver badges"><span class="badge2"></span><span class="badgecount">23</span></span><span title="28 bronze badges"><span class="badge3"></span><span class="badgecount">28</span></span>
+        </div>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</div>
+</td>
+        </tr>
+                
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-8839211" class="comments js-comments-container  dno">
+		        <table>
+                    <tbody class="js-comments-list" data-remaining-comments-count="0" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+                            <tr><td></td><td></td></tr>
+                    </tbody>
+		        </table>
+	    </div>
+
+        <div id="comments-link-8839211" data-rep="50" data-anon="true">
+
+                <a class="js-add-link comments-link disabled-link " title="Use comments to ask for more information or suggest improvements. Avoid answering questions in comments.">add a comment</a><span class="js-link-separator dno">&nbsp;|&nbsp;</span>
+            <a class="js-show-link comments-link dno" title="expand to show all comments on this post" href="#" onclick=""></a>
+        </div>         
+    </td>
+</tr>        </tbody></table>
+</div>
+
+            <div id="answers">
+
+                <a name="tab-top"></a>
+                <div id="answers-header">
+                    <div class="subheader answers-subheader">
+                        <h2 data-answercount="1">
+                                1 Answer
+                                <span style="display:none;" itemprop="answerCount">1</span>
+                        </h2>
+                        <div>
+                            <div id="tabs">
+        <a href="https://stackoverflow.com/questions/8839211/sqlalchemy-add-child-in-one-to-many-relationship?answertab=active#tab-top" data-nav-xhref="" title="Answers with the latest activity first" data-value="active" data-shortcut="A">
+            active</a>
+        <a href="https://stackoverflow.com/questions/8839211/sqlalchemy-add-child-in-one-to-many-relationship?answertab=oldest#tab-top" data-nav-xhref="" title="Answers in the order they were provided" data-value="oldest" data-shortcut="O">
+            oldest</a>
+        <a class="youarehere " href="https://stackoverflow.com/questions/8839211/sqlalchemy-add-child-in-one-to-many-relationship?answertab=votes#tab-top" data-nav-xhref="" title="Answers with the highest score first" data-value="votes" data-shortcut="V">
+            votes</a>
+</div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+  
+<a name="8842527"></a>
+<div id="answer-8842527" class="answer accepted-answer" data-answerid="8842527" itemscope="" itemtype="http://schema.org/Answer" itemprop="acceptedAnswer">
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+        <input name="_id_" value="8842527" type="hidden">
+        <a class="vote-up-off" title="This answer is useful">up vote</a>
+        <span itemprop="upvoteCount" class="vote-count-post ">22</span>
+        <a class="vote-down-off" title="This answer is not useful">down vote</a>
+
+
+
+        <span class="vote-accepted-on load-accepted-answer-date" title="loading when this answer was accepted...">accepted</span>
+
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text" itemprop="text">
+<p>You are right - you should not create the same parent twice. In terms
+ of adding children, ... well, you really need only to add them and you 
+do not care about the existing ones... So your edited code should do the
+ job just fine. You can make it shorter and more readable though:</p>
+
+<pre class="lang-py prettyprint prettyprinted" style=""><code><span class="kwd">def</span><span class="pln"> addChildren</span><span class="pun">(</span><span class="pln">pname</span><span class="pun">,</span><span class="pln"> pid</span><span class="pun">,</span><span class="pln"> cloc</span><span class="pun">,</span><span class="pln"> cstat</span><span class="pun">):</span><span class="pln">
+    p </span><span class="pun">=</span><span class="pln"> session</span><span class="pun">.</span><span class="pln">query</span><span class="pun">(</span><span class="typ">Parent</span><span class="pun">).</span><span class="pln">get</span><span class="pun">(</span><span class="pln">pid</span><span class="pun">)</span><span class="pln"> </span><span class="com"># will give you either Parent or None</span><span class="pln">
+    </span><span class="kwd">if</span><span class="pln"> </span><span class="kwd">not</span><span class="pun">(</span><span class="pln">p</span><span class="pun">):</span><span class="pln">
+        p </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Parent</span><span class="pun">(</span><span class="pln">pname</span><span class="pun">,</span><span class="pln"> pid</span><span class="pun">)</span><span class="pln">
+        session</span><span class="pun">.</span><span class="pln">add</span><span class="pun">(</span><span class="pln">p</span><span class="pun">)</span><span class="pln">
+    p</span><span class="pun">.</span><span class="pln">children</span><span class="pun">.</span><span class="pln">append</span><span class="pun">(</span><span class="typ">Child</span><span class="pun">(</span><span class="pln">loc</span><span class="pun">=</span><span class="pln">cloc</span><span class="pun">,</span><span class="pln"> status</span><span class="pun">=</span><span class="pln">cstat</span><span class="pun">))</span><span class="pln">
+    session</span><span class="pun">.</span><span class="pln">commit</span><span class="pun">()</span></code></pre>
+
+<p>The disadvantage of this way is that for existing Parent the whole 
+collection of Children will be loaded into memory before a new Child is 
+added and later saved to the database. If this is the case (many and 
+increasing number of children for each parent), then the <a href="http://www.sqlalchemy.org/docs/orm/collections.html#setting-noload" rel="noreferrer"><code>lazy='noload'</code></a> might be useful:</p>
+
+<pre class="lang-py prettyprint prettyprinted" style=""><code><span class="pln">parent </span><span class="pun">=</span><span class="pln"> relationship</span><span class="pun">(</span><span class="str">"Parent"</span><span class="pun">,</span><span class="pln"> backref</span><span class="pun">=</span><span class="pln">backref</span><span class="pun">(</span><span class="str">'children'</span><span class="pun">,</span><span class="pln"> lazy</span><span class="pun">=</span><span class="str">'noload'</span><span class="pun">))</span></code></pre>
+
+<p>This might dramatically improve the speed of inserts, but in this case the access to <code>p.children</code> will <strong>never</strong>
+ load the existing objects from the database. In such scenarios it is 
+enough to define another relationship. In these situations I prefer to 
+use <a href="http://www.sqlalchemy.org/docs/orm/relationships.html#building-query-enabled-properties" rel="noreferrer">Building Query-Enabled Properties</a>, so you end up with one property <strong>only</strong> for adding objects, and the other <strong>only</strong> for quering persisted results, which often are used by different parts of the system.</p>
+    </div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+<div class="post-menu"><a href="https://stackoverflow.com/a/8842527" title="short permalink to this answer" class="short-link" id="link-post-8842527">share</a><span class="lsep">|</span><a href="https://stackoverflow.com/posts/8842527/edit" class="suggest-edit-post" title="">improve this answer</a></div>                    </td>
+    <td class="post-signature" align="right">
+<div class="user-info user-hover">
+    <div class="user-action-time" style="margin-left: 37px !important;">
+        <a href="https://stackoverflow.com/posts/8842527/revisions" title="show all edits to this post">edited <span title="2016-05-28 14:47:10Z" class="relativetime">May 28 '16 at 14:47</span></a>
+    </div>
+    <div class="user-gravatar32 wb-hat-checked">
+        <a href="https://stackoverflow.com/users/1983854/fedorqui" style="display: inline;"><div class="hat" style="float: left; display: block; width: 0px; height: 0px; overflow: visible; position: relative; left: 3px; top: -12px;" data-hatid="4"><img style="display: block;" src="data:image/svg+xml,%3Csvg%20viewBox%3D%2243.875%2015.25%20104.25%20161.5%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20width%3D%2229%22%20height%3D%2246%22%3E%3Cg%20transform%3D%22%20translate%2844.06890813025025%2015.61443680783556%29%20scale%280.5381460297383394%29%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%2C.cls-10%2C.cls-11%2C.cls-12%2C.cls-13%2C.cls-15%2C.cls-16%2C.cls-21%2C.cls-7%2C.cls-8%2C.cls-9%7Bfill%3Anone%3B%7D.cls-2%7Bisolation%3Aisolate%3B%7D.cls-24%2C.cls-3%7Bfill%3A%238c813b%3B%7D.cls-4%7Bfill%3A%23231f20%3B%7D.cls-5%7Bfill%3A%232e3192%3B%7D.cls-6%7Bfill%3A%23ef6100%3B%7D.cls-10%2C.cls-11%2C.cls-12%2C.cls-14%2C.cls-16%2C.cls-17%2C.cls-7%2C.cls-8%2C.cls-9%7Bstroke-linejoin%3Abevel%3B%7D.cls-10%2C.cls-11%2C.cls-12%2C.cls-13%2C.cls-14%2C.cls-16%2C.cls-17%2C.cls-18%2C.cls-7%2C.cls-8%2C.cls-9%7Bstroke-width%3A2.52px%3B%7D.cls-7%7Bstroke%3Aurl%28%23a%29%3B%7D.cls-8%7Bstroke%3Aurl%28%23g%29%3B%7D.cls-9%7Bstroke%3Aurl%28%23f%29%3B%7D.cls-10%7Bstroke%3Aurl%28%23e%29%3B%7D.cls-11%7Bstroke%3Aurl%28%23d%29%3B%7D.cls-12%7Bstroke%3Aurl%28%23c%29%3B%7D.cls-13%2C.cls-14%2C.cls-15%2C.cls-18%7Bstroke%3A%23e68a24%3B%7D.cls-13%2C.cls-15%2C.cls-18%2C.cls-21%7Bstroke-miterlimit%3A10%3B%7D.cls-14%2C.cls-18%7Bfill%3A%23eedc00%3B%7D.cls-15%7Bstroke-width%3A2.71px%3B%7D.cls-16%2C.cls-17%2C.cls-21%7Bstroke%3A%232e3192%3B%7D.cls-17%7Bfill%3Aurl%28%23b%29%3B%7D.cls-19%7Bfill%3A%2322116d%3B%7D.cls-20%7Bfill%3A%23f1f2f2%3B%7D.cls-21%7Bstroke-width%3A2.72px%3B%7D.cls-22%2C.cls-26%7Bfill%3A%23fff%3B%7D.cls-23%7Bclip-path%3Aurl%28%23h%29%3B%7D.cls-24%7Bopacity%3A0.53%3Bmix-blend-mode%3Amultiply%3B%7D.cls-25%7Bfill%3A%23c7b000%3B%7D.cls-26%7Bopacity%3A0.2%3B%7D.cls-27%7Bfill%3A%23404041%3B%7D%3C%2Fstyle%3E%3ClinearGradient%20id%3D%22a%22%20x1%3D%2219.1%22%20x2%3D%2263.82%22%20y1%3D%2292.91%22%20y2%3D%2292.91%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20stop-color%3D%22%232e3192%22%20offset%3D%220%22%3E%3C%2Fstop%3E%3Cstop%20stop-color%3D%22%23c7b000%22%20offset%3D%221%22%3E%3C%2Fstop%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%2224.92%22%20x2%3D%2263.96%22%20y1%3D%2290.24%22%20y2%3D%2290.24%22%20xlink%3Ahref%3D%22%23a%22%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22f%22%20x1%3D%2230.73%22%20x2%3D%2264.1%22%20y1%3D%2287.44%22%20y2%3D%2287.44%22%20xlink%3Ahref%3D%22%23a%22%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22e%22%20x1%3D%2236.58%22%20x2%3D%2264.21%22%20y1%3D%2284.53%22%20y2%3D%2284.53%22%20xlink%3Ahref%3D%22%23a%22%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22d%22%20x1%3D%2242.48%22%20x2%3D%2264.28%22%20y1%3D%2281.51%22%20y2%3D%2281.51%22%20xlink%3Ahref%3D%22%23a%22%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22c%22%20x1%3D%2248.4%22%20x2%3D%2264.29%22%20y1%3D%2278.44%22%20y2%3D%2278.44%22%20xlink%3Ahref%3D%22%23a%22%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22b%22%20x1%3D%22155.3%22%20x2%3D%22163.9%22%20y1%3D%2256.94%22%20y2%3D%2244.17%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20stop-color%3D%22%23eeda23%22%20offset%3D%220%22%3E%3C%2Fstop%3E%3Cstop%20stop-color%3D%22%232e3192%22%20offset%3D%221%22%3E%3C%2Fstop%3E%3C%2FlinearGradient%3E%3CclipPath%20id%3D%22h%22%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M159%2C248.7c-5.45%2C2.48-14.9%2C3-24.82%2C2.67l.18-.12c1.29-9.27%2C1.55-14.91-.67-24.45a63.24%2C63.24%2C0%2C0%2C1-74.35%2C0c-1.58%2C8.91-1.64%2C14.24-.78%2C23.3-11.12.36-21.31%2C0-25-2-4.08-2.29%2C16.19%2C50.54%2C16.19%2C50.54s32.12-32.18%2C39.86-33.85c1.46-.31%2C2.53-.57%2C3.44-.77a59.46%2C59.46%2C0%2C0%2C0%2C6.35%2C0c1%2C.19%2C2.16.46%2C3.65.8%2C8.24%2C1.91%2C38.5%2C34.19%2C38.5%2C34.19S163.19%2C246.78%2C159%2C248.7Z%22%3E%3C%2Fpath%3E%3C%2FclipPath%3E%3C%2Fdefs%3E%3Cg%20class%3D%22cls-2%22%3E%3Cg%20data-name%3D%22Layer%202%22%3E%3Cpath%20class%3D%22cls-3%22%20d%3D%22m134.3%20251.2c-23.58%2017.13-52.12%2017.13-75.7%200-1-9.78-1-15.17%200.67-24.45a63.24%2063.24%200%200%200%2074.35%200c2.23%209.54%201.97%2015.21%200.68%2024.45z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-3%22%20d%3D%22m89.59%20264.8c-7.73%201.67-39.86%2033.85-39.86%2033.85s-20.28-52.82-16.19-50.54c9.51%205.33%2062.62-0.84%2062.62-0.84h0.19s47.23%208.48%2062.63%201.48c4.22-1.92-17.45%2050.3-17.45%2050.3s-30.26-32.28-38.5-34.19c-7.77-1.81-7.16-1.42-13.44-0.06z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-4%22%20d%3D%22m152%205.13c-16.6-6.84-94.94-6.84-111.5%200-17.15%207.07-13.79%2011.45-13.79%2011.45%201%204.38%2012.8%207.07%2017.85%2020.54s8.42%2055.88%207.75%2058.93%201.68%2026.6-5.05%2030c0%200%2015.75%205%2048.9%205h0.27c33.15%200%2048.9-5%2048.9-5-6.74-3.37-4.38-26.94-5.05-30s2.69-45.46%207.75-58.93%2016.83-16.12%2017.84-20.54c0%200%203.37-4.38-13.83-11.45z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-5%22%20d%3D%22m71.71%2078.46c-5.56%201.4-10.45%201.77-15.22%205.3s-5%205.3-5%205.3a7.26%207.26%200%200%201%201.59%204.55%2047.6%2047.6%200%200%200%200.23%204.8s0.91%2010.61-0.45%2012.38-3.41%202.27-3.18%204-1.87%2011.79-1.87%2011.79%2033.75%204.71%2046.47%204.71%2049.72-4.21%2050.85-4.71-2.47-2.27-2-4-2.11-3.7-2.11-3.7-0.91-6.06%200-6.57%200.68-3%200-4.55%201.82-4.8-2.27-6.57-3-2-2.73-6.31%201.58-13.88-1.38-15.41c0%200-55.88-2.78-62.93-1.01z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-6%22%20d%3D%22m129.2%20133.2c8-7.78%2029.45-9.19%2039.45-7.92s13.4%206%2013.4%206a34.6%2034.6%200%200%200-9.19-1.17c-4.43%200.17-11%203.69-11%203.69s10.07-0.86%2015.74%201.08%2012.19%206.57%2013.76%2010.18c0%200-11.06-5-18.81-4.36a46.42%2046.42%200%200%201%2014%2011.18c6.06%207.37%206.07%2014.73%206.07%2014.73a53.19%2053.19%200%200%201-2.16%2010.72c-1.73%205.37-1.57%209.8-3.34%2012.55%200%200%202.17-16.77-11.78-19.28%200%200%204.39%2010.62%202.74%2021.23a14.18%2014.18%200%200%201-11.61%2012s-5%207.13-10.26%208.52c0%200%2011.23-17.4-3.34-27.67%200%200-3.81%2021.33-18.84%2021.15%200%200%2025.57-27.26%203.52-32%200%200%206.7-12%204.25-21s-9.44-6.27-11-5.13-1.6-14.5-1.6-14.5z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-6%22%20d%3D%22M63.36%2C133.17c-8-7.78-29.45-9.19-39.45-7.92s-13.4%2C6-13.4%2C6a34.6%2C34.6%2C0%2C0%2C1%2C9.19-1.17c4.43.17%2C11%2C3.69%2C11%2C3.69S20.66%2C133%2C15%2C134.89%2C2.8%2C141.46%2C1.23%2C145.07c0%2C0%2C11.06-5%2C18.81-4.36a46.42%2C46.42%2C0%2C0%2C0-14%2C11.18C0%2C159.26%2C0%2C166.62%2C0%2C166.62a53.19%2C53.19%2C0%2C0%2C0%2C2.16%2C10.72c1.73%2C5.37%2C1.57%2C9.8%2C3.34%2C12.55%2C0%2C0-2.17-16.77%2C11.78-19.28%2C0%2C0-4.39%2C10.62-2.74%2C21.23a14.18%2C14.18%2C0%2C0%2C0%2C11.61%2C12s5%2C7.13%2C10.26%2C8.52c0%2C0-11.23-17.4%2C3.34-27.67%2C0%2C0%2C3.81%2C21.33%2C18.84%2C21.15%2C0%2C0-25.57-27.26-3.52-32%2C0%2C0-6.7-12-4.25-21s9.44-6.27%2C11-5.13S63.36%2C133.17%2C63.36%2C133.17Z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-7%22%20d%3D%22M20.4%2C87.65c-.46-2.51%2C3.42-5%2C7.29-3.42s35.54%2C18%2C35.54%2C18%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-8%22%20d%3D%22M26.18%2C81.68c0-2.38%2C3.95-4.06%2C7.25-2S63.2%2C102%2C63.2%2C102%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-9%22%20d%3D%22M32%2C75.71c.42-2.25%2C4.48-3.1%2C7.21-.52s24%2C26.51%2C24%2C26.51%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-10%22%20d%3D%22M37.75%2C69.74c.86-2.12%2C5-2.14%2C7.17.93s18.21%2C30.77%2C18.21%2C30.77%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-11%22%20d%3D%22m43.54%2063.77c1.3-2%205.53-1.19%207.12%202.38s12.43%2035%2012.43%2035%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-12%22%20d%3D%22M49.32%2C57.79c1.74-1.86%2C6.06-.23%2C7.08%2C3.83S63%2C100.91%2C63%2C100.91%22%3E%3C%2Fpath%3E%3Cline%20class%3D%22cls-13%22%20x1%3D%22139.8%22%20x2%3D%22158.2%22%20y1%3D%2287.81%22%20y2%3D%2270.68%22%3E%3C%2Fline%3E%3Cpath%20class%3D%22cls-14%22%20d%3D%22m158.4%2070.91%2014.47-6.45s-0.37-7.19-11.56-9.23z%22%3E%3C%2Fpath%3E%3Cline%20class%3D%22cls-13%22%20x1%3D%22172.9%22%20x2%3D%22182.3%22%20y1%3D%2264.46%22%20y2%3D%2260.24%22%3E%3C%2Fline%3E%3Cline%20class%3D%22cls-13%22%20x1%3D%22171.6%22%20x2%3D%22180%22%20y1%3D%2260.96%22%20y2%3D%2254.24%22%3E%3C%2Fline%3E%3Cline%20class%3D%22cls-13%22%20x1%3D%22168.8%22%20x2%3D%22176.2%22%20y1%3D%2257.44%22%20y2%3D%2249.47%22%3E%3C%2Fline%3E%3Cline%20class%3D%22cls-13%22%20x1%3D%22165.1%22%20x2%3D%22170%22%20y1%3D%2255.55%22%20y2%3D%2245.36%22%3E%3C%2Fline%3E%3Cline%20class%3D%22cls-15%22%20x1%3D%22161.4%22%20x2%3D%22163.6%22%20y1%3D%2254.61%22%20y2%3D%2244.4%22%3E%3C%2Fline%3E%3Cpath%20class%3D%22cls-16%22%20d%3D%22M137%2C83.08c.16-.63%2C22.85-31.37%2C22.85-31.37%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-17%22%20d%3D%22m169%2047.57c-2%203.51-10.28%205.32-10.28%205.32s-2.39-8-0.36-11.47%205.66-3.75%208.6-2%204.11%204.64%202.04%208.15z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-3%22%20d%3D%22M94.6%2C122.8c-.48-2.38%2C1-3.81%2C12.86-3.81s35.14%2C1%2C35.14%2C1l-1.43-6.19s-1.79-5.24-9.89-4.76-24.3-.48-32.87-2.86a71.74%2C71.74%2C0%2C0%2C1-15.72-6.67s27.15-4.76%2C32.87-3.81%2C23.59%2C4.37%2C25%2C7.23l-.13-6.27%2C2.38-6.19s1.07-8.58-1.31-10.48-34.06-4.76-41.68-3.33-4.12-1.95-13.65-1-14.14%2C3-14.14%2C3c6.67%2C1%2C33%2C11.3%2C33%2C11.3s-31.44%2C1.43-52.88%2C10l-.48%2C7.15-.25%2C3.71L50.67%2C113l1.77-.28s6.44-5.14%2C13.59-5.62%2C11-2.38%2C17.15-.48%2C7.15%2C2.86%2C4.76%2C3.81-11%2C2.86-17.63%2C3.33-18.8%2C1.84-18.8%2C1.84l-3.12%2C5.31-.25%2C4.54s26.93%2C4%2C42.65%2C4%2C18.58-1%2C18.58-1S95.08%2C125.18%2C94.6%2C122.8Z%22%3E%3C%2Fpath%3E%3Cpolygon%20class%3D%22cls-18%22%20points%3D%22116.8%2043.67%20124.7%2042.85%20126.3%2035.14%20119.5%2031.2%20113.6%2036.47%22%3E%3C%2Fpolygon%3E%3Cline%20class%3D%22cls-13%22%20x1%3D%22117.6%22%20x2%3D%22100.6%22%20y1%3D%2242.05%22%20y2%3D%2281.99%22%3E%3C%2Fline%3E%3Cpolygon%20class%3D%22cls-19%22%20points%3D%22117.7%2042.19%20121.2%2037.88%20122.2%2040.94%22%3E%3C%2Fpolygon%3E%3Cpolygon%20class%3D%22cls-19%22%20points%3D%22117.8%2042.26%20120.7%2035.53%20116.5%2036.17%22%3E%3C%2Fpolygon%3E%3Cpolygon%20class%3D%22cls-20%22%20points%3D%22111.9%2064.7%20136.1%2064.65%20136.1%2083.01%20124.3%2094.82%20111.8%2082.1%22%3E%3C%2Fpolygon%3E%3Cline%20class%3D%22cls-21%22%20x1%3D%22116.7%22%20x2%3D%22131%22%20y1%3D%2271.11%22%20y2%3D%2271.11%22%3E%3C%2Fline%3E%3Cline%20class%3D%22cls-21%22%20x1%3D%22116.7%22%20x2%3D%22124.2%22%20y1%3D%2276.89%22%20y2%3D%2276.89%22%3E%3C%2Fline%3E%3Cline%20class%3D%22cls-13%22%20x1%3D%22106.4%22%20x2%3D%22136.4%22%20y1%3D%2281.63%22%20y2%3D%2237.5%22%3E%3C%2Fline%3E%3Cpolygon%20class%3D%22cls-14%22%20points%3D%22137.1%2027.88%20143.2%2026.31%20142.6%2021.1%20154.4%2012.91%20149.5%2025.36%20136.9%2037.34%20136.1%2036.55%22%3E%3C%2Fpolygon%3E%3Cpolygon%20class%3D%22cls-3%22%20points%3D%22112.1%2083.7%2098.49%2083.85%20100%2076.72%20111.6%2076.21%22%3E%3C%2Fpolygon%3E%3Cpath%20class%3D%22cls-6%22%20d%3D%22m121.6%20152.2c-7.85%200-20.36-5.13-20.89-5.35l-0.51-0.21%200.38-0.41c0.66-0.71%201.22-1.34%201.72-1.9%202.6-2.94%203.67-4.16%209.23-4.16h1.85%202.56c6.42%200%209.48-1%2013.92-3.39l0.47-0.25%200.09%200.53a3.7%203.7%200%200%201-0.89%203.11%2032.08%2032.08%200%200%200%209.49-3.85c6.55-3.93%2016.22-5.39%2020.78-5.39h1.17l2.49%200.23-2.45%200.53c-0.06%200-5.51%201.23-8%204a22.39%2022.39%200%200%201%204.42-0.36c0.69%200%201.45%200%202.3%200.06a23.22%2023.22%200%200%201%209.32%202.11l1%200.52-1.08%200.19c-0.13%200-12.45%202.23-18%204.73%201.2%201%204.45%203.68%206.81%205.8l1.33%201.19-1.7-0.54a31%2031%200%200%200-8.49-1c-1.12%200-2.27%200-3.41%200.14a101.8%20101.8%200%200%200-11%201.73%20103.8%20103.8%200%200%201-11.72%201.82c-0.4%200.1-0.82%200.12-1.19%200.12z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-22%22%20d%3D%22m159.8%20131.4h1.14s-6.8%201.48-8.86%205c0%200%201.3-0.65%205.4-0.65%200.68%200%201.44%200%202.29%200.06a23%2023%200%200%201%209.16%202.07s-13.3%202.36-18.61%205c0%200%204.31%203.52%207.27%206.18a31%2031%200%200%200-8.61-1c-1.07%200-2.21%200-3.44%200.14-7.39%200.59-15.07%203-22.75%203.55h-1.15c-7.86%200-20.74-5.32-20.74-5.32%204.07-4.35%204.23-5.95%2010.66-5.95h1.84%202.57c6.47%200%209.63-1.07%2014.1-3.44%200%200%200.48%202.91-2.18%203.5-0.67%200.15-0.75%200.25-0.38%200.25a29.09%2029.09%200%200%200%2011.73-4.22c6.68-4%2016.38-5.34%2020.58-5.34m0-0.77c-4.6%200-14.35%201.48-21%205.45a32.58%2032.58%200%200%201-8.38%203.58%204.43%204.43%200%200%200%200.37-2.57l-0.17-1.05-0.94%200.5c-4.38%202.32-7.4%203.35-13.74%203.35h-2.54-1.87c-5.73%200-6.91%201.35-9.51%204.29-0.49%200.56-1.05%201.19-1.71%201.89l-0.76%200.81%201%200.43c0.53%200.22%2013.11%205.38%2021%205.38h1.21a104.2%20104.2%200%200%200%2011.76-1.82%20100%20100%200%200%201%2011-1.72c1.13-0.09%202.27-0.14%203.38-0.14a30.69%2030.69%200%200%201%208.38%201l3.39%201.08-2.64-2.38c-2.09-1.88-4.89-4.22-6.34-5.42%205.71-2.38%2017.18-4.43%2017.31-4.46l2.16-0.38-1.92-1a23.61%2023.61%200%200%200-9.49-2.16c-0.81%200-1.6-0.06-2.32-0.06a28.09%2028.09%200%200%200-3.24%200.17%2020%2020%200%200%201%206.87-3l4.88-1.07-5-0.45h-1.21z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-6%22%20d%3D%22m70.88%20152.2q-0.61%200-1.18%200a103.8%20103.8%200%200%201-11.7-1.86%20101.8%20101.8%200%200%200-11-1.73c-1.14-0.09-2.29-0.14-3.41-0.14a30.91%2030.91%200%200%200-8.49%201l-1.7%200.54%201.33-1.2c2.36-2.12%205.61-4.82%206.81-5.8-5.52-2.5-17.84-4.71-18-4.73l-1.08-0.19%201-0.52a23.22%2023.22%200%200%201%209.32-2.11c0.85%200%201.61-0.06%202.3-0.06a22.39%2022.39%200%200%201%204.42%200.36c-2.46-2.74-7.91-4-8-4l-2.5-0.49%202.49-0.23h1.17c4.56%200%2014.22%201.46%2020.77%205.39a32.3%2032.3%200%200%200%209.57%203.82%203.69%203.69%200%200%201-0.9-3.12l0.09-0.53%200.47%200.25c4.43%202.35%207.5%203.4%2013.92%203.39h2.56%201.85c5.56%200%206.63%201.22%209.23%204.16%200.5%200.57%201.06%201.2%201.72%201.9l0.38%200.41-0.51%200.21c-0.58%200.11-13.08%205.28-20.93%205.28z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-22%22%20d%3D%22m32.7%20131.4c4.2%200%2013.9%201.33%2020.58%205.34a29.09%2029.09%200%200%200%2011.72%204.22c0.37%200%200.29-0.1-0.38-0.25-2.66-0.59-2.18-3.5-2.18-3.5%204.47%202.37%207.63%203.44%2014.1%203.44h2.57%201.84c6.43%200%206.58%201.6%2010.66%205.95%200%200-12.88%205.32-20.74%205.32h-1.15c-7.68-0.59-15.36-3-22.75-3.55-1.22-0.1-2.37-0.14-3.44-0.14a31%2031%200%200%200-8.61%201c3-2.66%207.27-6.18%207.27-6.18-5.32-2.66-18.61-5-18.61-5a23%2023%200%200%201%209.16-2.07c0.84%200%201.6-0.06%202.29-0.06%204.09%200%205.4%200.65%205.4%200.65-2.07-3.55-8.86-5-8.86-5h1.14m0-0.77h-1.21l-5%200.45%204.88%201.07a20%2020%200%200%201%206.87%203%2028.07%2028.07%200%200%200-3.25-0.27c-0.73%200-1.51%200-2.32%200.06a23.61%2023.61%200%200%200-9.49%202.16l-1.92%201%202.16%200.38c0.12%200%2011.6%202.08%2017.31%204.46-1.45%201.2-4.25%203.53-6.34%205.42l-2.64%202.38%203.39-1.08a30.69%2030.69%200%200%201%208.38-1c1.11%200%202.25%200%203.38%200.14a100%20100%200%200%201%2011%201.72%20104.2%20104.2%200%200%200%2011.76%201.82h1.21c7.93%200%2020.5-5.16%2021-5.38l1-0.43-0.76-0.81c-0.66-0.7-1.21-1.33-1.71-1.89-2.6-2.95-3.79-4.29-9.51-4.3h-1.87-2.54c-6.34%200-9.36-1-13.74-3.35l-0.94-0.5-0.12%201.2a4.43%204.43%200%200%200%200.37%202.57%2032.49%2032.49%200%200%201-8.39-3.57c-6.62-4-16.37-5.45-21-5.45z%22%3E%3C%2Fpath%3E%3Cg%20class%3D%22cls-23%22%3E%3Cpath%20class%3D%22cls-5%22%20d%3D%22m48.23%20250.1c9.3-3%2014-3.38%2017.34%202.11s3.81%207.61-1.27%2011.84-18.61%201.69-18.61-1.27%202.54-12.68%202.54-12.68z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-5%22%20d%3D%22m141.3%20260.7c9.3-3%2014-3.38%2017.34%202.11s3.81%207.61-1.27%2011.84-18.61%201.69-18.61-1.27%202.54-12.68%202.54-12.68z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-5%22%20d%3D%22M55.57%2C225c9.3-3%2C14-3.38%2C17.34%2C2.11s3.81%2C7.61-1.27%2C11.84S53%2C240.61%2C53%2C237.65%2C55.57%2C225%2C55.57%2C225Z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-5%22%20d%3D%22m137.2%20240.2c-9.24%203.16-13.88%203.68-17.38-1.74s-4-7.53%201-11.86%2018.56-2.09%2018.63%200.87-2.25%2012.73-2.25%2012.73z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-5%22%20d%3D%22M64%2C290.18c-4-8.92-4.89-13.5.21-17.46s7.15-4.61%2C11.91%2C0%2C3.72%2C18.31.77%2C18.63S64%2C290.18%2C64%2C290.18Z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-5%22%20d%3D%22m33.64%20287.7c2.5-9.44%204.64-13.59%2011.09-13.49s8.46%200.88%209.31%207.43-8.57%2016.6-11.06%2015-9.34-8.94-9.34-8.94z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-5%22%20d%3D%22m110.6%20288.1c2.5-9.44%204.64-13.59%2011.09-13.49s8.46%200.88%209.31%207.43-8.57%2016.6-11.06%2015-9.34-8.94-9.34-8.94z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-5%22%20d%3D%22m95.32%20253.8c-9.24%203.16-13.88%203.68-17.38-1.74s-4-7.53%201-11.86%2018.56-2.09%2018.63%200.87-2.25%2012.73-2.25%2012.73z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-5%22%20d%3D%22m117.3%20265.7c-4-8.92-4.89-13.5%200.21-17.46s7.15-4.61%2011.91%200%203.72%2018.31%200.77%2018.63-12.89-1.17-12.89-1.17z%22%3E%3C%2Fpath%3E%3C%2Fg%3E%3Cpath%20class%3D%22cls-24%22%20d%3D%22m134.3%20251c-24.1%2017.13-51.55%2016.36-75.65-0.77-0.14-2.28-0.51-4-0.51-6%209.49%2010.9%2025.13%2018.08%2038.47%2018.08s29.24-6.67%2038.47-18.08a30.63%2030.63%200%200%201-0.78%206.77z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-25%22%20d%3D%22m108.6%20250.6c0%2013.8-1.61%2016.88-12.15%2016.88-10%200-12.15-3.08-12.15-16.88s0.91-16.26%2012.15-16.35c9.13-0.08%2012.15%202.55%2012.15%2016.35z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-26%22%20d%3D%22M63.65%2C128.81l2.49%2C1.33%2C15.94%2C5.38C91.87%2C80.8%2C88.19%2C41.36%2C76.77.4A180.87%2C180.87%2C0%2C0%2C0%2C57%2C1.87c-13.85%2C1.54-19.11%2C4.3-20.84%2C5C65.48%2C11.92%2C74%2C84.45%2C63.65%2C128.81Z%22%3E%3C%2Fpath%3E%3Cpath%20class%3D%22cls-27%22%20d%3D%22m173.8%20108.8c-2-1-14.82%2011.8-23.24%2014.92s-32.67%207.64-43.11%206.59c-8.24-0.82-10.85-0.35-11.59-0.11-0.74-0.24-3.35-0.71-11.59%200.11-10.44%201-34.69-3.47-43.11-6.59s-21.22-16-23.24-14.92%201.26%206.19%203%208.33c17.51%2021.23%2070.86%2018.64%2074.9%2018.41%204%200.23%2057.39%202.83%2074.9-18.41%201.82-2.1%205.1-7.29%203.08-8.33z%22%3E%3C%2Fpath%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" width="29" height="46"></div><div class="gravatar-wrapper-32"><img src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/m5hFv.png" alt="" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="https://stackoverflow.com/users/1983854/fedorqui">fedorqui</a>
+        <div class="-flair">
+            <span class="reputation-score" title="reputation score 139,697" dir="ltr">140k</span><span title="44 gold badges"><span class="badge1"></span><span class="badgecount">44</span></span><span title="259 silver badges"><span class="badge2"></span><span class="badgecount">259</span></span><span title="310 bronze badges"><span class="badge3"></span><span class="badgecount">310</span></span>
+        </div>
+    </div>
+</div>    </td>
+            
+
+
+    <td class="post-signature" align="right">   
+       
+
+    <div class="user-info ">
+    <div class="user-action-time">
+        answered <span title="2012-01-12 21:25:29Z" class="relativetime">Jan 12 '12 at 21:25</span>
+    </div>
+    <div class="user-gravatar32 wb-hat-checked">
+        <a href="https://stackoverflow.com/users/99594/van"><div class="gravatar-wrapper-32"><img src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/5434869366641f527b3f25a34f6e4665.jpeg" alt="" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="https://stackoverflow.com/users/99594/van">van</a>
+        <div class="-flair">
+            <span class="reputation-score" title="reputation score 38,946" dir="ltr">38.9k</span><span title="7 gold badges"><span class="badge1"></span><span class="badgecount">7</span></span><span title="76 silver badges"><span class="badge2"></span><span class="badgecount">76</span></span><span title="98 bronze badges"><span class="badge3"></span><span class="badgecount">98</span></span>
+        </div>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</td>
+        </tr>
+    
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-8842527" class="comments js-comments-container ">
+		        <table>
+                    <tbody class="js-comments-list" data-remaining-comments-count="0" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+
+
+    <tr id="comment-11045628" class="comment js-comment ">
+        <td class="js-comment-actions">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text js-comment-text-and-form">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">To add a list of children you could use <code>p.children.extend([list_of_children])</code>, no?</span>
+                    –&nbsp;<a href="https://stackoverflow.com/users/333308/aganders3" title="4,351 reputation" class="comment-user">aganders3</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment11045628_8842527"><span title="2012-01-13 00:17:32Z" class="relativetime-clean">Jan 13 '12 at 0:17</span></a></span>
+                                                                            </div>
+        </td>
+    </tr>
+    <tr id="comment-11050483" class="comment js-comment ">
+        <td class="js-comment-actions">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text js-comment-text-and-form">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">yes, sure. In fact, if we are sure that the <code>Parent</code> exists for given <code>pid</code>, and the task at hand is only to store the <code>Child(ren)</code>, what one can do is not to load relationship, but directly set the FK value for <code>parent_gid</code>: <code>session.add(Child(loc=cloc, status=cstat, parent_gid=pid))</code>, in which case one does not even need to trick the relationship to <code>lazy="noload"</code>, because the code will not be using the relationship</span>
+                    –&nbsp;<a href="https://stackoverflow.com/users/99594/van" title="38,946 reputation" class="comment-user">van</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment11050483_8842527"><span title="2012-01-13 08:15:22Z" class="relativetime-clean">Jan 13 '12 at 8:15</span></a></span>
+                        <span class="edited-yes" title="this comment was edited 2 times"></span>
+                                                                            </div>
+        </td>
+    </tr>
+    <tr id="comment-58743121" class="comment js-comment ">
+        <td class="js-comment-actions">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text js-comment-text-and-form">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">Could you please also show how to update child in the same scenario?</span>
+                    –&nbsp;<a href="https://stackoverflow.com/users/95735/piotr-dobrogost" title="25,522 reputation" class="comment-user">Piotr Dobrogost</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment58743121_8842527"><span title="2016-02-20 17:53:42Z" class="relativetime-clean">Feb 20 '16 at 17:53</span></a></span>
+                                                                            </div>
+        </td>
+    </tr>
+                    </tbody>
+		        </table>
+	    </div>
+
+        <div id="comments-link-8842527" data-rep="50" data-anon="true">
+
+                <a class="js-add-link comments-link disabled-link " title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”.">add a comment</a><span class="js-link-separator dno">&nbsp;|&nbsp;</span>
+            <a class="js-show-link comments-link dno" title="expand to show all comments on this post" href="#" onclick=""></a>
+        </div>         
+    </td>
+</tr>    </tbody></table>
+</div>
+                                    <a name="new-answer"></a>
+                        <form id="post-form" action="/questions/8839211/answer/submit" method="post" class="post-form">
+                            <input id="post-id" value="8839211" type="hidden">
+                            <input id="qualityBanWarningShown" name="qualityBanWarningShown" value="false" type="hidden">
+                            <input name="referrer" value="https://www.google.com/" type="hidden">
+                            <h2 class="space">Your Answer</h2>
+
+
+            <script>
+            StackExchange.ifUsing("editor", function () {
+                StackExchange.using("externalEditor", function () {
+                    StackExchange.using("snippets", function () {
+                        StackExchange.snippets.init();
+                    });
+                });
+            }, "code-snippets");
+        </script>
+    
+
+<script>
+    StackExchange.ready(function() {
+        initTagRenderer("".split(" "), "".split(" "));
+       
+        StackExchange.using("externalEditor", function() {
+                // Have to fire editor after snippets, if snippets enabled
+                if (StackExchange.settings.snippets.snippetsEnabled) {
+                    StackExchange.using("snippets", function() {
+                        createEditor();
+                    });
+                }
+                else {
+                    createEditor();
+                }
+            });
+
+            function createEditor() {
+                StackExchange.prepareEditor({
+                    heartbeatType: 'answer',
+                convertImagesToLinks: true,
+                reputationToPostImages: 10,
+                bindNavPrevention: true,
+                postfix: "",
+                    onDemand: true,
+                    discardSelector: ".discard-answer"
+                    ,immediatelyShowMarkdownHelp:true
+                    });
+                
+
+        }
+    });
+</script>
+
+
+<div id="post-editor" class="post-editor js-post-editor">
+
+    <div style="position: relative;"> 
+        <div class="wmd-container">
+            <div id="wmd-button-bar" class="wmd-button-bar"><ul id="wmd-button-row" class="wmd-button-row"><li id="wmd-bold-button" class="wmd-button" style="left: 0px;"><span style="background-position: 0px -20px;"></span></li><li id="wmd-italic-button" class="wmd-button" style="left: 25px;"><span style="background-position: -20px -20px;"></span></li><li id="wmd-spacer1" class="wmd-spacer" style="left: 50px;"><span style="background-position: -40px -20px;"></span></li><li id="wmd-link-button" class="wmd-button" style="left: 75px;"><span style="background-position: -40px -20px;"></span></li><li id="wmd-quote-button" class="wmd-button" style="left: 100px;"><span style="background-position: -60px -20px;"></span></li><li id="wmd-code-button" class="wmd-button" style="left: 125px;"><span style="background-position: -80px -20px;"></span></li><li id="wmd-image-button" class="wmd-button" style="left: 150px;"><span style="background-position: -100px -20px;"></span></li><li id="wmd-spacer2" class="wmd-spacer" style="left: 175px;"><span style="background-position: -120px -20px;"></span></li><li id="wmd-olist-button" class="wmd-button" style="left: 200px;"><span style="background-position: -120px -20px;"></span></li><li id="wmd-ulist-button" class="wmd-button" style="left: 225px;"><span style="background-position: -140px -20px;"></span></li><li id="wmd-heading-button" class="wmd-button" style="left: 250px;"><span style="background-position: -160px -20px;"></span></li><li id="wmd-hr-button" class="wmd-button" style="left: 275px;"><span style="background-position: -180px -20px;"></span></li><li id="wmd-spacer3" class="wmd-spacer" style="left: 300px;"><span style="background-position: -200px -20px;"></span></li><li id="wmd-undo-button" class="wmd-button" style="left: 325px;"><span style="background-position: -200px -20px;"></span></li><li id="wmd-redo-button" class="wmd-button" style="left: 350px;"><span style="background-position: -220px -20px;"></span></li></ul></div>
+            <textarea id="wmd-input" class="wmd-input" name="post-text" cols="92" rows="15" tabindex="101" data-min-length=""></textarea>
+        </div>
+    </div>
+
+    <div class="fl" style="margin-top: 8px; height:24px;">&nbsp;</div>
+    <div id="draft-saved" class="draft-saved community-option fl" style="margin-top: 8px; height:24px; display:none;">draft saved</div>
+
+    <div id="draft-discarded" class="draft-discarded community-option fl" style="margin-top: 8px; height:24px; display:none;">draft discarded</div>
+
+
+
+    <div id="wmd-preview" class="wmd-preview"></div>
+    <div></div>
+    <div class="edit-block">
+        <input id="fkey" name="fkey" value="15acbeae347a437040b0d8f7ec5fbf53" type="hidden">
+        <input id="author" name="author" type="text">
+    </div>
+
+
+
+</div>
+
+                            <div style="position: relative;">
+                                
+                                            <div class="form-item new-post-login">
+        
+                <div class="new-login-form">
+                    <div class="new-login-left">
+                        <h3>Sign up or <a id="login-link" href="https://stackoverflow.com/users/login?ssrc=question_page&amp;returnurl=https%3a%2f%2fstackoverflow.com%2fquestions%2f8839211%2fsqlalchemy-add-child-in-one-to-many-relationship%23new-answer">log in</a></h3>
+                        <script>
+                            StackExchange.ready(function () {
+                                StackExchange.helpers.onClickDraftSave('#login-link');
+                            });
+                        </script>
+                        <div class="preferred-login google-login">
+                            <svg aria-hidden="true" class="svg-icon native iconGoogle" width="18" height="18" viewBox="0 0 18 18"><g><path d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z" fill="#4285F4"></path><path d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z" fill="#34A853"></path><path d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z" fill="#FBBC05"></path><path d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z" fill="#EA4335"></path></g></svg> Sign up using Google
+                        </div>
+                        <div class="preferred-login facebook-login">
+                            <svg aria-hidden="true" class="svg-icon iconFacebook" width="18" height="18" viewBox="0 0 18 18"><path d="M1.88 1C1.4 1 1 1.4 1 1.88v14.24c0 .48.4.88.88.88h7.67v-6.2H7.46V8.4h2.09V6.61c0-2.07 1.26-3.2 3.1-3.2.88 0 1.64.07 1.87.1v2.16h-1.29c-1 0-1.19.48-1.19 1.18V8.4h2.39l-.31 2.42h-2.08V17h4.08c.48 0 .88-.4.88-.88V1.88c0-.48-.4-.88-.88-.88H1.88z" fill="#3C5A96"></path></svg> Sign up using Facebook
+                        </div>
+                        <div class="preferred-login stackexchange-login">
+                            <svg aria-hidden="true" class="svg-icon native iconLogoGlyphXSm" width="18" height="18" viewBox="0 0 18 18"><g><path fill="#BCBBBB" d="M14 16v-5h2v7H2v-7h2v5z"></path><path d="M5 15v-2h8v2H5zM12.09.72l4.5 6.06-1.2.9-4.51-6.06 1.21-.9zM8.34 4.3l.97-1.16 5.8 4.83-.96 1.16-5.8-4.83zm-1.9 3.36l.64-1.37 6.85 3.19-.63 1.37-6.85-3.2zM5.4 11.39l.38-1.67 7.42 1.48-.22 1.46-7.58-1.27z" fill="#F48024"></path></g></svg> Sign up using Email and Password
+                        </div>
+                    </div>
+                    <input name="manual-openid" class="manual-openid" type="hidden">
+                    <input name="use-facebook" class="use-facebook" value="false" type="hidden">
+                    <input name="use-google" class="use-google" value="false" type="hidden">
+                    <input class="submit-openid" value="Submit" style="display:none" type="button">
+                    <div class="new-login-right">
+                                <h3>Post as a guest</h3>
+    <div class="form-item">
+        <table>
+        <tbody><tr>
+                    <td class="vm">
+                <div>
+                    <label for="display-name">Name</label>
+                    <input id="display-name" name="display-name" size="30" maxlength="30" tabindex="105" type="text">
+                </div>
+                <div>
+                    <label for="m-address">Email</label>
+                    <input id="m-address" name="m-address" size="30" maxlength="100" tabindex="106" placeholder="required, but never shown" type="email">
+                </div>
+            </td>
+        </tr>
+        </tbody></table>
+    </div>
+
+                    </div>
+                </div>
+            </div>
+            <script>
+                StackExchange.ready(
+                    function () {
+                        
+StackExchange.openid.initPostLogin('.new-post-login', 
+'https%3a%2f%2fstackoverflow.com%2fquestions%2f8839211%2fsqlalchemy-add-child-in-one-to-many-relationship%23new-answer',
+ 'question_page');
+                    }
+                );
+            </script>
+            <noscript>
+                        <h3>Post as a guest</h3>
+    <div class="form-item">
+        <table>
+        <tr>
+                    <td class="vm">
+                <div>
+                    <label for="display-name">Name</label>
+                    <input id="display-name" name="display-name" 
+type="text" size="30" maxlength="30" value="" tabindex="105">
+                </div>
+                <div>
+                    <label for="m-address">Email</label>
+                    <input id="m-address" name="m-address" type="email" 
+size="30" maxlength="100" value="" tabindex="106" placeholder="required,
+ but never shown" />
+                </div>
+            </td>
+        </tr>
+        </table>
+    </div>
+
+            </noscript>
+
+                            </div>
+
+                                                            <div class="form-submit cbt">
+                                        <input id="submit-button" value="Post Your Answer" tabindex="110" type="submit">
+                                    <a href="#" class="btn-clear discard-answer dno">discard</a>
+
+<p class="privacy-policy-agreement">
+By posting your answer, you agree to the <a href="https://stackexchange.com/legal/privacy-policy" name="privacy" target="_blank">privacy policy</a> and <a href="https://stackexchange.com/legal/terms-of-service" name="tos" target="_blank">terms of service</a>.</p>
+<input name="legalLinksShown" value="1" type="hidden">                                </div>
+                        </form>
+
+
+
+                        <h2 class="bottom-notice" data-loc="1">
+Not the answer you're looking for?                            Browse other questions tagged <a href="https://stackoverflow.com/questions/tagged/python" class="post-tag" title="show questions tagged 'python'" rel="tag">python</a> <a href="https://stackoverflow.com/questions/tagged/orm" class="post-tag" title="show questions tagged 'orm'" rel="tag">orm</a> <a href="https://stackoverflow.com/questions/tagged/sqlalchemy" class="post-tag" title="show questions tagged 'sqlalchemy'" rel="tag">sqlalchemy</a>  or <a href="https://stackoverflow.com/questions/ask">ask your own question</a>.                        </h2>
+            </div>
+        </div>
+                <div id="sidebar" class="show-votes" role="complementary" aria-label="sidebar">
+                            <div class="module question-stats">
+                    <table id="qinfo">
+                        <tbody><tr>
+                            <td>
+                                <p class="label-key">asked</p>
+                            </td>
+                            <td style="padding-left: 10px">
+                                <p class="label-key" title="2012-01-12 17:11:44Z"><b>5 years, 11 months ago</b></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p class="label-key">viewed</p>
+                            </td>
+
+                            <td style="padding-left: 10px">
+                                <p class="label-key">
+                                    <b>17,371 times</b>
+                                </p>
+                            </td>
+                        </tr>
+                            <tr>
+                                <td>
+                                    <p class="label-key">active</p>
+                                </td>
+                                <td style="padding-left: 10px">
+                                    <p class="label-key"><b><a href="https://stackoverflow.com/questions/8839211/sqlalchemy-add-child-in-one-to-many-relationship?lastactivity" class="lastactivity-link" title="2016-05-28 14:47:10Z">1 year, 7 months ago</a></b></p>
+                                </td>
+                            </tr>
+                    </tbody></table>
+                </div>
+            <div class="module community-bulletin" data-tracker="cb=1">
+    <div class="related">
+                <div class="bulletin-title">
+                    Blog
+                </div>
+                <hr>
+    <div class="spacer">
+        <div class="bulletin-item-type">
+                <a href="https://stackoverflow.blog/2017/12/27/stack-overflow-gives-back-2017/?cb=1" class="question-hyperlink">
+<div class="favicon favicon-stackexchangemeta" title="Meta Stack Exchange"></div>                </a>
+            </div>
+                <div class="bulletin-item-content">
+                    <a href="https://stackoverflow.blog/2017/12/27/stack-overflow-gives-back-2017/?cb=1" class="question-hyperlink">Stack Overflow Gives Back 2017</a>
+                </div>
+                <br class="cbt">
+            </div>
+    </div>
+</div>            
+<div id="dfp-tsb" class="everyonelovesstackoverflow" style="" data-google-query-id="COXusZbIr9gCFdYh0wodaNUMfg" data-clc-prefilled="true" data-clc-ready="true"><div id="google_ads_iframe_/248424177/stackoverflow.com/sb/question-pages_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/248424177/stackoverflow.com/sb/question-pages_0" title="3rd party ad content" name="google_ads_iframe_/248424177/stackoverflow.com/sb/question-pages_0" scrolling="no" marginwidth="0" marginheight="0" style="border: 0px none; vertical-align: bottom;" srcdoc="" width="300" height="250" frameborder="0"></iframe></div></div>
+            <div id="hireme" class="tag-themed python tagged tex2jax_ignore clc-jobs-multi"><a class="top " href="https://stackoverflow.com/jobs" target="_blank" data-clc-click="https://clc.stackoverflow.com/click?an=4wrJfyJy2e-qh-oWqagQJiaB1Qdms0zkeal-4o-hWTbjR787AScCGbgYejYwMDTYMzIyMM1mermeY3YP14eDQkJcDCkH3Pe9snS-l2LPyFZQWZKRnzeb6cViju4_nFMXCQH1FU_8V5VtmWCgC5dnUJq9mv2p7ASTbaUA&amp;cr=10440&amp;ct=1&amp;url=https%3A%2F%2Fstackoverflow.com%2Fjobs%3Fmed=clc&amp;sig=9vpZqOLzLYYLmg"><span>Want a <span class="header-tag">python</span> job?</span></a><div class="middle"><ul class="jobs"><li class="&quot;clc-dismissable&quot;"><div class="job-wrap"><a class="job" title="Software Engineer (Product Development) at BriteCore. Click to learn more." href="https://stackoverflow.com/jobs/161873/software-engineer-product-development-britecore" target="_blank" data-clc-click="https://clc.stackoverflow.com/click?an=4wrJfyJy2e-qh-oWqagQJiaB1Qdms0zkeal-4o-hWTbjR787AScCGbgYejYwMDTYMzIyMM1mermeY3YP14eDQkJcDCkH3Pe9snS-l2LPyFZQWZKRnzeb6cViju4_nFMXCQH1FU_8V5VtmWCgC5dnUJq9mv2p7ASTbaUA&amp;cr=303344&amp;ct=0&amp;url=https%3A%2F%2Fstackoverflow.com%2Fjobs%2F161873%2Fsoftware-engineer-product-development-britecore%3Fmed=clc&amp;sig=D9DT9ZBBexmIgg"><div class="title">Software Engineer (Product Development)</div><div><span class="company">BriteCore</span><span class="location"><svg viewBox="0 0 12 12"><path d="M6 5.7c.4 0 .7-.1.9-.4.3-.3.4-.6.4-.9 0-.4-.1-.7-.4-.9-.2-.3-.5-.4-.9-.4s-.7.1-.9.4c-.3.2-.4.5-.4.9s.1.7.4.9c.2.3.5.4.9.4zm0-5c1 0 1.9.4 2.6 1.1.7.7 1.1 1.6 1.1 2.6 0 .5-.1 1.1-.4 1.8s-.5 1.3-.9 1.9c-.4.5-.7 1.1-1.1 1.6-.4.5-.7.9-.9 1.2l-.4.4c-.1-.1-.2-.3-.4-.5s-.5-.6-.9-1.2c-.4-.5-.8-1-1.1-1.6s-.7-1.1-.9-1.8c-.3-.7-.4-1.3-.4-1.8 0-1 .4-1.9 1.1-2.6S5 .7 6 .7z"></path></svg><span>Springfield, MO</span></span></div><div class="opts"><span class="opt salary"><span>$50k - $70k</span></span><span class="opt remote"><svg viewBox="0 0 12 12"><path d="M6 9.8L3.9 7.7c1.3-.9 3-.9 4.2 0L6 9.8zm3-3a4.81 4.81 0 0 0-6 0L2.2 6c2.2-1.8 5.5-1.8 7.7 0l-.9.8zm1.7-1.7a7.27 7.27 0 0 0-9.4 0l-.9-.8c3.2-2.8 7.9-2.8 11.1 0l-.8.8z"></path></svg><span>Remote</span></span></div><span class="post-tag highlight">python</span><span class="post-tag">django</span><div></div></a></div><a class="clc-dismiss" data-clc-click="https://clc.stackoverflow.com/click?an=4wrJfyJy2e-qh-oWqagQJiaB1Qdms0zkeal-4o-hWTbjR787AScCGbgYejYwMDTYMzIyMM1mermeY3YP14eDQkJcDCkH3Pe9snS-l2LPyFZQWZKRnzeb6cViju4_nFMXCQH1FU_8V5VtmWCgC5dnUJq9mv2p7ASTbaUA&amp;cr=303344&amp;ct=-1&amp;sig=Sm8NhbwSCALBsw" data-clc-meta-target="-1"><svg viewBox="0 0 13.6 13.6"><path d="M11.4 2.3C8.9-.2 4.8-.2 2.3 2.3s-2.5 6.6 0 9.1 6.6 2.5 9.1 0 2.5-6.6 0-9.1zM8.6 9.5L6.8 7.7 5 9.5l-.9-.9 1.8-1.8L4.1 5l.9-.9 1.8 1.8 1.8-1.8.9.9-1.8 1.8 1.8 1.8-.9.9z"></path></svg><span class="clc-tooltip above-left">dismiss this job</span></a></li><li class="&quot;clc-dismissable&quot;"><div class="job-wrap"><a class="job" title="Principal Data Scientist - Pricing &amp; Forecasting at Zalando SE. Click to learn more." href="https://stackoverflow.com/jobs/159909/principal-data-scientist-pricing-forecasting-zalando-se" target="_blank" data-clc-click="https://clc.stackoverflow.com/click?an=4wrJfyJy2e-qh-oWqagQJiaB1Qdms0zkeal-4o-hWTbjR787AScCGbgYejYwMDTYMzIyMM1mermeY3YP14eDQkJcDCkH3Pe9snS-l2LPyFZQWZKRnzeb6cViju4_nFMXCQH1FU_8V5VtmWCgC5dnUJq9mv2p7ASTbaUA&amp;cr=299285&amp;ct=0&amp;url=https%3A%2F%2Fstackoverflow.com%2Fjobs%2F159909%2Fprincipal-data-scientist-pricing-forecasting-zalando-se%3Fmed=clc&amp;sig=yM7dt-b_NiaWUg"><div class="title">Principal Data Scientist - Pricing &amp; Forecasting</div><div><span class="company">Zalando SE</span><span class="location"><svg viewBox="0 0 12 12"><path d="M6 5.7c.4 0 .7-.1.9-.4.3-.3.4-.6.4-.9 0-.4-.1-.7-.4-.9-.2-.3-.5-.4-.9-.4s-.7.1-.9.4c-.3.2-.4.5-.4.9s.1.7.4.9c.2.3.5.4.9.4zm0-5c1 0 1.9.4 2.6 1.1.7.7 1.1 1.6 1.1 2.6 0 .5-.1 1.1-.4 1.8s-.5 1.3-.9 1.9c-.4.5-.7 1.1-1.1 1.6-.4.5-.7.9-.9 1.2l-.4.4c-.1-.1-.2-.3-.4-.5s-.5-.6-.9-1.2c-.4-.5-.8-1-1.1-1.6s-.7-1.1-.9-1.8c-.3-.7-.4-1.3-.4-1.8 0-1 .4-1.9 1.1-2.6S5 .7 6 .7z"></path></svg><span>Berlin, Germany</span></span></div><div class="opts"><span class="opt visa"><svg viewBox="0 0 12 12"><path d="M6 .7C3.1.7.7 3.1.7 6s2.4 5.3 5.3 5.3 5.3-2.4 5.3-5.3S8.9.7 6 .7zm3.6 3.2H8.1C8 3.2 7.7 2.6 7.4 2c.9.4 1.8 1 2.2 1.9zM6 1.8c.4.6.8 1.3 1 2.1H5c.2-.8.6-1.5 1-2.1zM1.9 7.1c-.1-.4-.1-.7-.1-1.1s.1-.7.2-1.1h1.8c-.1.4-.1.7-.1 1.1s.1.7.1 1.1H1.9zm.5 1h1.5c.1.7.4 1.3.7 1.9-.9-.4-1.8-1-2.2-1.9zm1.5-4.2H2.4C2.9 3 3.7 2.4 4.6 2c-.3.6-.6 1.2-.7 1.9zM6 10.2c-.4-.6-.8-1.3-1-2.1h2c-.2.8-.6 1.5-1 2.1zm1.2-3.1H4.8c-.1-.4-.1-.7-.1-1.1s.1-.7.1-1.1h2.5c0 .4.1.7.1 1.1s-.1.7-.2 1.1zm.2 2.9c.3-.6.6-1.2.7-1.9h1.5C9.2 9 8.3 9.6 7.4 10zm.9-2.9c.1-.4.1-.7.1-1.1s-.1-.7-.1-1.1h1.8c.1.3.2.7.2 1.1s-.1.7-.2 1.1H8.3z"></path></svg><span>Visa Sponsorship</span></span></div><span class="post-tag highlight">python</span><span class="post-tag">tensorflow</span><div></div></a></div><a class="clc-dismiss" data-clc-click="https://clc.stackoverflow.com/click?an=4wrJfyJy2e-qh-oWqagQJiaB1Qdms0zkeal-4o-hWTbjR787AScCGbgYejYwMDTYMzIyMM1mermeY3YP14eDQkJcDCkH3Pe9snS-l2LPyFZQWZKRnzeb6cViju4_nFMXCQH1FU_8V5VtmWCgC5dnUJq9mv2p7ASTbaUA&amp;cr=299285&amp;ct=-1&amp;sig=zA1PCVOOf7S3-Q" data-clc-meta-target="-1"><svg viewBox="0 0 13.6 13.6"><path d="M11.4 2.3C8.9-.2 4.8-.2 2.3 2.3s-2.5 6.6 0 9.1 6.6 2.5 9.1 0 2.5-6.6 0-9.1zM8.6 9.5L6.8 7.7 5 9.5l-.9-.9 1.8-1.8L4.1 5l.9-.9 1.8 1.8 1.8-1.8.9.9-1.8 1.8 1.8 1.8-.9.9z"></path></svg><span class="clc-tooltip above-left">dismiss this job</span></a></li></ul></div><img src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/impression.gif" class="impression" style="display: none;"></div>
+<script>;window.clc=window.clc||{},window.clc.init=window.clc.init||function(a){var
+ 
+b=window,c=b.document;try{if("function"!=typeof[].indexOf||!window.addEventListener||!a.allowed)return;var
+ d=new 
+RegExp(a.allowed);if(!d.test(location.hostname))return;if(b.clc.options)for(var
+ e in b.clc.options)a[e]=b.clc.options[e];b.clc.cmd="undefined"==typeof 
+b.clc.cmd?[]:b.clc.cmd,b.clc.autoload=b.clc.autoload||function(){"function"==typeof
+ b.clc.load?b.clc.load():b.clc.cmd.push(function(a){a.load()})};var 
+f=a.wv;if(c.hidden&&f)return void 
+c.addEventListener("visibilitychange",function 
+b(){c.hidden||(window.clc.init(a),c.removeEventListener("visibilitychange",b))});b.clc.options=a,a.al&&b.clc.autoload();var
+ 
+g=/Trident/i.test(navigator.userAgent)?a.lib.replace(/(\.min)?\.js(\?v=[0-9a-fA-F]+)?$/,".ie$1.js$2"):a.lib,h=c.createElement("script");h.async=!0,h.src=g,c.body.appendChild(h)}catch(a){}},window.clc.loadDisplayAds=window.clc.loadDisplayAds||function(){function
+ 
+a(b){b.style.height=b.style.maxHeight=b.style.minHeight="auto",b.style.display="IFRAME"===b.tagName?"none":"block",[].forEach.call(b.children,a)}function
+ b(a){new Image().src="https://"+e+"/stalled.gif?"+a}var 
+c=window,d=c.document,e="clc.stackoverflow.com",f={slots:{lb:[[728,90]],mlb:[[728,90]],sb:[[300,250],[300,600]],"tag-sponsorship":[[730,135]]},ids:{"dfp-tlb":"lb","dfp-mlb":"mlb","dfp-tsb":"sb","dfp-tag":"tag-sponsorship","clc-tlb":"lb","clc-mlb":"mlb","clc-tsb":"sb"}},g=/^\/tags\//.test(location.pathname)||/^\/questions\/tagged\//.test(location.pathname)?"tag-pages":"question-pages",h=location.hostname;/^clc\./.test(location.hostname)&&(h="test/dev.stackoverflow.com");var
+ i=[4385506061,4386578282,4386579572];return function(e){var 
+j=(e&&0<e.length?e:Object.keys(f.ids)).map(function(a){return 
+d.getElementById(a)}).filter(function(a){return!!a&&/^\s*$/.test(a.innerHTML)}).map(function(a){return
+ 
+a.id});if(0!==j.length){c.googletag=c.googletag||{},c.googletag.cmd=c.googletag.cmd||[],c.googletag.cmd.push(function(){var
+ 
+e=c.googletag,k=d.createElement("div");k.className="adsbox",k.id="clc-abd",k.style.position="absolute",k.style.pointerEvents="none",k.innerHTML="&nbsp;",d.body.appendChild(k);var
+ 
+l=e.pubads();l.enableSingleRequest(),l.addEventListener("slotRenderEnded",function(c){var
+ e=c.serviceName,f=c.slot,g=c.lineItemId;try{var 
+h=f.getSlotElementId(),j=[];h||j.push("id=0");var 
+k=d.getElementById(h);if(!h||k?k.hasAttribute("data-clc-stalled")&&j.push("st=1"):j.push("el=0"),0!==j.length)return
+ void 
+b(j.join("&"));-1===i.indexOf(g)?k.setAttribute("data-clc-prefilled","true"):a(k),k.setAttribute("data-clc-ready","true")}catch(a){var
+ 
+l=d.getElementById("dfp-tsb")||d.getElementById("clc-tsb");l&&l.setAttribute("data-clc-ready","true"),b("e=1")}});var
+ 
+m=c.dfp_targeting||{};m&&Object.keys(m).forEach(function(a){l.setTargeting(a,m[a])});for(var
+ n=0,o=j;n<o.length;n++){var 
+p=o[n],q=f.ids[p],r=f.slots[q],s="/"+"248424177"+"/"+h+"/"+q+"/"+g,t=e.defineSlot(s,r,p);("tag-sponsorship"===q||"sb"==q)&&t.setCollapseEmptyDiv(!0,!0),t.addService(l),!1}e.enableServices();for(var
+ p,u=0,v=j;u<v.length;u++)p=v[u],e.display(p)});var 
+k=d.createElement("script");k.async=!0,k.src="https://www.googletagservices.com/tag/js/gpt.js",document.body.appendChild(k)}}}(),window.clc.init.call(null,
+ 
+{"lib":"https://cdn.sstatic.net/clc/clc.min.js?v=b0e6e728032a","style":"https://cdn.sstatic.net/clc/styles/clc.min.css?v=b18b3a2258df","u":"https://clc.stackoverflow.com/markup.js","wa":true,"kt":2000,"tto":true,"h":"clc.stackoverflow.com","allowed":"^(((talent\\.)?stackoverflow)|(blog\\.codinghorror)|(serverfault|askubuntu)|([^\\.]+\\.stackexchange))\\.com$","wv":true,"al":false,"ga":false});</script>            <script>
+window.clc_request='ApD41RHTTtUIAAAAACvghgACAAAAAgAAAAAXAAAAfHB5dGhvbnxvcm18c3FsYWxjaGVteXwAuDbZWu2q_Ii7bQ';
+                    clc.autoload();
+                var 
+dfp_targeting={Registered:['false'],'so-tag':['python','orm','sqlalchemy'],'X-Site':['unix.stackexchange.com']};
+                                    clc.loadDisplayAds();
+            </script>
+            
+
+                <div class="module sidebar-related">
+                    <h4 id="h-related">Related</h4>
+                    <div class="related js-gps-related-questions" data-tracker="rq=1">
+                        <div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/1024847?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes answered-accepted extra-large">1643</div></a><a href="https://stackoverflow.com/questions/1024847/add-new-keys-to-a-dictionary?rq=1" class="question-hyperlink">Add new keys to a dictionary?</a></div><div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/1889251?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes answered-accepted default">10</div></a><a href="https://stackoverflow.com/questions/1889251/sqlalchemy-many-to-many-relationship-on-a-single-table?rq=1" class="question-hyperlink">SQLAlchemy Many-to-Many Relationship on a Single Table</a></div><div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/2128505?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes answered-accepted large">186</div></a><a href="https://stackoverflow.com/questions/2128505/whats-the-difference-between-filter-and-filter-by-in-sqlalchemy?rq=1" class="question-hyperlink">What's the difference between filter and filter_by in SQLAlchemy?</a></div><div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/4186062?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes answered-accepted large">243</div></a><a href="https://stackoverflow.com/questions/4186062/sqlalchemy-order-by-descending?rq=1" class="question-hyperlink">SQLAlchemy ORDER BY DESCENDING?</a></div><div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/4201455?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes answered-accepted large">263</div></a><a href="https://stackoverflow.com/questions/4201455/sqlalchemy-whats-the-difference-between-flush-and-commit?rq=1" class="question-hyperlink">SQLAlchemy: What's the difference between flush() and commit()?</a></div><div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/5973553?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes answered-accepted default">20</div></a><a href="https://stackoverflow.com/questions/5973553/sqlalchemy-ordering-by-count-on-a-many-to-many-relationship?rq=1" class="question-hyperlink">SQLAlchemy ordering by count on a many to many relationship</a></div><div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/6542967?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes answered-accepted default">15</div></a><a href="https://stackoverflow.com/questions/6542967/querying-a-many-to-many-relationship-in-sqlalchemy?rq=1" class="question-hyperlink">Querying a many-to-many relationship in SQLAlchemy</a></div><div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/9100367?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes default">1</div></a><a href="https://stackoverflow.com/questions/9100367/many-to-many-relationships-in-sqlalchemy?rq=1" class="question-hyperlink">Many-to-Many Relationships in SQLAlchemy</a></div><div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/22913612?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes default">5</div></a><a href="https://stackoverflow.com/questions/22913612/sqlalchemy-add-a-child-in-many-to-many-relationship-by-ids?rq=1" class="question-hyperlink">SQLAlchemy: add a child in many-to-many relationship by IDs</a></div><div class="spacer js-gps-track"><a href="https://stackoverflow.com/q/28964147?rq=1" title="Vote score (upvotes - downvotes)"><div class="answer-votes answered-accepted default">0</div></a><a href="https://stackoverflow.com/questions/28964147/sqlalchemy-many-to-many-relationships-confusion?rq=1" class="question-hyperlink">SQLAlchemy many to many relationships confusion</a></div>
+                    </div>
+                </div>
+
+<div id="hot-network-questions" class="module tex2jax_ignore">
+    <h4>
+        <a href="https://stackexchange.com/questions?tab=hot" class="js-gps-track" data-gps-track="posts_hot_network.click({ item_type:1, location:11 })">
+            Hot Network Questions
+        </a>
+    </h4>
+    <ul>
+            <li>
+                <div class="favicon favicon-travel" title="Travel Stack Exchange"></div><a href="https://travel.stackexchange.com/questions/107420/should-i-not-use-double-things-in-a-double-room-if-i-have-booked-it-as-a-single" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:273 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Should I not use double things in a double room if I have booked it as a single guest?
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-writers" title="Writers Stack Exchange"></div><a href="https://writers.stackexchange.com/questions/32135/is-wikipedia-trustworthy" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:166 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Is Wikipedia Trustworthy?
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-academia" title="Academia Stack Exchange"></div><a href="https://academia.stackexchange.com/questions/101283/how-much-help-is-a-phd-supervisor-if-you-only-see-them-30-minutes-a-month" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:415 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How much help is a PhD supervisor if you only see them 30 minutes a month?
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-ell" title="English Language Learners Stack Exchange"></div><a href="https://ell.stackexchange.com/questions/151898/agnostic-vs-atheist" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:481 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Agnostic vs Atheist
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-skeptics" title="Skeptics Stack Exchange"></div><a href="https://skeptics.stackexchange.com/questions/40298/did-jodie-foster-say-all-men-over-30-are-full-blown-rapists" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:212 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Did Jodie Foster say all men over 30 are full-blown rapists?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-interpersonal" title="Interpersonal Skills Stack Exchange"></div><a href="https://interpersonal.stackexchange.com/questions/8448/how-do-i-tell-my-parents-i-dont-want-to-go-to-church-over-the-holidays" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:680 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How do I tell my parents "I don't want to go to church" over the holidays?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-writers" title="Writers Stack Exchange"></div><a href="https://writers.stackexchange.com/questions/32231/is-it-better-to-save-each-chapter-in-a-separate-word-document-or-all-in-one-docu" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:166 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Is it better to save each chapter in a separate word document or all in one document
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-puzzling" title="Puzzling Stack Exchange"></div><a href="https://puzzling.stackexchange.com/questions/58488/an-old-postal-rebus" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:559 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    An old postal rebus
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-unix" title="Unix &amp; Linux Stack Exchange"></div><a href="https://unix.stackexchange.com/questions/413614/how-can-i-both-extract-a-specific-line-in-a-text-file-as-well-as-multiple-lines" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:106 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How can I both extract a specific line in a text 
+file as well as multiple lines containing a specific string?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-travel" title="Travel Stack Exchange"></div><a href="https://travel.stackexchange.com/questions/107506/non-immigrant-b2-expired-visa" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:273 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Non-immigrant B2 expired visa
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-electronics" title="Electrical Engineering Stack Exchange"></div><a href="https://electronics.stackexchange.com/questions/347150/transistors-are-hard-to-wrap-my-head-around-with-laws" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:135 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Transistors are hard to wrap my head around with laws
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-puzzling" title="Puzzling Stack Exchange"></div><a href="https://puzzling.stackexchange.com/questions/58524/ali-baba-and-the-10-thieves" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:559 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Ali Baba and the 10 thieves
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-security" title="Information Security Stack Exchange"></div><a href="https://security.stackexchange.com/questions/176197/is-this-account-change-pdf-email-supposedly-from-paypal-an-exploit" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:162 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Is this account change PDF email (supposedly from Paypal) an exploit?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-stats" title="Cross Validated"></div><a href="https://stats.stackexchange.com/questions/320665/why-does-feature-engineering-work" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:65 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Why does feature engineering work ?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-unix" title="Unix &amp; Linux Stack Exchange"></div><a href="https://unix.stackexchange.com/questions/413370/weird-service-with-the-name-carbon-running-everyday-and-occupy-100-cpu" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:106 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Weird service with the name "Carbon" running everyday and occupy 100% CPU
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-sqa" title="Software Quality Assurance &amp; Testing Stack Exchange"></div><a href="https://sqa.stackexchange.com/questions/31237/is-the-software-engineer-in-test-role-out-of-style" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:244 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Is the Software Engineer in Test role out of style?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-interpersonal" title="Interpersonal Skills Stack Exchange"></div><a href="https://interpersonal.stackexchange.com/questions/8523/how-to-get-my-coworkers-and-family-to-respect-my-hobby" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:680 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How To Get My Coworkers and Family To Respect My Hobby
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-mathoverflow" title="MathOverflow"></div><a href="https://mathoverflow.net/questions/289502/where-is-my-mistake-in-calculating-duals" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:504 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Where is my mistake in calculating duals?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-askubuntu" title="Ask Ubuntu"></div><a href="https://askubuntu.com/questions/990560/is-it-possible-to-implement-a-name-booking-system-using-linux-file-permissions" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:89 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Is it possible to implement a "name" booking system using linux file permissions
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-security" title="Information Security Stack Exchange"></div><a href="https://security.stackexchange.com/questions/175977/how-can-i-argue-against-system-is-unhackable-so-why-patch-vulnerabilities" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:162 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How can I argue against: "System is unhackable so why patch vulnerabilities?"
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-crypto" title="Cryptography Stack Exchange"></div><a href="https://crypto.stackexchange.com/questions/54263/are-there-any-asymmetric-cryptographic-primitives-not-relying-on-arithmetic-ov" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:281 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Are there any (asymmetric) cryptographic primitives 
+not relying on arithmetic over prime fields and/or finite fields?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-electronics" title="Electrical Engineering Stack Exchange"></div><a href="https://electronics.stackexchange.com/questions/347172/why-devices-stop-operating-properly-in-extreme-cold" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:135 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Why devices stop operating properly in extreme cold?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-diy" title="Home Improvement Stack Exchange"></div><a href="https://diy.stackexchange.com/questions/129764/splitting-a-220-v-line-into-two-110-v-lines" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:73 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Splitting a 220 V line into two 110 V lines?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-unix" title="Unix &amp; Linux Stack Exchange"></div><a href="https://unix.stackexchange.com/questions/413449/does-bash-provide-support-for-using-pointers" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:106 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Does bash provide support for using pointers?
+                </a>
+
+            </li>
+    </ul>
+
+        
+</div>
+        </div>
+    <div id="feed-link">
+    <div id="feed-link-text">
+        <a href="https://stackoverflow.com/feeds/question/8839211" title="feed of this question and its answers">
+            <svg aria-hidden="true" class="svg-icon iconRss" width="18" height="18" viewBox="0 0 18 18"><path d="M1 3c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3zm14.5 12C15.5 8.1 9.9 2.5 3 2.5V5a10 10 0 0 1 10 10h2.5zm-5 0A7.5 7.5 0 0 0 3 7.5V10a5 5 0 0 1 5 5h2.5zm-5 0A2.5 2.5 0 0 0 3 12.5V15h2.5z"></path></svg>
+            question feed
+        </a>
+    </div>
+</div>
+    </div>
+<script>StackExchange.ready(function(){$.get('/posts/8839211/ivc/2bc9');});</script>
+<noscript><div><img src="/posts/8839211/ivc/2bc9" class="dno" alt="" width="0" height="0"></div></noscript><div style="display:none" id="prettify-lang">lang-py</div></div>
+
+
+        </div>
+    </div><script async="" src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/gpt.js"></script>
+
+    <footer id="footer" class="s-footer js-footer" role="contentinfo">
+        <div class="-container">
+            <div class="g-row">
+                    <div class="-logo">
+
+                        <a href="https://stackoverflow.com/"><svg aria-hidden="true" class="svg-icon native iconLogo" width="150" height="30" viewBox="0 0 150 30"><g><path d="M33.9 18.6l-1.7-.2c-1.3-.1-1.9-.6-1.9-1.6 0-1.1.8-1.8 2.4-1.8 1.1 0 2.1.3 2.8.8l1-1c-1-.8-2.3-1.1-3.8-1.1-2.3 0-3.9 1.2-3.9 3.1 0 1.8 1.1 2.7 3.2 2.9l1.8.2c1.2.1 1.8.6 1.8 1.6 0 1.3-1.1 1.9-2.8 1.9-1.3 0-2.5-.3-3.3-1.2l-1 1c1.2 1.1 2.6 1.5 4.4 1.5 2.6 0 4.3-1.2 4.3-3.2-.2-2-1.5-2.7-3.3-2.9zm13.3-4.8c-1.7 0-2.8.3-3.7 1.5l1 1c.6-.9 1.3-1.2 2.7-1.2 1.9 0 2.7.8 2.7 2.3v1h-3.2c-2.4 0-3.7 1.2-3.7 3.1 0 .8.3 1.6.8 2.2.7.7 1.5 1 3 1 1.4 0 2.2-.3 3.1-1.1v1h1.6v-7.2c-.1-2.4-1.5-3.6-4.3-3.6zm2.7 7c0 .9-.2 1.5-.5 1.8-.7.6-1.5.7-2.4.7-1.7 0-2.4-.6-2.4-1.8 0-1.2.8-1.9 2.4-1.9h3l-.1 1.2zm7.6-5.6c1 0 1.6.3 2.4 1.2l1-1c-1.1-1.2-2-1.6-3.5-1.6-2.7 0-4.7 1.8-4.7 5.5 0 3.6 2 5.5 4.7 5.5 1.5 0 2.4-.4 3.5-1.6l-1.1-1c-.8.9-1.4 1.2-2.4 1.2s-1.9-.4-2.5-1.2c-.5-.7-.7-1.5-.7-2.9 0-1.3.2-2.2.7-2.9.7-.8 1.6-1.2 2.6-1.2zm13.4-1.3H69l-4.8 4.7V9.1h-1.6v15.4h1.6v-3.9l1.9-1.9 3.6 5.8h1.9l-4.4-6.9 3.7-3.7zm7.3-.33c-1.6 0-2.7.6-3.4 1.4-1 1-1.3 2.3-1.3 4.3s.3 3.3 1.3 4.3c.7.7 1.8 1.4 3.4 1.4 1.6 0 2.8-.6 3.4-1.4 1-1 1.3-2.3 1.3-4.3s-.3-3.3-1.3-4.3c-.6-.8-1.7-1.4-3.4-1.4zm1.3 8.3c-.3.3-.7.5-1.3.5-.6 0-1-.2-1.3-.5-.6-.6-.6-1.6-.6-2.7 0-1.2.1-2.1.6-2.7.3-.3.7-.5 1.3-.5.6 0 1 .2 1.3.5.6.6.6 1.5.6 2.7.1 1.2 0 2.2-.6 2.7zm10.8-8.2l-2.2 6.9-2.3-6.9h-2.9l4.1 11.1h2.2l4.1-11.1h-3zm7.6-.1c-2.9 0-4.8 2-4.8 5.7 0 4.5 2.5 5.7 5.1 5.7 2 0 3.1-.6 4.2-1.7l-1.7-1.6c-.7.7-1.3 1-2.5 1-1.6 0-2.4-1-2.4-2.5h6.9v-1.2c0-3.2-1.7-5.4-4.8-5.4zm-2.1 4.6c0-.5.1-.8.3-1.2.3-.7.9-1.2 1.9-1.2.9 0 1.6.5 1.9 1.2.2.4.2.7.3 1.2h-4.4zm11-3.4v-1.1h-2.7v11.1h2.8v-6.7c0-1.4.9-2 1.8-2 .7 0 1 .2 1.5.7l2.1-2.1c-.8-.8-1.5-1-2.6-1-1.3-.1-2.3.4-2.9 1.1zm6.3-2.3v12.3h2.8v-8.8h2v-2.1h-2v-1.2c0-.6.3-1 1-1h1.1v-2.3h-1.6c-2.3 0-3.3 1.6-3.3 3.1zm16.2 1.1c-1.6 0-2.7.6-3.4 1.4-1 1-1.3 2.3-1.3 4.3s.3 3.3 1.3 4.3c.7.7 1.8 1.4 3.4 1.4 1.6 0 2.8-.6 3.4-1.4 1-1 1.3-2.3 1.3-4.3s-.3-3.3-1.3-4.3c-.6-.8-1.8-1.4-3.4-1.4zm1.3 8.3c-.3.3-.7.5-1.3.5-.6 0-1-.2-1.3-.5-.6-.6-.6-1.6-.6-2.7 0-1.2.1-2.1.6-2.7.3-.3.7-.5 1.3-.5.6 0 1 .2 1.3.5.6.6.6 1.5.6 2.7 0 1.2 0 2.2-.6 2.7zm16.5-8.2l-1.8 6.9-2.3-6.9h-2l-2.3 6.9-1.8-6.9H134l3.4 11.1h2.3l2.3-7 2.3 7h2.3l3.4-11.1h-2.9zm-25.1 7.7V9.27h-2.8v12.3c0 1.6 1 3.2 3.2 3.2h1.6v-2.3h-1c-.7 0-1-.4-1-1.1zM41.3 15.6l1.4-1.4h-3v-3.5h-1.6v11.1c0 1.6.9 2.9 2.7 2.9h1.1v-1.3h-.8c-1 0-1.5-.6-1.5-1.6v-6.1h1.7v-.1z" fill="#222426"></path><path fill="#BCBBBB" d="M21 27v-8h3v11H0V19h3v8z"></path><path d="M5.4 19.1l13.56 1.96.17-2.38-13.26-2.55-.47 2.97zm1.8-6.8l12 5.6 1.1-2.4-12-5.6-1.1 2.4zm3.4-5.9l10.2 8.5 1.7-2-10.2-8.5-1.7 2zM17.1.2L15 1.8l7.9 10.6 2.1-1.6L17.1.2zM5 25h14v-3H5v3z" fill="#F48024"></path></g></svg></a>
+                    </div>
+                
+                    <nav class="-nav js-category _visible" data-name="default">
+                        <h5 class="-title"><a href="https://stackoverflow.com/" class="js-gps-track" data-gps-track="footer.click({ location: 2, link: 15})">Stack Overflow</a></h5>
+                        <ul class="-list">
+                            <li class="-item"><a href="https://stackoverflow.com/questions" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 16})">Questions</a></li>
+                                <li class="-item"><a href="https://stackoverflow.com/jobs" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 17})">Jobs</a></li>
+                                <li class="-item"><a href="https://stackoverflow.com/jobs/directory/developer-jobs" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 11})">Developer Jobs Directory</a></li>
+                                     <li class="-item"><a href="https://stackoverflow.com/jobs/salary" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 28})">Salary Calculator</a></li>
+                                                            <li class="-item"><a href="https://stackoverflow.com/help" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 3 })">Help</a></li>
+                                <li class="-item"><a onclick='StackExchange.switchMobile("on")' class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 12 })">Mobile</a></li>
+                        </ul>
+                    </nav>
+                    <nav class="-nav js-category _visible" data-name="default">
+                        <h5 class="-title"><a href="https://www.stackoverflowbusiness.com/?utm_source=so-footer&amp;utm_medium=referral&amp;utm_campaign=brand-activation&amp;utm_term=sotob2b-footer-business-category" class="js-gps-track" data-gps-track="footer.click({ location: 2, link: 19 })">Stack Overflow<br> Business</a></h5>
+                        <ul class="-list">
+                            <li class="-item"><a href="https://www.stackoverflowbusiness.com/talent?utm_source=so-footer&amp;utm_medium=referral&amp;utm_campaign=brand-activation&amp;utm_term=sotob2b-footer-talent" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 20 })">Talent</a></li>
+                            <li class="-item"><a href="https://www.stackoverflowbusiness.com/advertise?utm_source=so-footer&amp;utm_medium=referral&amp;utm_campaign=brand-activation&amp;utm_term=sotob2b-footer-advertise" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 21 })">Ads</a></li>
+                            <li class="-item"><a href="https://www.stackoverflowbusiness.com/enterprise?utm_source=so-footer&amp;utm_medium=referral&amp;utm_campaign=brand-activation&amp;utm_term=sotob2b-footer-enterprise" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 22 })">Enterprise</a></li>
+                        </ul>
+                    </nav>
+                <nav class="-nav js-category _visible" data-name="default">
+                    <h5 class="-title"><a class="js-gps-track" data-gps-track="footer.click({ location: 2, link: 1 })" href="https://stackoverflow.com/company/about">Company</a></h5>
+                    <ul class="-list">
+                            <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 1 })" href="https://stackoverflow.com/company/about">About</a></li>
+                                                <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 27 })" href="https://stackoverflow.com/company/press">Press</a></li>
+                            <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 9 })" href="https://stackoverflow.com/company/work-here">Work Here</a></li>
+                        <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 7 })" href="https://stackexchange.com/legal">Legal</a></li>
+                        <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 8 })" href="https://stackexchange.com/legal/privacy-policy">Privacy Policy</a></li>
+                            <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 13 })" href="https://stackoverflow.com/company/contact">Contact Us</a></li>
+                    </ul>
+                </nav>
+                <div class="-network g-row">
+                    <a href="#" class="-back-trigger js-back"><svg aria-hidden="true" class="svg-icon iconArrowLeftAlt" width="18" height="18" viewBox="0 0 18 18"><path d="M10.58 16L12 14.59 6.4 9 12 3.41 10.57 2l-7 7z"></path></svg></a>
+                    <div>
+                        <h5 class="-title"><a href="https://stackexchange.com/">Stack Exchange<br> Network</a></h5>
+                        <ul class="-list">
+                            <li class="-item"><a href="#" class="-link _expandable js-category-trigger js-gps-track" data-gps-track="footer.click({ location: 2, link: 24 })" data-target="Technology">Technology</a></li>
+                            <li class="-item"><a href="#" class="-link _expandable js-category-trigger js-gps-track" data-gps-track="footer.click({ location: 2, link: 24 })" data-target="Life / Arts">Life / Arts</a></li>
+                            <li class="-item"><a href="#" class="-link _expandable js-category-trigger js-gps-track" data-gps-track="footer.click({ location: 2, link: 24 })" data-target="Culture / Recreation">Culture / Recreation</a></li>
+                            <li class="-item"><a href="#" class="-link _expandable js-category-trigger js-gps-track" data-gps-track="footer.click({ location: 2, link: 24 })" data-target="Science">Science</a></li>
+                            <li class="-item"><a href="#" class="-link _expandable js-category-trigger js-gps-track" data-gps-track="footer.click({ location: 2, link: 24 })" data-target="Other">Other</a></li>
+
+                        </ul>
+                    </div>
+                </div>
+                <nav class="-nav js-category" data-name="Technology">
+        <ul class="-list">
+                <li class="-item"><a href="https://stackoverflow.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="professional and enthusiast programmers">Stack Overflow</a></li>
+                <li class="-item"><a href="https://serverfault.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="system and network administrators">Server Fault</a></li>
+                <li class="-item"><a href="https://superuser.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="computer enthusiasts and power users">Super User</a></li>
+                <li class="-item"><a href="https://webapps.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="power users of web applications">Web Applications</a></li>
+                <li class="-item"><a href="https://askubuntu.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="Ubuntu users and developers">Ask Ubuntu</a></li>
+                <li class="-item"><a href="https://webmasters.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="pro webmasters">Webmasters</a></li>
+                <li class="-item"><a href="https://gamedev.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="professional and independent game developers">Game Development</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="https://tex.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="users of TeX, LaTeX, ConTeXt, and related typesetting systems">TeX - LaTeX</a></li>
+                <li class="-item"><a href="https://softwareengineering.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="professionals, academics, and students working within the systems development life cycle">Software Engineering</a></li>
+                <li class="-item"><a href="https://unix.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="users of Linux, FreeBSD and other Un*x-like operating systems">Unix &amp; Linux</a></li>
+                <li class="-item"><a href="https://apple.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="power users of Apple hardware and software">Ask Different (Apple)</a></li>
+                <li class="-item"><a href="https://wordpress.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="WordPress developers and administrators">WordPress Development</a></li>
+                <li class="-item"><a href="https://gis.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="cartographers, geographers and GIS professionals">Geographic Information Systems</a></li>
+                <li class="-item"><a href="https://electronics.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="electronics and electrical engineering professionals, students, and enthusiasts">Electrical Engineering</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="https://android.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="enthusiasts and power users of the Android operating system">Android Enthusiasts</a></li>
+                <li class="-item"><a href="https://security.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="information security professionals">Information Security</a></li>
+                <li class="-item"><a href="https://dba.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="database professionals who wish to improve their database skills and learn from others in the community">Database Administrators</a></li>
+                <li class="-item"><a href="https://drupal.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="Drupal developers and administrators">Drupal Answers</a></li>
+                <li class="-item"><a href="https://sharepoint.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="SharePoint enthusiasts">SharePoint</a></li>
+                <li class="-item"><a href="https://ux.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="user experience researchers and experts">User Experience</a></li>
+                <li class="-item"><a href="https://mathematica.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="users of Wolfram Mathematica">Mathematica</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="https://salesforce.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="Salesforce administrators, implementation experts, developers and anybody in-between">Salesforce</a></li>
+                <li class="-item"><a href="https://expressionengine.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="administrators, end users, developers and designers for ExpressionEngine® CMS">ExpressionEngine® Answers</a></li>
+                <li class="-item"><a href="https://pt.stackoverflow.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="programadores profissionais e entusiastas">Stack Overflow em Português</a></li>
+                <li class="-item"><a href="https://blender.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="people who use Blender to create 3D graphics, animations, or games">Blender</a></li>
+                <li class="-item"><a href="https://networkengineering.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="network engineers">Network Engineering</a></li>
+                <li class="-item"><a href="https://crypto.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="software developers, mathematicians and others interested in cryptography">Cryptography</a></li>
+                <li class="-item"><a href="https://codereview.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="peer programmer code reviews">Code Review</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="https://magento.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="users of the Magento e-Commerce platform">Magento</a></li>
+                <li class="-item"><a href="https://softwarerecs.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="people seeking specific software recommendations">Software Recommendations</a></li>
+                <li class="-item"><a href="https://dsp.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="practitioners of the art and science of signal, image and video processing">Signal Processing</a></li>
+                <li class="-item"><a href="https://emacs.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="those using, extending or developing Emacs">Emacs</a></li>
+                <li class="-item"><a href="https://raspberrypi.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="users and developers of hardware and software for Raspberry Pi">Raspberry Pi</a></li>
+                <li class="-item"><a href="https://ru.stackoverflow.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="программистов">Stack Overflow на русском</a></li>
+                <li class="-item"><a href="https://codegolf.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="programming puzzle enthusiasts and code golfers">Programming Puzzles &amp; Code Golf</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="https://es.stackoverflow.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="programadores y profesionales de la informática">Stack Overflow en español</a></li>
+                <li class="-item"><a href="https://ethereum.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="users of Ethereum, the decentralized application platform and smart contract enabled blockchain">Ethereum</a></li>
+                <li class="-item"><a href="https://datascience.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="Data science professionals, Machine Learning specialists, and those interested in learning more about the field">Data Science</a></li>
+                <li class="-item"><a href="https://arduino.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="developers of open-source hardware and software that is compatible with Arduino">Arduino</a></li>
+                <li class="-item"><a href="https://bitcoin.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="Bitcoin crypto-currency enthusiasts">Bitcoin</a></li>
+                            <li class="-item">
+                    <a href="https://stackexchange.com/sites#technology" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 26 })">
+                        <strong>
+                            more (26)
+                        </strong>
+                    </a>
+                </li>
+        </ul>
+    </nav>
+    <nav class="-nav js-category" data-name="Life / Arts">
+        <ul class="-list">
+                <li class="-item"><a href="https://photo.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="professional, enthusiast and amateur photographers">Photography</a></li>
+                <li class="-item"><a href="https://scifi.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="science fiction and fantasy enthusiasts">Science Fiction &amp; Fantasy</a></li>
+                <li class="-item"><a href="https://graphicdesign.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="Graphic Design professionals, students, and enthusiasts">Graphic Design</a></li>
+                <li class="-item"><a href="https://movies.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="movie and tv enthusiasts">Movies &amp; TV</a></li>
+                <li class="-item"><a href="https://music.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="musicians, students, and enthusiasts">Music: Practice &amp; Theory</a></li>
+                <li class="-item"><a href="https://worldbuilding.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="writers/artists using science, geography and culture to construct imaginary worlds and settings">Worldbuilding</a></li>
+                <li class="-item"><a href="https://cooking.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="professional and amateur chefs">Seasoned Advice (cooking)</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Life / Arts"><ul class="-list">
+                <li class="-item"><a href="https://diy.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="contractors and serious DIYers">Home Improvement</a></li>
+                <li class="-item"><a href="https://money.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="people who want to be financially literate">Personal Finance &amp; Money</a></li>
+                <li class="-item"><a href="https://academia.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="academics and those enrolled in higher education">Academia</a></li>
+                <li class="-item"><a href="https://law.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="legal professionals, students, and others with experience or interest in law">Law</a></li>
+                            <li class="-item">
+                    <a href="https://stackexchange.com/sites#lifearts" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 26 })">
+                        <strong>
+                            more (16)
+                        </strong>
+                    </a>
+                </li>
+        </ul>
+    </nav>
+    <nav class="-nav js-category" data-name="Culture / Recreation">
+        <ul class="-list">
+                <li class="-item"><a href="https://english.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="linguists, etymologists, and serious English language enthusiasts">English Language &amp; Usage</a></li>
+                <li class="-item"><a href="https://skeptics.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="scientific skepticism">Skeptics</a></li>
+                <li class="-item"><a href="https://judaism.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="those who base their lives on Jewish law and tradition and anyone interested in learning more">Mi Yodeya (Judaism)</a></li>
+                <li class="-item"><a href="https://travel.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="road warriors and seasoned travelers">Travel</a></li>
+                <li class="-item"><a href="https://christianity.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="committed Christians, experts in Christianity and those interested in learning more">Christianity</a></li>
+                <li class="-item"><a href="https://ell.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="speakers of other languages learning English">English Language Learners</a></li>
+                <li class="-item"><a href="https://japanese.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="students, teachers, and linguists wanting to discuss the finer points of the Japanese language">Japanese Language</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Culture / Recreation"><ul class="-list">
+                <li class="-item"><a href="https://gaming.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="passionate videogamers on all platforms">Arqade (gaming)</a></li>
+                <li class="-item"><a href="https://bicycles.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="people who build and repair bicycles, people who train cycling, or commute on bicycles">Bicycles</a></li>
+                <li class="-item"><a href="https://rpg.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="gamemasters and players of tabletop, paper-and-pencil role-playing games">Role-playing Games</a></li>
+                <li class="-item"><a href="https://anime.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="anime and manga fans">Anime &amp; Manga</a></li>
+                <li class="-item"><a href="https://puzzling.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="those who create, solve, and study puzzles">Puzzling</a></li>
+                <li class="-item"><a href="https://mechanics.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="mechanics and DIY enthusiast owners of cars, trucks, and motorcycles">Motor Vehicle Maintenance &amp; Repair</a></li>
+                            <li class="-item">
+                    <a href="https://stackexchange.com/sites#culturerecreation" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 26 })">
+                        <strong>
+                            more (32)
+                        </strong>
+                    </a>
+                </li>
+        </ul>
+    </nav>
+    <nav class="-nav js-category" data-name="Science">
+        <ul class="-list">
+                <li class="-item"><a href="https://mathoverflow.net/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="professional mathematicians">MathOverflow</a></li>
+                <li class="-item"><a href="https://math.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="people studying math at any level and professionals in related fields">Mathematics</a></li>
+                <li class="-item"><a href="https://stats.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="people interested in statistics, machine learning, data analysis, data mining, and data visualization">Cross Validated (stats)</a></li>
+                <li class="-item"><a href="https://cstheory.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="theoretical computer scientists and researchers in related fields">Theoretical Computer Science</a></li>
+                <li class="-item"><a href="https://physics.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="active researchers, academics and students of physics">Physics</a></li>
+                <li class="-item"><a href="https://chemistry.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="scientists, academics, teachers and students">Chemistry</a></li>
+                <li class="-item"><a href="https://biology.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="biology researchers, academics, and students">Biology</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Science"><ul class="-list">
+                <li class="-item"><a href="https://cs.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="students, researchers and practitioners of computer science">Computer Science</a></li>
+                <li class="-item"><a href="https://philosophy.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="those interested in the study of the fundamental nature of knowledge, reality, and existence">Philosophy</a></li>
+                            <li class="-item">
+                    <a href="https://stackexchange.com/sites#science" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 26 })">
+                        <strong>
+                            more (10)
+                        </strong>
+                    </a>
+                </li>
+        </ul>
+    </nav>
+    <nav class="-nav js-category" data-name="Other">
+        <ul class="-list">
+                <li class="-item"><a href="https://meta.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="meta-discussion of the Stack Exchange family of Q&amp;A websites">Meta Stack Exchange</a></li>
+                <li class="-item"><a href="https://stackapps.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="apps, scripts, and development with the Stack Exchange API">Stack Apps</a></li>
+                <li class="-item"><a href="https://api.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="programmatic interaction with Stack Exchange sites">API</a></li>
+                <li class="-item"><a href="https://data.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="querying Stack Exchange data using SQL">Data</a></li>
+                <li class="-item"><a href="https://area51.stackexchange.com/" class="-link js-gps-track" data-gps-track="footer.click({ location: 2, link: 25 })" title="proposing new sites in the Stack Exchange network">Area 51</a></li>
+                    </ul>
+    </nav>
+                <div class="-copyright g-row jc-end">
+                    <div class="g-column jc-sp-between">
+                        <ul class="-list">
+                            <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link:4 })" href="https://stackoverflow.blog/?blb=1">Blog</a></li>
+                            <li class="-item"><a href="https://www.facebook.com/officialstackoverflow/" class="-link">Facebook</a></li>
+                            <li class="-item"><a href="https://twitter.com/stackoverflow" class="-link">Twitter</a></li>
+                            <li class="-item"><a href="https://linkedin.com/company/stack-overflow" class="-link">LinkedIn</a></li>
+                        </ul>
+
+                        <div>
+                            <p>
+site design / logo © 2017 Stack Exchange Inc; user contributions licensed under <a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="license" class="-link">cc by-sa 3.0</a>
+                    with <a href="https://stackoverflow.blog/2009/06/25/attribution-required/" rel="license" class="-link">attribution required</a>.
+                                <span id="svnrev">rev&nbsp;2017.12.22.28257</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                    </div>
+    </footer><div class="adsbox" id="clc-abd" style="position: absolute; pointer-events: none;">&nbsp;</div>
+
+    <noscript>
+        <div id="noscript-warning">Stack Overflow works best with JavaScript enabled
+            <img src="https://pixel.quantserve.com/pixel/p-c1rF4kxgLUzNc.gif" alt="" class="dno">
+        </div>
+    </noscript>
+
+    <script>
+            (function(i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r; i[r] = i[r] || 
+function() { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new
+ Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = 
+g; m.parentNode.insertBefore(a, m);
+            })(window, document, 'script', 
+'https://www.google-analytics.com/analytics.js', 'ga');
+                ga('create', 'UA-5620270-1');
+                ga('set', 'dimension2', '|python|orm|sqlalchemy|');
+                ga('send', 'pageview');
+                    
+            var _qevents = _qevents || [],
+            _comscore = _comscore || [];
+            (function() {
+                var ssl = 'https:' == document.location.protocol,
+                    s = document.getElementsByTagName('script')[0],
+                    qc = document.createElement('script');
+                 qc.async = true;
+                    qc.src = (ssl ? 'https://secure' : 'http://edge') + 
+'.quantserve.com/quant.js';
+                    s.parentNode.insertBefore(qc, s);
+                    _qevents.push({ qacct: "p-c1rF4kxgLUzNc" });
+                                 var sc = 
+document.createElement('script');
+                    sc.async = true;
+                    sc.src = (ssl ? 'https://sb' : 'http://b') + 
+'.scorecardresearch.com/beacon.js';
+                    s.parentNode.insertBefore(sc, s);
+                    _comscore.push({ c1: "2", c2: "17440561" });
+            })();
+            
+
+    </script>
+        
+    
+    
+<iframe id="google_osd_static_frame_1529580829279" name="google_osd_static_frame" style="display: none; width: 0px; height: 0px;"></iframe><script async="" src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/clc.js"></script><script src="python%20-%20sqlalchemy%20add%20child%20in%20one-to-many%20relationship%20-%20Stack%20Overflow_files/markup.js" async=""></script></body></html>

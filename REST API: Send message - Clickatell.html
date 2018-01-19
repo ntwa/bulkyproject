@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths" style="" lang="en"><!--<![endif]--><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><style id="__react-native-style">/* React Native */
+html {font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:rgba(0,0,0,0)}
+body {margin:0}
+button::-moz-focus-inner, input::-moz-focus-inner {border:0;padding:0}
+input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {display:none}
+.__style_df {display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex}
+.__style_pea, .__style_pebo, .__style_pebn * {pointer-events:auto}
+.__style_pen, .__style_pebo *, .__style_pen {pointer-events:none}</style>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<link rel="icon" type="image/png" sizes="16x16" href="https://www.clickatell.com/favicon.png">
+<link href="REST%20API:%20Send%20message%20-%20Clickatell_files/fonts.css" rel="stylesheet">
+<link rel="stylesheet" href="REST%20API:%20Send%20message%20-%20Clickatell_files/font-awesome.css">
+<link rel="stylesheet" href="REST%20API:%20Send%20message%20-%20Clickatell_files/bootstrap.css">
+<link rel="stylesheet" href="REST%20API:%20Send%20message%20-%20Clickatell_files/bootstrap-theme.css">
+<link rel="stylesheet" href="REST%20API:%20Send%20message%20-%20Clickatell_files/dropkick.css">
+<link rel="stylesheet" href="REST%20API:%20Send%20message%20-%20Clickatell_files/slick.css">
+<link rel="stylesheet" href="REST%20API:%20Send%20message%20-%20Clickatell_files/flag-icon.css">
+<link rel="stylesheet" href="REST%20API:%20Send%20message%20-%20Clickatell_files/main.css">
+<link rel="stylesheet" href="REST%20API:%20Send%20message%20-%20Clickatell_files/styles.css"><meta name="google-site-verification" content="_HdsiXD1zVwBxj34kpG8C4PVN2uTlV-_807PB5E8r_I">
+
+<title>REST API: Send message - Clickatell</title>
+
+<!-- This site is optimized with the Yoast SEO Premium plugin v4.0.1 - https://yoast.com/wordpress/plugins/seo/ -->
+<meta name="description" content="Find out more about the Send Message command in our REST API and the server response for JSON and XML formats.">
+<meta name="robots" content="noodp">
+<link rel="canonical" href="https://www.clickatell.com/developers/api-documentation/rest-api-send-message/">
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="REST API: Send message - Clickatell">
+<meta property="og:description" content="Find out more about the Send Message command in our REST API and the server response for JSON and XML formats.">
+<meta property="og:url" content="https://www.clickatell.com/developers/api-documentation/rest-api-send-message/">
+<meta property="og:site_name" content="Clickatell">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:description" content="Find out more about the Send Message command in our REST API and the server response for JSON and XML formats.">
+<meta name="twitter:title" content="REST API: Send message - Clickatell">
+<meta property="DC.date.issued" content="2016-11-11T12:58:14+02:00">
+<!-- / Yoast SEO Premium plugin. -->
+
+<link rel="dns-prefetch" href="https://s.w.org/">
+<link rel="https://api.w.org/" href="https://www.clickatell.com/wp-json/">
+<link rel="alternate" type="application/json+oembed" href="https://www.clickatell.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.clickatell.com%2Fdevelopers%2Fapi-documentation%2Frest-api-send-message%2F">
+<link rel="alternate" type="text/xml+oembed" href="https://www.clickatell.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.clickatell.com%2Fdevelopers%2Fapi-documentation%2Frest-api-send-message%2F&amp;format=xml">
+<script id="twitter-wjs" src="REST%20API:%20Send%20message%20-%20Clickatell_files/widgets.js"></script><script src="REST%20API:%20Send%20message%20-%20Clickatell_files/482481518817721" async=""></script><script src="REST%20API:%20Send%20message%20-%20Clickatell_files/iwl.js" async=""></script><script src="REST%20API:%20Send%20message%20-%20Clickatell_files/834687473235520" async=""></script><script async="" src="REST%20API:%20Send%20message%20-%20Clickatell_files/fbevents.js"></script><script async="" src="REST%20API:%20Send%20message%20-%20Clickatell_files/16723.js"></script><script type="text/javascript" async="" src="REST%20API:%20Send%20message%20-%20Clickatell_files/insight.js"></script><script type="text/javascript" async="" src="REST%20API:%20Send%20message%20-%20Clickatell_files/conversion_async.js"></script><script type="text/javascript" async="" src="REST%20API:%20Send%20message%20-%20Clickatell_files/analytics.js"></script><script async="" src="REST%20API:%20Send%20message%20-%20Clickatell_files/gtm.js"></script><script async="" src="REST%20API:%20Send%20message%20-%20Clickatell_files/16723.js"></script><script type="text/javascript">
+
+//<![CDATA[
+
+var themosis = {
+
+ajaxurl: 'https://www.clickatell.com/cms/wp-admin/admin-ajax.php',
+
+};
+
+//]]>
+
+</script><link rel="icon" href="https://www.clickatell.com/content/uploads/2016/11/Favicon2.png" sizes="32x32">
+<link rel="icon" href="https://www.clickatell.com/content/uploads/2016/11/Favicon2.png" sizes="192x192">
+<link rel="apple-touch-icon-precomposed" href="https://www.clickatell.com/content/uploads/2016/11/Favicon2.png">
+<meta name="msapplication-TileImage" content="https://www.clickatell.com/content/uploads/2016/11/Favicon2.png">
+		<style type="text/css" id="wp-custom-css">
+			/*
+You can add your own CSS here.
+
+Click the help icon above to learn more.
+*/
+/* SMS */
+    .page-id-16176 {}
+
+        .page-id-16176 h1 {
+            color: #1889ae;
+        }
+
+        .page-id-16176 strong {
+            color: #7a7d7e;
+            display: block;
+        }
+
+        .page-id-16176 .col-left h1:first-child {
+            margin-top: 20px;
+        }
+
+        .page-id-16176 #s1 section {}
+
+            .page-id-16176 #s1 p {
+                margin-bottom: 0;
+            }
+
+        .page-id-16176 #s7 section {
+            padding-bottom: 0;
+        }
+
+            .page-id-16176 #s7 h1 {
+                margin-top: 15px;
+            }
+
+            .page-id-16176 #s7 p > strong {
+                margin-bottom: 23px;
+            }
+
+        .page-id-16176 #s9 section {}
+
+            .page-id-16176 #s9 h3 {
+                margin-bottom: 0;
+            }
+
+        .page-id-16176 #s12 section {}
+
+            .page-id-16176 #s12 .carousel {
+                width: 100%;
+                height: auto;
+            }
+
+                .page-id-16176 #s12 .right.slider-carousel-control {
+                    right: 0px;
+                }
+
+                .page-id-16176 #s12 .left.slider-carousel-control {
+                    left: 0px;
+                }
+
+                .page-id-16176 #s12 .right.slider-carousel-control,
+                .page-id-16176 #s12 .left.slider-carousel-control {
+                    margin-top: auto;
+                }
+
+                .page-id-16176 #s12 .carousel h1 {
+                    font-size: 32px;
+                    line-height: 38px;
+                }
+
+            .page-id-16176 #s12 section {}
+
+                .page-id-16176 #s13 p {
+                    margin-bottom: 0;
+                }
+                
+            .page-id-16176 #s15 section {}
+
+                .page-id-16176 #s15 .col-md-12 {
+                    text-align: left!important;
+                }
+
+                .page-id-16176 #s15 .list.plain {
+                    margin-bottom: 55px;
+                }
+
+                    .page-id-16176 #s15 .list.plain p {
+                        font-size: inherit;
+                        line-height: 13px;
+                    }
+
+                        .page-id-16176 #s15 .list.plain strong {
+                            padding-left: 10px;
+                        }
+
+                        .page-id-16176 #s15 .list.plain .tick {
+                            top: 15px;
+                            color: #a7a9aa;
+                        }
+
+                .page-id-16176 #s15 h4 {
+                    font-size: 25px;
+                }
+
+        .page-id-16176 #s8 h3,
+        .page-id-16176 #s10 h3 {
+            margin-bottom: 20px;
+        }
+
+        .page-id-16176 #s8 p,
+        .page-id-16176 #s10 p {
+            margin-bottom: 5px;
+        }
+
+        .page-id-16176 #s2 section,
+        .page-id-16176 #s4 section,
+        .page-id-16176 #s8 section,
+        .page-id-16176 #s15 section {
+            padding-top: 0;
+        }
+
+        .page-id-16176 .bg h1,
+        .page-id-16176 .bg strong {
+            color: #fff;
+        }
+
+        .page-id-16176 #s2 .col-left,
+        .page-id-16176 #s5 .col-left,
+        .page-id-16176 #s9 .col-left {
+            padding-left: 70px;
+        }
+
+        .page-id-16176 #s14 .col-left,
+        .page-id-16176 #s15 .col-md-12 {
+            padding-left: 118px;
+        }
+
+
+
+#sms2
+/*
+You can add your own CSS here.
+
+Click the help icon above to learn more.
+*/
+/* SMS */
+    .page-id-16201 {}
+
+        .page-id-16201 h1 {
+            color: #1889ae;
+        }
+
+        .page-id-16201 strong {
+            color: #7a7d7e;
+            display: block;
+        }
+
+        .page-id-16201 .col-left h1:first-child {
+            margin-top: 20px;
+        }
+
+        .page-id-16201 #s1 section {}
+
+            .page-id-16201 #s1 p {
+                margin-bottom: 0;
+            }
+
+        .page-id-16201 #s7 section {
+            padding-bottom: 0;
+        }
+
+            .page-id-16201 #s7 h1 {
+                margin-top: 15px;
+            }
+
+            .page-id-16201 #s7 p > strong {
+                margin-bottom: 23px;
+            }
+
+        .page-id-16201 #s9 section {}
+
+            .page-id-16201 #s9 h3 {
+                margin-bottom: 0;
+            }
+
+        .page-id-16201 #s12 section {}
+
+            .page-id-16201 #s12 .carousel {
+                width: 100%;
+                height: auto;
+            }
+
+                .page-id-16201 #s12 .right.slider-carousel-control {
+                    right: 0px;
+                }
+
+                .page-id-16201 #s12 .left.slider-carousel-control {
+                    left: 0px;
+                }
+
+                .page-id-16201 #s12 .right.slider-carousel-control,
+                .page-id-16201 #s12 .left.slider-carousel-control {
+                    margin-top: auto;
+                }
+
+                .page-id-16201 #s12 .carousel h1 {
+                    font-size: 32px;
+                    line-height: 38px;
+                }
+
+            .page-id-16201 #s12 section {}
+
+                .page-id-16201 #s13 p {
+                    margin-bottom: 0;
+                }
+                
+            .page-id-16201 #s15 section {}
+
+                .page-id-16201 #s15 .col-md-12 {
+                    text-align: left!important;
+                }
+
+                .page-id-16201 #s15 .list.plain {
+                    margin-bottom: 55px;
+                }
+
+                    .page-id-16201 #s15 .list.plain p {
+                        font-size: inherit;
+                        line-height: 13px;
+                    }
+
+                        .page-id-16201 #s15 .list.plain strong {
+                            padding-left: 10px;
+                        }
+
+                        .page-id-16201 #s15 .list.plain .tick {
+                            top: 15px;
+                            color: #a7a9aa;
+                        }
+
+                .page-id-16201 #s15 h4 {
+                    font-size: 25px;
+                }
+
+        .page-id-16201 #s8 h3,
+        .page-id-16201 #s10 h3 {
+            margin-bottom: 20px;
+        }
+
+        .page-id-16201 #s8 p,
+        .page-id-16201 #s10 p {
+            margin-bottom: 5px;
+        }
+
+        .page-id-16201 #s2 section,
+        .page-id-16201 #s4 section,
+        .page-id-16201 #s8 section,
+        .page-id-16201 #s15 section {
+            padding-top: 0;
+        }
+
+        .page-id-16201 .bg h1,
+        .page-id-16201 .bg strong {
+            color: #fff;
+        }
+
+        .page-id-16201 #s2 .col-left,
+        .page-id-16201 #s5 .col-left,
+        .page-id-16201 #s9 .col-left {
+            padding-left: 70px;
+        }
+
+        .page-id-16201 #s14 .col-left,
+        .page-id-16201 #s15 .col-md-12 {
+            padding-left: 118px;
+        }
+#sms2
+/*
+You can add your own CSS here.
+
+Click the help icon above to learn more.
+*/
+/* SMS Gateway*/
+    .page-id-16507 {}
+
+        .page-id-16507 h1 {
+            color: #1889ae;
+        }
+
+        .page-id-16507 strong {
+            color: #7a7d7e;
+            display: block;
+        }
+
+        .page-id-16507 .col-left h1:first-child {
+            margin-top: 20px;
+        }
+
+        .page-id-16507 #s1 section {}
+
+            .page-id-16507 #s1 p {
+                margin-bottom: 0;
+            }
+
+        .page-id-16507 #s7 section {
+            padding-bottom: 0;
+        }
+
+            .page-id-16507 #s7 h1 {
+                margin-top: 15px;
+            }
+
+            .page-id-16507 #s7 p > strong {
+                margin-bottom: 23px;
+            }
+
+        .page-id-16507 #s9 section {}
+
+            .page-id-16507 #s9 h3 {
+                margin-bottom: 0;
+            }
+
+        .page-id-16507 #s12 section {}
+
+            .page-id-16507 #s12 .carousel {
+                width: 100%;
+                height: auto;
+            }
+
+                .page-id-16507 #s12 .right.slider-carousel-control {
+                    right: 0px;
+                }
+
+                .page-id-16507 #s12 .left.slider-carousel-control {
+                    left: 0px;
+                }
+
+                .page-id-16507 #s12 .right.slider-carousel-control,
+                .page-id-16507 #s12 .left.slider-carousel-control {
+                    margin-top: auto;
+                }
+
+                .page-id-16507 #s12 .carousel h1 {
+                    font-size: 32px;
+                    line-height: 38px;
+                }
+
+            .page-id-16507 #s12 section {}
+
+                .page-id-16507 #s13 p {
+                    margin-bottom: 0;
+                }
+                
+            .page-id-16507 #s15 section {}
+
+                .page-id-16507 #s15 .col-md-12 {
+                    text-align: left!important;
+                }
+
+                .page-id-16507 #s15 .list.plain {
+                    margin-bottom: 55px;
+                }
+
+                    .page-id-16507 #s15 .list.plain p {
+                        font-size: inherit;
+                        line-height: 13px;
+                    }
+
+                        .page-id-16507 #s15 .list.plain strong {
+                            padding-left: 10px;
+                        }
+
+                        .page-id-16507 #s15 .list.plain .tick {
+                            top: 15px;
+                            color: #a7a9aa;
+                        }
+
+                .page-id-16507 #s15 h4 {
+                    font-size: 25px;
+                }
+
+        .page-id-16507 #s8 h3,
+        .page-id-16507 #s10 h3 {
+            margin-bottom: 20px;
+        }
+
+        .page-id-16507 #s8 p,
+        .page-id-16507 #s10 p {
+            margin-bottom: 5px;
+        }
+
+        .page-id-16507 #s2 section,
+        .page-id-16507 #s4 section,
+        .page-id-16507 #s8 section,
+        .page-id-16507 #s15 section {
+            padding-top: 0;
+        }
+
+        .page-id-16507 .bg h1,
+        .page-id-16507 .bg strong {
+            color: #fff;
+        }
+
+        .page-id-16507 #s2 .col-left,
+        .page-id-16507 #s5 .col-left,
+        .page-id-16507 #s9 .col-left {
+            padding-left: 70px;
+        }
+
+        .page-id-16507 #s14 .col-left,
+        .page-id-16507 #s15 .col-md-12 {
+            padding-left: 118px;
+        }		</style>
+	    <link rel="stylesheet" href="REST%20API:%20Send%20message%20-%20Clickatell_files/mono-blue.css">
+
+<script src="REST%20API:%20Send%20message%20-%20Clickatell_files/modernizr-2.js"></script>
+
+<!-- Start Visual Website Optimizer Asynchronous Code -->
+<script type="text/javascript">
+var _vwo_code=(function(){
+var account_id=141302,
+settings_tolerance=2000,
+library_tolerance=2500,
+use_existing_jquery=false,
+// DO NOT EDIT BELOW THIS LINE
+f=false,d=document;return{use_existing_jquery:function(){return use_existing_jquery;},library_tolerance:function(){return library_tolerance;},finish:function(){if(!f){f=true;var a=d.getElementById('_vis_opt_path_hides');if(a)a.parentNode.removeChild(a);}},finished:function(){return f;},load:function(a){var b=d.createElement('script');b.src=a;b.type='text/javascript';b.innerText;b.onerror=function(){_vwo_code.finish();};d.getElementsByTagName('head')[0].appendChild(b);},init:function(){settings_timer=setTimeout('_vwo_code.finish()',settings_tolerance);var a=d.createElement('style'),b='body{opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important;}',h=d.getElementsByTagName('head')[0];a.setAttribute('id','_vis_opt_path_hides');a.setAttribute('type','text/css');if(a.styleSheet)a.styleSheet.cssText=b;else a.appendChild(d.createTextNode(b));h.appendChild(a);this.load('//dev.visualwebsiteoptimizer.com/j.php?a='+account_id+'&u='+encodeURIComponent(d.URL)+'&r='+Math.random());return settings_timer;}};}());_vwo_settings_timer=_vwo_code.init();
+</script><script src="REST%20API:%20Send%20message%20-%20Clickatell_files/j.js" type="text/javascript"></script>
+<!-- End Visual Website Optimizer Asynchronous Code -->
+
+<script>/*<![CDATA[*/(function(w,a,b,d,s){w[a]=w[a]||{};w[a][b]=w[a][b]||{q:[],track:function(r,e,t){this.q.push({r:r,e:e,t:t||+new Date});}};var e=d.createElement(s);var f=d.getElementsByTagName(s)[0];e.async=1;e.src='//marketing.clickatell.com/cdnr/92/acton/bn/tracker/16723';f.parentNode.insertBefore(e,f);})(window,'ActOn','Beacon',document,'script');ActOn.Beacon.track();/*]]>*/</script>
+<script type="application/ld+json">
+{ "@context" : "http://schema.org",
+"@type" : "Organization",
+"url" : "https://www.clickatell.com/",
+"logo" : "https://www.clickatell.com/content/uploads/2016/11/Clickatell-Logo-white-310x276-1.jpg",
+"email": "support@clickatell.com",
+"employee": "Deon van Heerden",
+"sameAs" : [
+"https://twitter.com/clickatell",
+"https://www.facebook.com/pages/Clickatell/187073743959",
+"https://www.linkedin.com/company/clickatell",
+"https://www.youtube.com/channel/UCkytCEUxs9-o8dM4GmbNNoQ"
+],
+"contactPoint" : [
+{ "@type" : "ContactPoint",
+"telephone" : "+1-650-622480",
+"contactType" : "customer service",
+"areaServed" : [ "AU","CA","DK","GB","IE","IN","NL","NO","NZ","SE","SG","US" ]
+} ,{
+"@type" : "ContactPoint",
+"telephone" : "+27-21-910-7700",
+"contactType" : "customer service",
+"areaServed" : "ZA"
+}],
+"address" :
+  [{"@type" : "PostalAddress",
+      "addressCountry" : "United States",
+    "addressRegion": "CA",
+    "postalCode": "94065",
+    "streetAddress": "900 Island Dr #202, Redwood City"
+    },
+    {"@type" : "PostalAddress",
+    "addressCountry" : "South Africa",
+    "addressLocality" : "Cape Town",
+    "addressRegion" : "Western Cape",
+    "postalCode" : "7530",
+    "streetAddress": "100 Edward Rd, Bo Oakdale"
+    }]
+}
+</script>
+<script async="" src="REST%20API:%20Send%20message%20-%20Clickatell_files/hotjar-157062.js"></script><script src="REST%20API:%20Send%20message%20-%20Clickatell_files/a"></script><script async="" src="REST%20API:%20Send%20message%20-%20Clickatell_files/modules-526d80f8c01454f84b75838f21c8706e.js"></script><style type="text/css">iframe#_hjRemoteVarsFrame {display: none !important; width: 1px !important; height: 1px !important; opacity: 0 !important; pointer-events: none !important;}</style></head>
+<body class="developers-template-default single single-developers postid-12285 post-rest-api-send-message" id="template-developers">
+	<script>dataLayer = [];</script>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-9RBL');</script>
+<!-- End Google Tag Manager -->    <header id="header" class="small bg-blue"> <div class="container">
+    <div class="row">
+        <div id="clickatell-main-nav" class="col-md-12">
+            <a class="close-nav pull-left" data-toggle="collapse" data-target="#navbar" aria-expanded="true" aria-controls="navbar"></a>
+                        <nav class="secondary">
+                <ul>
+                    <li class="search-header"><form id="search-header" class="hidden-xs" novalidate="" data-parsley-validate="data-parsley-validate" role="search" action="https://www.clickatell.com/search-results" method="GET" accept-charset="UTF-8">    <input class="form-control" placeholder="Search..." autocomplete="off" name="search" data-parsley-id="7012" type="search"><ul class="parsley-errors-list" id="parsley-id-7012"></ul>    <button class="hide" type="submit" name="submit"></button></form></li>
+                    <li><span class="flag-icon flag-icon-tz flag-icon-squared"></span></li>
+                    <li><a class="login" href="https://www.clickatell.com/sign-in/">Sign in</a></li>
+                    <li><a class="login" href="https://www.clickatell.com/sign-up/">Register</a></li>
+                </ul>
+            </nav>
+                        <nav class="navbar">
+                <div class="navbar-header">
+                    <a class="clickatell-logo" href="https://www.clickatell.com/"></a>
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav left">
+                        <li id="menu-item-278" class="menu-item menu-item-type-custom menu-item-object-custom dropdown menu-item-278"><a href="#">PRODUCTS &amp; PRICING</a>
+<ul class="dropdown-menu">
+	<li id="menu-item-65" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-65"><a href="https://www.clickatell.com/products/platform/">SMS Platform</a></li>
+	<li id="menu-item-639" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-639"><a href="https://www.clickatell.com/pricing-and-coverage/message-pricing/">SMS Pricing Estimator</a></li>
+	<li id="menu-item-14594" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-14594"><a href="https://www.clickatell.com/products/promotions/">SMS Promotions</a></li>
+	<li id="menu-item-16613" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-16613"><a href="https://www.clickatell.com/developers/platform/enterprise-integrations/">Enterprise Integrations</a></li>
+	<li id="menu-item-64" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-64"><a href="https://www.clickatell.com/products/touch/">Touch</a></li>
+	<li id="menu-item-16822" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-16822"><a href="https://www.clickatell.com/products/transact/">Transact</a></li>
+</ul>
+</li>
+<li id="menu-item-277" class="menu-item menu-item-type-custom menu-item-object-custom dropdown menu-item-277"><a href="#">RESOURCES &amp; HELP</a>
+<ul class="dropdown-menu">
+	<li id="menu-item-118" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-118"><a href="https://www.clickatell.com/case-studies/">Case studies</a></li>
+	<li id="menu-item-120" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-120"><a href="https://www.clickatell.com/articles/">Articles</a></li>
+	<li id="menu-item-121" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-121"><a href="https://www.clickatell.com/white-papers/">White papers</a></li>
+	<li id="menu-item-119" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-119"><a href="https://www.clickatell.com/faqs/">FAQs</a></li>
+</ul>
+</li>
+                    </ul>
+                    <ul class="nav navbar-nav right">
+                        <li id="menu-item-276" class="menu-item menu-item-type-custom menu-item-object-custom dropdown menu-item-276"><a href="#">DEVELOPER TOOLS</a>
+<ul class="dropdown-menu">
+	<li id="menu-item-71" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-71"><a href="https://www.clickatell.com/developers/platform/">SMS Platform</a></li>
+	<li id="menu-item-12687" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-12687"><a href="https://www.clickatell.com/developers/archive/">Developer archive</a></li>
+</ul>
+</li>
+<li id="menu-item-275" class="menu-item menu-item-type-custom menu-item-object-custom dropdown menu-item-275"><a href="#">CONTACT US</a>
+<ul class="dropdown-menu">
+	<li id="menu-item-13926" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-13926"><a href="https://www.clickatell.com/contact/contact-support/">Contact support</a></li>
+	<li id="menu-item-13925" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-13925"><a href="https://www.clickatell.com/contact/contact-sales/">Contact sales</a></li>
+	<li id="menu-item-181" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-181"><a href="https://www.clickatell.com/contact/ask-the-community/">Ask the community</a></li>
+</ul>
+</li>
+                    </ul>
+                </div>
+                            </nav>
+        </div>
+    </div>
+</div> </header>
+            <div class="search-wrap developers">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 breadcrumbs">
+                    <p><small><a href="https://www.clickatell.com/">Home</a>&nbsp;&nbsp;›&nbsp;&nbsp;Developer Tools&nbsp;&nbsp;›&nbsp;&nbsp;<a href="https://www.clickatell.com/developers/platform/">SMS Platform</a>&nbsp;&nbsp;›&nbsp;&nbsp;<a href="https://www.clickatell.com/developers/platform/api-documentation/">API Documentation</a>&nbsp;&nbsp;›&nbsp;&nbsp;<a href="https://www.clickatell.com/developers/api-documentation/rest-api-send-message/">REST API: Send message</a></small></p>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-md-4 col-left">
+                    <div class="pin-on-scroll">
+                        <div>
+	<h2 class="nav-heading"><strong>Developer documentation for: <i class="visible-xs bs-icon-arrow"></i></strong></h2>
+	<div class="dk-select form-control custom-dk" id="dk0-dropdown-devs"><div class="dk-selected " tabindex="0" id="dk0-combobox" aria-live="assertive" aria-owns="dk0-listbox" role="combobox">SMS Platform</div><ul class="dk-select-options" id="dk0-listbox" role="listbox" aria-expanded="false"><li class="dk-option  dk-option-selected" data-value="platform" role="option" aria-selected="true" id="dk0-platform">SMS Platform</li><li class="dk-option " data-value="archive" role="option" aria-selected="false" id="dk0-archive">Archive</li></ul></div><select class="form-control custom-dk" id="dropdown-devs" name="section" data-dkcacheid="0"><option value="platform" selected="selected">SMS Platform</option><option value="archive">Archive</option></select>            <div class="panel">
+            
+                        <a class="panel-heading  active " data-toggle="collapse" href="#collapse2">API documentation <i class="bs-icon-arrow"></i></a>
+            <div id="collapse2" class="panel-collapse collapse  in  ">
+
+                <ul class="plain list">
+                                            <li>
+                            <a data-toggle="collapse" href="#collapse2-71">REST <i class="bs-icon"></i></a>
+                            <div id="collapse2-71" class="panel-collapse collapse  in  ">
+                                <ul class="plain list">
+                                                                            <li><a href="https://www.clickatell.com/developers/api-documentation/rest-api-request-parameters/">REST API: Request parameters</a></li>
+                                                                            <li class="active"><a href="https://www.clickatell.com/developers/api-documentation/rest-api-send-message/">REST API: Send message</a></li>
+                                                                            <li><a href="https://www.clickatell.com/developers/api-documentation/rest-api-status-callback/">REST API: Status callback</a></li>
+                                                                            <li><a href="https://www.clickatell.com/developers/api-documentation/rest-api-reply-callback/">REST API: Reply callback</a></li>
+                                                                            <li><a href="https://www.clickatell.com/developers/api-documentation/rest-api-error-message-descriptions/">REST API: Error message descriptions</a></li>
+                                                                    </ul>
+                            </div>
+                        </li>
+                                            <li>
+                            <a data-toggle="collapse" href="#collapse2-307">HTTP <i class="bs-icon"></i></a>
+                            <div id="collapse2-307" class="panel-collapse collapse  ">
+                                <ul class="plain list">
+                                                                            <li><a href="https://www.clickatell.com/developers/api-documentation/http-api-error-messages/">HTTP API: Error messages</a></li>
+                                                                            <li><a href="https://www.clickatell.com/developers/api-documentation/http-api-request-parameters/">HTTP API: Request parameters</a></li>
+                                                                            <li><a href="https://www.clickatell.com/developers/api-documentation/http-api-send-message/">HTTP API: Send message</a></li>
+                                                                            <li><a href="https://www.clickatell.com/developers/api-documentation/http-api-status-callback/">HTTP API: Status callback</a></li>
+                                                                            <li><a href="https://www.clickatell.com/developers/api-documentation/http-api-reply-callback/">HTTP API: Reply callback</a></li>
+                                                                    </ul>
+                            </div>
+                        </li>
+                                    </ul>
+
+            </div>
+            
+                                        <a class="panel-heading  active " data-toggle="collapse" href="#collapse3">SDKs <i class="bs-icon-arrow"></i></a>
+                <div id="collapse3" class="panel-collapse collapse ">
+                    <ul class="plain list">
+                                                    <li><a href="https://www.clickatell.com/developers/api-documentation/c-script/">C# script</a></li>
+                                                    <li><a href="https://www.clickatell.com/developers/api-documentation/php-library/">PHP library</a></li>
+                                            </ul>
+                </div>
+                        
+        </div>
+    
+            <ul class="plain list">
+            <li><a href="https://www.clickatell.com/developers/platform/tutorials/">Tutorials</a></li>
+            <li><a href="https://www.clickatell.com/developers/platform/third-party-integrations/">Enterprise Integrations</a></li>
+            <li><a href="https://www.clickatell.com/faqs/product-specific-faqs/platform/">Developer FAQs</a></li>
+            <li><a href="https://www.clickatell.com/contact/contact-us/">Contact support</a></li>
+            <li><a href="https://www.clickatell.com/contact/ask-the-community/">Ask the community</a></li>
+        </ul>
+
+        <form id="search-form" novalidate="" data-parsley-validate="data-parsley-validate" action="https://www.clickatell.com/developers/search-results" method="GET" accept-charset="UTF-8">	<input placeholder="Quick search..." class="form-control search-input with-search-icon" name="search" data-parsley-id="5875" type="search"><ul class="parsley-errors-list" id="parsley-id-5875"></ul>    <button class="text-blue transparent overlay" type="submit"><span class="hide">search</span><i class="bs-icon-search"></i></button>
+</form>    
+</div>                    </div>
+                </div>
+
+                <div class="col-md-8 col-right">
+                    <div class="content">
+                        <h1 class="text-center-mobile">REST API: Send message</h1>
+                                                    <p>This command 
+allows you to send one or more SMS messages. The server will respond 
+with a unique identifier for each message. You can also send to multiple
+ handsets in one single HTTPS request (up to 200 messages). This is 
+useful if you are sending the same message text to multiple handsets.</p>
+<p>The base URL for all API call strings is: https://platform.clickatell.com</p>
+<h3>JSON</h3>
+<p><strong>Request</strong></p>
+<pre style="border: none;"><code class="hljs bash">
+POST /messages
+Content-Type: application/json
+Accept: application/json
+Authorization: [Your Authorization Token]
+{
+<span class="hljs-string">"content"</span>: <span class="hljs-string">"string"</span>,
+<span class="hljs-string">"to"</span>: [
+<span class="hljs-string">"+380976543211"</span>,
+<span class="hljs-string">"+380976543212"</span>
+],
+<span class="hljs-string">"from"</span>: <span class="hljs-string">"380671234567"</span>,
+<span class="hljs-string">"binary"</span>: <span class="hljs-literal">false</span>,
+<span class="hljs-string">"clientMessageId"</span>: <span class="hljs-string">"uuid"</span>,
+<span class="hljs-string">"scheduledDeliveryTime"</span>: <span class="hljs-string">"yyyy-MM-dd'T'HH:mm:ssZ"</span>,
+<span class="hljs-string">"userDataHeader"</span>: <span class="hljs-string">"0605040B8423F0"</span>,
+<span class="hljs-string">"validityPeriod"</span>: 0,
+<span class="hljs-string">"charset"</span>: <span class="hljs-string">"UTF-8"</span>
+}
+</code></pre>
+<p><strong>Response</strong></p>
+<pre style="border: none;"><code class="hljs coffeescript">
+<span class="hljs-number">202</span> Accepted
+Content-Type: application/json
+{
+<span class="hljs-string">"messages"</span>: [
+{
+<span class="hljs-string">"apiMessageId"</span>: <span class="hljs-string">"77fb29998253415fa5d66971d519d362"</span>,
+<span class="hljs-string">"accepted"</span>: <span class="hljs-literal">true</span>,
+<span class="hljs-string">"to"</span>: <span class="hljs-string">"380976543211"</span>,
+<span class="hljs-string">"error"</span>: <span class="hljs-literal">null</span>
+},
+{
+<span class="hljs-string">"apiMessageId"</span>: <span class="hljs-string">"d2a7b3f2a72a4c798f3f385ee92ee5ce"</span>,
+<span class="hljs-string">"accepted"</span>: <span class="hljs-literal">true</span>,
+<span class="hljs-string">"to"</span>: <span class="hljs-string">"380976543212"</span>,
+<span class="hljs-string">"error"</span>: <span class="hljs-literal">null</span>
+}
+],
+<span class="hljs-string">"error"</span>: <span class="hljs-literal">null</span>
+}
+</code></pre>
+<h3>XML</h3>
+<p><strong>Request</strong></p>
+<pre style="border: none;"><code class="hljs xml">
+POST /messages
+Content-Type: application/xml
+Accept: application/xml
+Authorization: [Your Authorization Token]
+<span class="php"><span class="hljs-meta">&lt;?</span>xml version=<span class="hljs-string">"1.0"</span><span class="hljs-meta">?&gt;</span></span>
+<span class="hljs-tag">&lt;<span class="hljs-name">SendMessageRequest</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">Content</span>&gt;</span>string<span class="hljs-tag">&lt;/<span class="hljs-name">Content</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">To</span>&gt;</span>+380685555555<span class="hljs-tag">&lt;/<span class="hljs-name">To</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">From</span>&gt;</span>string<span class="hljs-tag">&lt;/<span class="hljs-name">From</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">Binary</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">Binary</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ClientMessageId</span>&gt;</span>id<span class="hljs-tag">&lt;/<span class="hljs-name">ClientMessageId</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ScheduledDeliveryTime</span>&gt;</span>yyyy-MM-dd'T'HH:mm:ssZ<span class="hljs-tag">&lt;/<span class="hljs-name">ScheduledDeliveryTime</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">UserDataHeader</span>&gt;</span>0605040B8423F0<span class="hljs-tag">&lt;/<span class="hljs-name">UserDataHeader</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ValidityPeriod</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">ValidityPeriod</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">Charset</span>&gt;</span>UTF-8<span class="hljs-tag">&lt;/<span class="hljs-name">Charset</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">SendMessageRequest</span>&gt;</span>
+
+</code></pre>
+<p><strong>Response</strong></p>
+<pre style="border: none;"><code class="hljs xml">
+202 Accepted
+Content-Type: application/xml
+<span class="php"><span class="hljs-meta">&lt;?</span>xml version=<span class="hljs-string">"1.0"</span> encoding=<span class="hljs-string">"UTF-8"</span> standalone=<span class="hljs-string">"yes"</span><span class="hljs-meta">?&gt;</span></span>
+<span class="hljs-tag">&lt;<span class="hljs-name">SendMessagesResponse</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">Messages</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">Message</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ApiMessageId</span>&gt;</span>174319bc027f45d989728093cc170107<span class="hljs-tag">&lt;/<span class="hljs-name">ApiMessageId</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">Accepted</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">Accepted</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">To</span>&gt;</span>380685555555<span class="hljs-tag">&lt;/<span class="hljs-name">To</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">Message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">Messages</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">SendMessagesResponse</span>&gt;</span>
+</code></pre>
+                                            </div>
+                    <div class="next-posts-wrap">
+                        <a href="https://www.clickatell.com/developers/api-documentation/rest-api-request-parameters/" rel="prev">&nbsp;&nbsp;‹&nbsp;&nbsp; Previous<small>REST API: Request parameters</small></a>                        <span class="pull-right"><a href="https://www.clickatell.com/developers/api-documentation/rest-api-status-callback/" rel="next"><small>REST API: Status callback</small> Next &nbsp;&nbsp;›&nbsp;&nbsp;</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="text-center">
+            <div id="slices">
+         </div>         </div>
+    </div>
+    	<section class="get-involved dark bg blue marker">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 hidden-xs text-center">
+                        <p class="pull-right">Get involved, visit our community.</p>
+                    </div>
+                    <div class="col-sm-6 col-xs-12 text-center">
+                        <a class="pull-left icons-small icon-social icon-social-fb" target="_blank" href="https://www.facebook.com/Clickatell-187073743959"></a>
+                        <a class="pull-left icons-small icon-social icon-social-tw" target="_blank" href="https://twitter.com/Clickatell"></a>
+                        <a class="pull-left icons-small icon-social icon-social-yt" target="_blank" href="https://www.youtube.com/clickatell"></a>
+                        <a class="pull-left icons-small icon-social icon-social-li" target="_blank" href="https://www.linkedin.com/company/clickatell"></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer id="footer">
+                        <div class="bg dark">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <ul class="nav list-inline">
+                                <li id="menu-item-13836" class="menu-item menu-item-type-custom menu-item-object-custom dropdown menu-item-13836"><a href="https://www.clickatell.com/pricing-and-coverage/message-pricing/">PRODUCTS &amp; PRICING</a>
+<ul class="dropdown-menu">
+	<li id="menu-item-78" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-78"><a href="https://www.clickatell.com/products/platform/">SMS Platform</a></li>
+	<li id="menu-item-16614" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-16614"><a href="https://www.clickatell.com/developers/platform/enterprise-integrations/">Enterprise Integrations</a></li>
+	<li id="menu-item-79" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-79"><a href="https://www.clickatell.com/products/touch/">Touch</a></li>
+	<li id="menu-item-638" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-638"><a href="https://www.clickatell.com/pricing-and-coverage/message-pricing/">SMS Pricing Estimator</a></li>
+	<li id="menu-item-16821" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-16821"><a href="https://www.clickatell.com/products/transact/">Transact</a></li>
+</ul>
+</li>
+<li id="menu-item-13835" class="menu-item menu-item-type-custom menu-item-object-custom dropdown menu-item-13835"><a href="https://www.clickatell.com/faqs/">RESOURCES &amp; HELP</a>
+<ul class="dropdown-menu">
+	<li id="menu-item-114" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-114"><a href="https://www.clickatell.com/case-studies/">Case studies</a></li>
+	<li id="menu-item-115" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-115"><a href="https://www.clickatell.com/articles/">Articles</a></li>
+	<li id="menu-item-116" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-116"><a href="https://www.clickatell.com/white-papers/">White papers</a></li>
+	<li id="menu-item-117" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-117"><a href="https://www.clickatell.com/faqs/">FAQs</a></li>
+</ul>
+</li>
+<li id="menu-item-13834" class="menu-item menu-item-type-custom menu-item-object-custom dropdown menu-item-13834"><a href="https://www.clickatell.com/developers/archive/">DEVELOPER TOOLS</a>
+<ul class="dropdown-menu">
+	<li id="menu-item-84" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-84"><a href="https://www.clickatell.com/developers/platform/">SMS Platform</a></li>
+	<li id="menu-item-12681" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-12681"><a href="https://www.clickatell.com/developers/archive/">Developer archive</a></li>
+</ul>
+</li>
+<li id="menu-item-13833" class="menu-item menu-item-type-custom menu-item-object-custom dropdown menu-item-13833"><a href="https://www.clickatell.com/who-are-we/">THE COMPANY</a>
+<ul class="dropdown-menu">
+	<li id="menu-item-147" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-147"><a href="https://www.clickatell.com/who-are-we/">Who are we?</a></li>
+	<li id="menu-item-272" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-272"><a href="https://www.clickatell.com/jobs/">Jobs at Clickatell</a></li>
+	<li id="menu-item-149" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-149"><a href="https://www.clickatell.com/people/">Our people</a></li>
+	<li id="menu-item-150" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-150"><a href="https://www.clickatell.com/press-center/">Press center</a></li>
+</ul>
+</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            	<div class="bg light">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<ul class="list-inline bottom-secondary">
+						<li class="hidden-xs"><a class="clickatell-logo" href="https://www.clickatell.com/"></a></li>
+						<li class="footer-copy"><p>© Copyright 2017 Clickatell. <span class="hidden-xs">All rights reserved.</span></p></li>
+						<li class="xs-border-right border-grey"><p><a href="https://www.clickatell.com/legal/general-terms-notices/privacy-notice/">Privacy Policy</a></p></li>
+                        <li class="hidden-xs"><p><a href="https://www.clickatell.com/legal/">Legal</a></p></li>
+						<li class="hidden-xs"><p><a href="https://www.clickatell.com/legal/general-terms-notices/cookie-notice/">Cookie Policy</a></p></li>
+						<li class="hidden-sm visible-xs xs-border-left border-grey"><p><a href="https://www.clickatell.com/legal/general-terms-notices/cookie-notice/">Cookie Policy</a></p></li>
+						<li class="hidden-sm visible-xs"><p><a href="https://www.clickatell.com/legal/">Legal</a></p></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+    <div id="ctl-touch-widget" data-tenantid="ff80808158547f50015863343b650003" data-meta-useragent="webchat" data-meta-email="" data-meta-username="" data-meta-firstname="" data-meta-lastname=""><div data-reactroot=""></div></div>
+    <script defer="defer" src="REST%20API:%20Send%20message%20-%20Clickatell_files/bundle.js"></script>
+</footer>    
+	<script src="REST%20API:%20Send%20message%20-%20Clickatell_files/jquery-1.js"></script>
+<script src="REST%20API:%20Send%20message%20-%20Clickatell_files/bootstrap.js"></script>
+
+<script src="REST%20API:%20Send%20message%20-%20Clickatell_files/jquery.js"></script>
+<script src="REST%20API:%20Send%20message%20-%20Clickatell_files/jquery_002.js"></script>
+<script src="REST%20API:%20Send%20message%20-%20Clickatell_files/jquery_003.js"></script>
+<script src="REST%20API:%20Send%20message%20-%20Clickatell_files/dropkick.js"></script>
+<script src="REST%20API:%20Send%20message%20-%20Clickatell_files/slick.js"></script>
+<script src="REST%20API:%20Send%20message%20-%20Clickatell_files/hideShowPassword.js"></script>
+<script src="REST%20API:%20Send%20message%20-%20Clickatell_files/underscore-min.js"></script>
+<script src="REST%20API:%20Send%20message%20-%20Clickatell_files/moment.js"></script>
+
+<script>
+     var debug = false;     var template_path = 'https://www.clickatell.com/content/themes/twentyfifteen/resources/assets';
+    var is_valid = true;
+    var home_url = 'https://www.clickatell.com';
+    var user_country = 'TZ';
+</script>
+<script src="REST%20API:%20Send%20message%20-%20Clickatell_files/main.js"></script><script type="text/javascript" id="">(function(a,c,d,b,e){a[c]=a[c]||{};a[c][d]=a[c][d]||{q:[],track:function(a,b,c){this.q.push({r:a,e:b,t:c||+new Date})}};a=b.createElement(e);b=b.getElementsByTagName(e)[0];a.async=1;a.src="//marketing.clickatell.com/cdnr/92/acton/bn/tracker/16723";b.parentNode.insertBefore(a,b)})(window,"ActOn","Beacon",document,"script");ActOn.Beacon.track();</script>
+
+<script type="text/javascript" id="">(function(a,c,e,f,d,b){a.hj=a.hj||function(){(a.hj.q=a.hj.q||[]).push(arguments)};a._hjSettings={hjid:157062,hjsv:5};d=c.getElementsByTagName("head")[0];b=c.createElement("script");b.async=1;b.src=e+a._hjSettings.hjid+f+a._hjSettings.hjsv;d.appendChild(b)})(window,document,"//static.hotjar.com/c/hotjar-",".js?sv\x3d");</script>
+<script type="text/javascript" id="">var url=window.location.href,keyToFind="utm_source";if(-1<url.indexOf(keyToFind+"\x3d")){var valueFound=url.substr(url.indexOf(keyToFind+"\x3d")+keyToFind.length+1).split("\x26")[0];sessionStorage.setItem(keyToFind,valueFound)};</script>
+<script type="text/javascript" id="">!function(b,e,f,g,a,c,d){b.fbq||(a=b.fbq=function(){a.callMethod?a.callMethod.apply(a,arguments):a.queue.push(arguments)},b._fbq||(b._fbq=a),a.push=a,a.loaded=!0,a.version="2.0",a.queue=[],c=e.createElement(f),c.async=!0,c.src=g,d=e.getElementsByTagName(f)[0],d.parentNode.insertBefore(c,d))}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");fbq("init","482481518817721");fbq("set","agent","tmgoogletagmanager","482481518817721");fbq("track","PageView");</script>
+
+    <script src="REST%20API:%20Send%20message%20-%20Clickatell_files/highlight.js"></script>
+    <script>
+        $(function() {
+            hljs.initHighlightingOnLoad();
+        });
+    </script>
+
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-9RBL"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>	<script type="text/javascript" src="REST%20API:%20Send%20message%20-%20Clickatell_files/wp-embed.js"></script>
+
+
+<script src="REST%20API:%20Send%20message%20-%20Clickatell_files/a_002" type="text/javascript"></script><script src="REST%20API:%20Send%20message%20-%20Clickatell_files/a.js" type="text/javascript"></script><iframe style="display: none !important; width: 1px !important; height: 1px !important; opacity: 0 !important; pointer-events: none !important;" name="_hjRemoteVarsFrame" title="_hjRemoteVarsFrame" id="_hjRemoteVarsFrame" src="REST%20API:%20Send%20message%20-%20Clickatell_files/rcj-99d43ead6bdf30da8ed5ffcb4f17100c.html"></iframe><img src="REST%20API:%20Send%20message%20-%20Clickatell_files/seg.gif" alt="" style="display: none;" width="1" border="0" height="1"><div id="ads"></div><div style="display: none; visibility: hidden;"><script>(function(){var a=window._fbq||(window._fbq=[]);if(!a.loaded){var b=document.createElement("script");b.async=!0;b.src="//connect.facebook.net/en_US/fbds.js";var c=document.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c);a.loaded=!0}a.push(["addPixelId","834687473235520"])})();window._fbq=window._fbq||[];window._fbq.push(["track","PixelInitialized",{}]);</script>
+<noscript></noscript></div><iframe id="rufous-sandbox" scrolling="no" allowtransparency="true" allowfullscreen="true" style="position: absolute; visibility: hidden; display: none; width: 0px; height: 0px; padding: 0px; border: medium none;" title="Twitter analytics iframe" frameborder="0"></iframe></body></html>
+<!-- Performance optimized by W3 Total Cache. Learn more: https://www.w3-edge.com/products/
+
+ Served from: www.clickatell.com @ 2017-12-31 20:38:24 by W3 Total Cache -->

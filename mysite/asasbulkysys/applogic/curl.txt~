@@ -1,0 +1,7 @@
+curl -i \
+-X POST \
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-H "Authorization: b3itx5JgS-O7nc7xJ9KVlw==" \
+-d '{"content": "We are testing bulky sms in action", "to": ["255718255585"]}' \
+-s https://platform.clickatell.com/messages

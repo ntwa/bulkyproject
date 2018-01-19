@@ -1,0 +1,36 @@
+anam	17	
+caitlin	0	
+chelsea	8	
+jodi	4	
+kaylim	6	
+kcee	2	
+lee-roy	5	
+lukhanyo	6	
+lusapho	9	
+michaela	1	
+nevalio	0	
+selemela	1	
+shaun	1	
+tumie	0	
+
+
+
+
+anam	6	
+caitlin	0	
+chelsea	0	
+jodi	14	
+kaylim	4	
+kcee	0	
+lee-roy	3	
+lukhanyo	0	
+lusapho	0	
+michaela	4	
+nevalio	0	
+selemela	0	
+shaun	3	
+tumie	0	
+
+
+
+
