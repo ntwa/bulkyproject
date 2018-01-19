@@ -366,7 +366,7 @@ var retrieveGroupAllocatioTemplate=function(){
              url: urlstr,
              cache: false
              })
-            .done(function( html ) {
+            .done(function(html) {
             $( "#main-content" ).html('');
             $( "#main-content" ).append(html);//Now append that interface
             
@@ -375,7 +375,7 @@ var retrieveGroupAllocatioTemplate=function(){
                            //Now work on the slider
                            //handleSliderNav();
                             //});
-             retrieveAllContacts();
+             //retrieveAllContacts();
          
              });
 
@@ -402,6 +402,7 @@ var retrieveAllContacts=function(){
                     
                   
                     var contacts = new Array();
+                    var html_str="";
                    
                   
                     var contacts_counter=0;
@@ -412,6 +413,8 @@ var retrieveAllContacts=function(){
 
                         //alert("Local Storage Supported");
                       }
+
+
 
                     //addressbookobj1=JSON.parse(localStorage.getItem("Contacts"))
                     for(var x in contactsobj)
@@ -425,26 +428,26 @@ var retrieveAllContacts=function(){
 
 
                         //Get name
-                        contact_names=contact_names+addressbookobj[""+x+""]["first_name"];
+                        contact_names=contact_names+contactsobj[""+x+""]["first_name"];
                         contact_names=contact_names+ " ";
-                        contact_names=contact_names+addressbookobj[""+x+""]["last_name"];
+                        contact_names=contact_names+contactsobj[""+x+""]["last_name"];
                         //contact_ids[name_counter]=addressbookobj[""+x+""]["ContactID"];
                         //address_objects[name_counter]=""+x+"";
 
                         //get ward
-                         contact_ward=contact_ward+addressbookobj[""+x+""]["ward"];
+                         contact_ward=contact_ward+contactsobj[""+x+""]["ward"];
 
                         //get district
 
-                         contact_district=contact_district+addressbookobj[""+x+""]["district"];
+                         contact_district=contact_district+contactsobj[""+x+""]["district"];
 
                         //get region
 
-                         contact_region=contact_region+addressbookobj[""+x+""]["region"];
+                         contact_region=contact_region+contactsobj[""+x+""]["region"];
 
 
 
-                         contact_country=contact_country+addressbookobj[""+x+""]["country"];
+                         contact_country=contact_country+contactsobj[""+x+""]["country"];
                          
                        
                          //contacts[contacts_counter]=new Array();
@@ -453,13 +456,39 @@ var retrieveAllContacts=function(){
                          //contacts[contacts_counter]["District"]=contact_district;
                          //contacts[contacts_counter]["Region"]=contact_region;
                          //contacts[contacts_counter]["Country"]=contact_country;
+                         html_str=html_str+"\n<tr>\n";
+                         html_str=html_str+"    <td>";
+                         html_str=html_str+contact_names;
+                         html_str=html_str+"    </td>\n";
 
+
+                         html_str=html_str+"    <td>\n";
+                         html_str=html_str+contact_ward;
+                         html_str=html_str+"    </td>\n";
+
+
+                         html_str=html_str+"    <td>\n";
+                         html_str=html_str+contact_district
+                         html_str=html_str+"    </td>\n";
+
+          
+                         html_str=html_str+"    <td>\n";
+                         html_str=html_str+contact_region;
+                         html_str=html_str+"    </td>\n";
+
+                         html_str=html_str+"    <td>\n";
+                         html_str=html_str+contact_country;
+                         html_str=html_str+"    </td>\n";
+
+                         html_str=html_str+"\n</tr>\n";
+                         
 
                        
 
                          
                     }
-
+                    //alert(html_str);
+                    $("#allcontacts").html(html_str);
 
              });
 
@@ -568,6 +597,13 @@ var expandGroup=function(group_id,menu_id){
  if(current_menu==record_id)
      return;
 //alert("Expand Group.."+group_id);
+retrieveGroupAllocatioTemplate();
+//$.noConflict();
+
+
+setTimeout(function(){retrieveAllContacts();},20);
+
+setTimeout(function(){$('#example').DataTable();},60);
 current_menu=record_id;
 
 };

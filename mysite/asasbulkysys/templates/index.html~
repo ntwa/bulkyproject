@@ -17,9 +17,7 @@
 <!--script and css for datatables-->
 <!-- One usage of datatable is for assigning people in the address book to groups-->
 
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
 
-<!--End of script and css for datatables-->
 <!--<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery-ui.js" %}"></script>-->
 
   <link rel="stylesheet" href="//code.jquery.com/mobile/1.5.0-alpha.1/jquery.mobile-1.5.0-alpha.1.min.css">
@@ -50,6 +48,14 @@
 
   <!--<link rel="stylesheet" href="{% static "bulkysms/css/jquery.mobile-1.4.5.min.css" %}">-->
   <link href="{% static "bulkysms/css/jquery-ui.css" %}" rel="stylesheet" type="text/css" />
+
+<!--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">-->
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+ 
+ 
+
+<!--End of script and css for datatables-->
   
 <style>
   .table-striped > tbody > tr:nth-child(2n+1) > td {
@@ -197,7 +203,10 @@ td.progressbox {
 
  <!--Scripts For address book starts here-->
 
- 
+<script>
+
+
+</script> 
 
 
   <!--End of scripts For address book starts here-->
