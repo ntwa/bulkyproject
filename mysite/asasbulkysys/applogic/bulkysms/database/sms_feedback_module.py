@@ -17,6 +17,8 @@ class Feedback(Base):
     recipient_mobile=Column(String(20))
     message=Column(String(1000))
     status=Column(Boolean)
+    is_group_sms=Column(Boolean)
+    group_id=Column(Integer)
     
     
     def __init__(self,recipient_mobile,message):

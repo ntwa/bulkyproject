@@ -1,0 +1,393 @@
+{% load url from future %}
+{% load static %}
+<!Doctype html>
+<html>
+
+  <script language="javascript">
+  //require('bootstrap');
+ </script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!--to utilize pop up from jquery mobile 1.4.2 import the script and its respective css -->
+<!--
+  <script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.js" %}"></script>
+<link rel="stylesheet" href="{% static "bulkysms/css/jquery.mobile-1.4.2.min.css" %}">-->
+
+
+
+<!--<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery-ui.js" %}"></script>-->
+
+  <link rel="stylesheet" href="//code.jquery.com/mobile/1.5.0-alpha.1/jquery.mobile-1.5.0-alpha.1.min.css">
+  <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="//code.jquery.com/mobile/1.5.0-alpha.1/jquery.mobile-1.5.0-alpha.1.min.js"></script>
+
+
+ 
+ <!--CSS For address book starts here-->
+  
+  <!--<link rel="stylesheet" href="{% static "bulkysms/css/addressbook/bootstrap.css" %}">-->
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+
+
+<!--script and css for datatables-->
+<!-- One usage of datatable is for assigning people in the address book to groups-->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+
+ <!--<link href="{% static "bulkysms/css/jquery-ui.css" %}" rel="stylesheet" type="text/css" />-->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
+
+ <!-- <link rel="stylesheet" href="{% static "bulkysms/css/bootstrap.min.css" %}">-->
+
+ <!--<link rel="stylesheet" href="{% static "bulkysms/css/font-awesome.min.css" %}">-->
+  <link href="{% static "bulkysms/css/font-awesome.min.css" %}" rel="stylesheet">
+ <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+  
+  <link rel="stylesheet" type="text/css" href="{% static "bulkysms/css/addressbook/animate.css" %}">
+  <!-- SLIDENAV -->
+
+  <link rel="stylesheet" type="text/css" href="{% static "bulkysms/css/addressbook/slidernav.css" %}">
+  <!-- FONTS -->
+
+ <link href="{% static "bulkysms/css/addressbook/css.css" %}" rel="stylesheet" type="text/css">
+  <link href="{% static "bulkysms/css/addressbook/additional.css" %}" rel="stylesheet" type="text/css">
+
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/bulkysmssupporting.js" %}"></script>
+
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/modernizr.custom.87504.js" %}"></script> 
+  <!--CSS for address book ends here-->
+
+  <!--<link rel="stylesheet" href="{% static "bulkysms/css/jquery.mobile-1.4.5.min.css" %}">-->
+ 
+
+
+ 
+ 
+
+<!--End of script and css for datatables-->
+  
+<style>
+  .table-striped > tbody > tr:nth-child(2n+1) > td {
+   background-color: #b6e0ef;
+}
+
+
+
+
+
+.table-striped thead tr:nth-child(2n+1) > th{
+  background-color: #8b9dc3;
+}
+
+td.iconbuttons{
+text-align:center;
+
+
+}
+
+th{
+
+text-align:center;
+
+}
+/*background: url('{% static "django_facebook/images/arrows.png" %}') no-repeat left top;*/
+.ui-dialog > .ui-widget-header {background: #8b9dc3;}
+
+
+
+
+
+
+.charge {
+	position: relative;
+	bottom: 0.5em;
+	color: red;
+	font-size: 0.8em;
+	}/*for superscript*/
+
+
+.chargedescr {
+	position: relative;
+	/*bottom: 0.5em;*/
+	color: red;
+	font-size: 0.8em;
+	}/*for superscript description*/
+
+#menu { margin-left:10px; float: left; width: 200px; }
+/*#main-content { margin-left: 300px; }*/
+#rcorners1 {
+    border-radius: 15px;
+    background: #8b9dc3;
+    padding: 20px; 
+    width: 250px;
+    height: 450px;    
+}
+
+.content {
+    border-radius: 5px;
+    background:blue;
+    padding: 90px; 
+    width: 200px;
+    height: 350px;   
+}
+
+.vertical-menu {
+    width: 200px;
+    
+}
+
+.company-theme {
+   
+    color: rgb(227,58,12);;
+    
+}
+
+.vertical-menu a {
+    background-color:white;
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+}
+
+.vertical-menu a:hover {
+    background-color: #ccc;
+}
+
+.vertical-menu a.active {
+    /*background-color:rgb(227,58,12);*/
+    background-color: #8b9dc3;
+    color: white;
+}
+
+td.smsboxindividual {
+    text-align: center;
+    border: 1px solid #9A9A9A; 
+}
+
+td.progressbox {
+    border: 1px solid #9A9A9A; 
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+    background:orange;
+}
+
+
+
+/*CSS for progress bar*/
+.loader {
+  border: 6px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 6px solid #3498db;
+  width: 50px;
+  height: 50px;
+  -webkit-animation: spin 1s linear infinite; /* Safari */
+  animation: spin 1s linear infinite;
+}
+/* Safari */
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+<!-- general scripts for app-->
+<!--
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery-3.2.1.min.js" %}">
+</script>-->
+
+
+<!--<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery.mobile-1.4.5.min.js" %}"></script>-->
+
+
+
+<!-- JQUERY UI-->
+<!-- BOOTSTRAP -->
+<script src="{% static "bulkysms/scripts/addressbook/bootstrap.js" %}"></script>
+<!--<script src="{% static "bulkysms/scripts/addressbook/jquery-2.js" %}"></script>-->
+<!--<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery-ui.js" %}"></script>-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+<!-- SLIDENAV -->
+
+<script type="text/javascript" src="{% static "bulkysms/scripts/addressbook/slidernav.js" %}"></script>
+
+<!--End of general scripts for app-->
+
+ <!--Scripts For address book starts here-->
+
+<script>
+//resolve conflicts in scripts
+
+//$.noConflict();
+
+
+
+</script> 
+
+
+  <!--End of scripts For address book starts here-->
+
+
+<body>
+<div class="container-fluid ui-content" data-role="main">
+    <div class="page-header">
+       <div>
+   <table border=0 width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+           <td><img src="{% static "bulkysms/images/companyname.png" %}" alt="COMPANY LOGO"/></td>
+       
+    	<td align="center" class="company-theme"><h1>Customer Relationship Management System</h1></td>
+       </tr>
+   </table>      
+  </div>
+  <div class="row">
+    <div class="col-sm-3" align="center">
+
+           <div class="vertical-menu" id="rcorners1" align="left">
+            <a href="#" class="active menuimage" value="Home">Home</a>
+            <a href="#"><table border=0>
+                  <tr>
+                     <td><img src="{% static "bulkysms/images/addressbook.jpeg" %}" alt="" width="40" height="50" class="menuimage" style="cursor:pointer" value="AddressBook"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="AddressBook">Address Book</td>
+                  </tr>
+              </table>
+            </a>
+
+            <a href="#"><table border=0>
+  
+                  <tr>
+                     <td><img src="{% static "bulkysms/images/groups.jpeg" %}" alt="" width="40" height="50" class="menuimage" style="cursor:pointer" value="Grouping"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="Grouping">Groups
+                      
+                
+
+                      <!-- <a href="#popupMenu" data-rel="popup" data-transition="slideup"><img src="{% static "bulkysms/images/groups.jpeg" %}" alt="" width="40" height="50" style="cursor:pointer" value="Grouping"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="Grouping">Groups</a>-->
+
+                   </td>
+                  </tr>
+              </table>
+            </a>
+
+            <a href="#"><table border=0>
+                  <tr>
+                     <td><img src="{% static "bulkysms/images/campaign.png" %}" alt="" width="40" height="50" class="menuimage" style="cursor:pointer" value="Campaign"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="Campaign">Campaigns</td>
+                  </tr>
+              </table>
+            </a>
+            <a href="#"><table border=0>
+                  <tr>
+                     <td><img src="{% static "bulkysms/images/scheduler.jpeg" %}" alt="" width="40" height="50" class="menuimage" style="cursor:pointer" value="Scheduler"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="Scheduler">Schedule Message</td>
+                  </tr>
+              </table>
+            </a>
+  	    <a href="#"><table border=0>
+                  <tr>
+                     <td><img src="{% static "bulkysms/images/settings.jpeg" %}" alt="" width="40" height="50" class="menuimage" style="cursor:pointer" value="Settings"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="Settings">Settings</td>
+                  </tr>
+              </table>
+            </a>
+        </div>
+
+
+
+       
+       <!--<div data-role="popup" id="popupaddressbooksms1" class="ui-content">-->
+      <div id="smsdialog" title="SMS Composer">
+       <!--<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+-->
+       <div align="center">
+       <table>
+
+           
+           <tr>
+
+             <td class="progressbox" align="center">
+              <div class="nothing" id="myprogressbar">&nbsp;</div>
+             </td>
+
+           </tr>
+            
+            <tr>
+             
+              <td class="smsboxindividual"> 
+
+              <b><i>Send an SMS to</i></b>:<div id="simplesmscomposerid"></div><br>
+
+             </br>
+             <!--<div class="nothing loader" id="progressbar">&nbsp;</div>-->
+             <input type="hidden" value="" id="primarymobile">
+             <textarea name="addresssmsbox" id="addresssmsbox" rows="20" cols="22" onchange="clearFeedback(1);" onfocus="clearFeedback(0);" onkeypress="typingFeedback();"></textarea>
+
+             <img src="http://localhost:8000/static/bulkysms/images/sendmessage.jpg" %}" id="instantsmsbtn"  style="cursor:pointer">
+             
+             </td>
+
+            
+
+          </tr>
+
+ 
+
+          
+
+      </table>
+    </div> 
+    </div>
+
+
+
+<!--Another pop up -->
+
+<!--
+<div data-role="popup" id="popupMenu" data-theme="b">
+        <ul data-role="listview" data-inset="true" style="min-width:210px;">
+            <li data-role="list-divider">Choose an action</li>
+            <li><a href="#">View details</a></li>
+            <li><a href="#">Edit</a></li>
+            <li><a href="#">Disable</a></li>
+            <li><a href="#">Delete</a></li>
+        </ul>
+</div>
+
+-->
+
+
+
+</div>
+    <!--<div class="col-sm-4" style="background-color:lavenderblush;">.col-sm-4</div>-->
+    <div id="main-content" class="col-sm-9">
+         <h2 style="color:green;"><i>Handle relationship with customers through SMS, email and social media</i></h2>
+
+
+ 
+   <!--Declare pop up for sending message-->
+
+ 
+<!--<button id="opener">Open Dialog</button>-->
+    
+
+
+    <!--End of pop up for sending messages-->
+
+</div>
+  </div>          
+</div>
+
+</body>
+</html>

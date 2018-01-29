@@ -299,12 +299,12 @@ class QueueFeedback:
           print "Message queue"
           return (json.JSONEncoder().encode(result))
  
-myjson={"message":"Hello Ntwa. You are doing great!!","recipient":"+255742340759"}
-obj=QueueFeedback(myjson)
+#myjson={"message":"Hello Ntwa. You are doing great!!","recipient":"+255742340759"}
+#obj=QueueFeedback(myjson)
 #result=obj.getQueuedSMS()
 #result=obj.saveFeedbackInDB()
-result=obj.sendOneSMS(114)
-print result
+#result=obj.sendOneSMS(114)
+#print result
 #msg_ids=json.loads(result)
 
 

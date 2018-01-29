@@ -61,7 +61,7 @@
     <thead>
       <tr>
         <th>Group Name</th>
-        <th>Group Description<br>(Max:200 chars)</th>
+        <th>Group Description</th>
         <th>Number of Members</th>
         <th>Action</th>
       </tr>

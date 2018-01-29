@@ -10,24 +10,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!--to utilize pop up from jquery mobile 1.4.2 import the script and its respective css -->
-
+<!--
   <script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.js" %}"></script>
-<link rel="stylesheet" href="{% static "bulkysms/css/jquery.mobile-1.4.2.min.css" %}">
+<link rel="stylesheet" href="{% static "bulkysms/css/jquery.mobile-1.4.2.min.css" %}">-->
 
-<!--script and css for datatables-->
-<!-- One usage of datatable is for assigning people in the address book to groups-->
 
 
 <!--<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery-ui.js" %}"></script>-->
 
-  <link rel="stylesheet" href="//code.jquery.com/mobile/1.5.0-alpha.1/jquery.mobile-1.5.0-alpha.1.min.css">
-  <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
-  <script src="//code.jquery.com/mobile/1.5.0-alpha.1/jquery.mobile-1.5.0-alpha.1.min.js"></script>
+  <!--<link rel="stylesheet" href="//code.jquery.com/mobile/1.5.0-alpha.1/jquery.mobile-1.5.0-alpha.1.min.css">-->
+
+ <link rel="stylesheet" href="{% static "bulkysms/css/jquery.mobile-1.5.0-alpha.1.min.css" %}">
+  <!--<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>-->
+  <!--<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>-->
+
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  
+ <!--<script src="//code.jquery.com/mobile/1.5.0-alpha.1/jquery.mobile-1.5.0-alpha.1.min.js"></script>-->
+<script src="{% static "bulkysms/scripts/jquery.mobile-1.5.0-alpha.1.min.js" %}"></script>
+
+
+ 
  <!--CSS For address book starts here-->
   
   <!--<link rel="stylesheet" href="{% static "bulkysms/css/addressbook/bootstrap.css" %}">-->
  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  
+
+
+
+
+<!--script and css for datatables-->
+<!-- One usage of datatable is for assigning people in the address book to groups-->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+
+ <!--<link href="{% static "bulkysms/css/jquery-ui.css" %}" rel="stylesheet" type="text/css" />-->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
+
  <!-- <link rel="stylesheet" href="{% static "bulkysms/css/bootstrap.min.css" %}">-->
 
  <!--<link rel="stylesheet" href="{% static "bulkysms/css/font-awesome.min.css" %}">-->
@@ -43,15 +63,15 @@
  <link href="{% static "bulkysms/css/addressbook/css.css" %}" rel="stylesheet" type="text/css">
   <link href="{% static "bulkysms/css/addressbook/additional.css" %}" rel="stylesheet" type="text/css">
 
- 
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/bulkysmssupporting.js" %}"></script>
+
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/modernizr.custom.87504.js" %}"></script> 
   <!--CSS for address book ends here-->
 
   <!--<link rel="stylesheet" href="{% static "bulkysms/css/jquery.mobile-1.4.5.min.css" %}">-->
-  <link href="{% static "bulkysms/css/jquery-ui.css" %}" rel="stylesheet" type="text/css" />
+ 
 
-<!--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">-->
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+
  
  
 
@@ -81,6 +101,13 @@ th{
 text-align:center;
 
 }
+/*background: url('{% static "django_facebook/images/arrows.png" %}') no-repeat left top;*/
+.ui-dialog > .ui-widget-header {background: #8b9dc3;}
+
+
+
+
+
 
 .charge {
 	position: relative;
@@ -153,6 +180,17 @@ td.progressbox {
     border: 1px solid #9A9A9A; 
 }
 
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+    background:orange;
+}
+
 
 
 /*CSS for progress bar*/
@@ -181,20 +219,19 @@ td.progressbox {
 <!--
 <script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery-3.2.1.min.js" %}">
 </script>-->
-<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/bulkysmssupporting.js" %}">
-
-</script>
-<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/modernizr.custom.87504.js" %}"></script>
-
 
 
 <!--<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery.mobile-1.4.5.min.js" %}"></script>-->
 
-<script src="{% static "bulkysms/scripts/addressbook/jquery-2.js" %}"></script>
-<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery-ui.js" %}"></script>
+
+
 <!-- JQUERY UI-->
 <!-- BOOTSTRAP -->
 <script src="{% static "bulkysms/scripts/addressbook/bootstrap.js" %}"></script>
+<!--<script src="{% static "bulkysms/scripts/addressbook/jquery-2.js" %}"></script>-->
+<!--<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery-ui.js" %}"></script>-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
 <!-- SLIDENAV -->
 
 <script type="text/javascript" src="{% static "bulkysms/scripts/addressbook/slidernav.js" %}"></script>
@@ -206,7 +243,9 @@ td.progressbox {
 <script>
 //resolve conflicts in scripts
 
-$.noConflict();
+//$.noConflict();
+
+
 
 </script> 
 
@@ -271,12 +310,16 @@ $.noConflict();
               </table>
             </a>
         </div>
+
+
+
        
-       <div data-role="popup" id="popupaddressbooksms" class="ui-content">
-       <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+       <!--<div data-role="popup" id="popupaddressbooksms1" class="ui-content">-->
+      <div id="smsdialog" title="SMS Composer">
+        
+            <table>
 
-       <table>
-
+           
            <tr>
 
              <td class="progressbox" align="center">
@@ -284,40 +327,39 @@ $.noConflict();
              </td>
 
            </tr>
-            
-            <tr>
+
+          <tr>
              
               <td class="smsboxindividual"> 
 
               <b><i>Send an SMS to</i></b>:<div id="simplesmscomposerid"></div><br>
-
-             </br>
+               <div id="smsgeneralization" hidden>
+                 <input type="radio" name="smsoptradio" checked>Personalized
+                 <input type="radio" name="smsoptradio">General
+               </div>
+              
              <!--<div class="nothing loader" id="progressbar">&nbsp;</div>-->
              <input type="hidden" value="" id="primarymobile">
-             <textarea name="addresssmsbox" id="addresssmsbox" rows="20" cols="22" onchange="clearFeedback(1);" onfocus="clearFeedback(0);" onkeypress="typingFeedback();"></textarea>
+             <textarea name="addresssmsbox" id="addresssmsbox" rows="5" cols="22" onchange="clearFeedback(1);" onfocus="clearFeedback(0);" onkeypress="typingFeedback();"></textarea>
 
-             <img src="http://localhost:8000/static/bulkysms/images/sendmessage.jpg" %}"  style="cursor:pointer" onclick="sendOneSMS();">
+             <img src="http://localhost:8000/static/bulkysms/images/sendmessage.jpg" %}" id="instantsmsbtn"  style="cursor:pointer">
              
              </td>
 
             
 
           </tr>
+         </table>
 
 
-
-         
-
-          
-
-      </table>
-    </div
+  
+      </div>
 
 
 
 <!--Another pop up -->
 
-
+<!--
 <div data-role="popup" id="popupMenu" data-theme="b">
         <ul data-role="listview" data-inset="true" style="min-width:210px;">
             <li data-role="list-divider">Choose an action</li>
@@ -328,7 +370,7 @@ $.noConflict();
         </ul>
 </div>
 
-
+-->
 
 
 
@@ -336,8 +378,13 @@ $.noConflict();
     <!--<div class="col-sm-4" style="background-color:lavenderblush;">.col-sm-4</div>-->
     <div id="main-content" class="col-sm-9">
          <h2 style="color:green;"><i>Handle relationship with customers through SMS, email and social media</i></h2>
+
+
+ 
    <!--Declare pop up for sending message-->
-    
+
+ 
+<!--<button id="opener">Open Dialog</button>-->
     
 
 

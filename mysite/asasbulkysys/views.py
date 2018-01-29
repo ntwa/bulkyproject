@@ -21,7 +21,7 @@ def index(request):
 
 # retrieve all contacts
 def retrieveAddressBookContent(myjson):
-    
+     #myjson={"GroupID":"4"}
      obj=AddressBookManager(myjson)
      contacts=obj.retrieveContactDetailsFromDB() #the returned contacts is an encoded json object    
      return contacts
@@ -38,14 +38,17 @@ def saveGroups(myjson):
     return msg
 
 def saveSMS(myjson):
-     obj=SaveSMS(myjson)
-     msg=obj.saveOneSMSInDB()
-     return msg
+    obj=SaveSMS(myjson)
+    msg=obj.saveOneSMSInDB()
+    return msg
 
 @csrf_exempt 
 def dataloader(request,command_id):#REST API used by the client side of web application to load data for display
      myjson={}
      if command_id == "RABC":#RAB stands for Retrieve Address Book Content
+          myjson=json.loads(request.body)
+          #myjson={"GroupID":"-1","Option":"-1"}
+          #myjson={"GroupID":"-1"}  
           alldata=retrieveAddressBookContent(myjson)
           #return HttpResponse(alldata, content_type='application/json')
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),alldata), content_type='application/json')

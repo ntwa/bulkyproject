@@ -3,7 +3,7 @@ import datetime
 import sys,json
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from bulkysms.database.address_book_module import AddressBook,MobileDetails,EmailDetails,db,dbconn
+from bulkysms.database.address_book_module import AddressBook,MobileDetails,EmailDetails,GroupMember,db,dbconn
 from collections import OrderedDict
 
 class switch(object):
@@ -17,6 +17,43 @@ def case(*args):
 class AddressBookManager:
      def __init__(self,myjson):
           self.myjson=myjson
+
+
+     def binary_search(self,item_list,item):
+	  first = 0
+	  last = len(item_list)-1
+	  found = False
+	  while( first<=last and not found):
+               mid = (first + last)//2
+	       if item_list[mid] == item :
+		    found = True
+	       else:
+		    if item < item_list[mid]:
+			 last = mid - 1
+		    else:
+			 first = mid + 1	
+	  return found
+
+
+
+
+
+     def insertionSort(self,alist):
+
+   	  for i in range(1,len(alist)):
+
+               #element to be compared
+       	       current = alist[i]
+
+               #comparing the current element with the sorted portion and swapping
+               while i>0 and alist[i-1]>current:
+                    alist[i] = alist[i-1]
+                    i = i-1
+                    alist[i] = current
+
+               #print(alist)
+
+          return alist
  
      def verify_country_code(self,country,mobile_no):
           
@@ -91,57 +128,163 @@ class AddressBookManager:
                # create a Session
                Session = sessionmaker(bind=engine)
                session = Session()
-               result={}                    
+               result={}    
+
+               #result["GroupID"]=self.myjson["GroupID"]
+               #result["G"]=self.myjson["Option"] 
+               #return (json.JSONEncoder().encode(result))                
                # querying for a record if it exists already.
-               res= session.query(AddressBook).order_by(AddressBook.first_name).order_by(AddressBook.last_name).all()
+
+               if self.myjson["GroupID"] =='-1' and self.myjson["Option"] =='-1':
+               	    res= session.query(AddressBook).order_by(AddressBook.first_name).order_by(AddressBook.last_name).all()
                
-               if len(res) ==0:
-                    session.close()
-                    engine.dispose()
-                    dbconn.close()
-                    result["ContactID"]=-1
-                    return (json.JSONEncoder().encode(result))
-	       else: 
-                    for addrbk_rec in res:
+                   
+               
+               	    if len(res) ==0:
+                         session.close()
+                         engine.dispose()
+                         dbconn.close()
+                         contacterror={}
+                         contacterror["ContactID"]=-1
+                         result["AD00"]=contacterror
+                         return (json.JSONEncoder().encode(result))
+	            else: 
+                         for addrbk_rec in res:
 			 
-                         #start the second query to get mobile details
-                         mob_res=session.query(MobileDetails).filter(MobileDetails.contact_id==addrbk_rec.id).order_by(MobileDetails.id).all()
-                         level_two_json_counter=0 #reset counter to zero 
-                         mobile_tuple={} #reset the tupple for holding phone numbers
-                         for mob_rec in mob_res:
-                              mobile_tuple[key2+"%d"%level_two_json_counter]=mob_rec.mobile_number
-                              level_two_json_counter=level_two_json_counter+1
+                              #start the second query to get mobile details
+                              mob_res=session.query(MobileDetails).filter(MobileDetails.contact_id==addrbk_rec.id).order_by(MobileDetails.id).all()
+                              level_two_json_counter=0 #reset counter to zero 
+                              mobile_tuple={} #reset the tupple for holding phone numbers
+                              for mob_rec in mob_res:
+                                   mobile_tuple[key2+"%d"%level_two_json_counter]=mob_rec.mobile_number
+                                   level_two_json_counter=level_two_json_counter+1
 
 
 
-                         #start the third query to get email details
-                         email_res=session.query(EmailDetails).filter(EmailDetails.contact_id==addrbk_rec.id).order_by(EmailDetails.id).all() 
-                         level_two_json_counter=0 #reset counter to zero
-                         email_tuple={} #Reset tuple for holding email addresses
-                         for email_rec in email_res:
-                              email_tuple[key2+"%d"%level_two_json_counter]=email_rec.email_address
-                              level_two_json_counter=level_two_json_counter+1
+                              #start the third query to get email details
+                              email_res=session.query(EmailDetails).filter(EmailDetails.contact_id==addrbk_rec.id).order_by(EmailDetails.id).all() 
+                              level_two_json_counter=0 #reset counter to zero
+                              email_tuple={} #Reset tuple for holding email addresses
+                              for email_rec in email_res:
+                                   email_tuple[key2+"%d"%level_two_json_counter]=email_rec.email_address
+                                   level_two_json_counter=level_two_json_counter+1
 
                          
 			  
-                         #Now  put both mobile tuple and email tuple to the main address tuple
-                         if level_one_json_counter<10:
-                              key1="AD0"# append a zero. This is important in ordering keys alphabetically
-                         else:
-                              key1="AD"
-                         dobstr="%s"%addrbk_rec.birth_date #convert date to string
+                              #Now  put both mobile tuple and email tuple to the main address tuple
+                              if level_one_json_counter<10:
+                                   key1="AD0"# append a zero. This is important in ordering keys alphabetically
+                              else:
+                                  key1="AD"
+                              dobstr="%s"%addrbk_rec.birth_date #convert date to string
 
-                         address_tuple[key1+"%d"%level_one_json_counter]={"ContactID":addrbk_rec.id, "first_name":addrbk_rec.first_name, "middle_name":addrbk_rec.middle_name, "last_name":addrbk_rec.last_name, "gender":addrbk_rec.gender,"birth_date":dobstr, "ward":addrbk_rec.ward, "district":addrbk_rec.district, "region":addrbk_rec.region, "country":addrbk_rec.country, "mobiles":mobile_tuple, "emails":email_tuple}
-                         level_one_json_counter=level_one_json_counter+1	
+                              address_tuple[key1+"%d"%level_one_json_counter]={"ContactID":addrbk_rec.id, "first_name":addrbk_rec.first_name, "middle_name":addrbk_rec.middle_name, "last_name":addrbk_rec.last_name, "gender":addrbk_rec.gender,"birth_date":dobstr, "ward":addrbk_rec.ward, "district":addrbk_rec.district, "region":addrbk_rec.region, "country":addrbk_rec.country, "mobiles":mobile_tuple, "emails":email_tuple}
+                              level_one_json_counter=level_one_json_counter+1	
          
                          
-                    session.close()  
-                    engine.dispose()   
-                    dbconn.close()
-                    #we wind up the retrieve operation.  
-                    #return json.JSONEncoder().encode(address_tuple) 
-                    return(json.JSONEncoder().encode(OrderedDict(sorted(address_tuple.items(), key=lambda t: t[0]))))   
-                                   
+                         session.close()  
+                         engine.dispose()   
+                         dbconn.close()
+                         #we wind up the retrieve operation.  
+                         #return json.JSONEncoder().encode(address_tuple) 
+                         return(json.JSONEncoder().encode(OrderedDict(sorted(address_tuple.items(), key=lambda t: t[0]))))   
+               elif self.myjson["GroupID"] =='-1' and self.myjson["Option"] <>'-1':
+                   
+		    group_id=int(self.myjson["GroupID"])
+                    group_id_exclude=int(self.myjson["Option"])
+                    contact_ids_exclude=[]
+                    #first get all contacts IDs that need to be excluded
+                    res= session.query(AddressBook,GroupMember).filter(AddressBook.id==GroupMember.contact_id).filter(GroupMember.group_id==group_id_exclude).order_by(AddressBook.first_name).order_by(AddressBook.last_name).all() 
+                    if len(res) ==0:
+                         #The group, then get everyone else
+                         res= session.query(AddressBook).order_by(AddressBook.first_name).order_by(AddressBook.last_name).all()
+                         for addrbk_rec in res:
+                              #                                                       
+                              if level_one_json_counter<10:
+                                   key1="AD0"# append a zero. This is important in ordering keys alphabetically
+                              else:
+                                  key1="AD"
+                              dobstr="%s"%addrbk_rec.birth_date #convert date to string
+
+                              address_tuple[key1+"%d"%level_one_json_counter]={"ContactID":addrbk_rec.id, "first_name":addrbk_rec.first_name, "middle_name":addrbk_rec.middle_name, "last_name":addrbk_rec.last_name, "ward":addrbk_rec.ward, "district":addrbk_rec.district, "region":addrbk_rec.region, "country":addrbk_rec.country}
+                              level_one_json_counter=level_one_json_counter+1
+                         
+                         session.close()  
+
+                         engine.dispose()   
+                         dbconn.close()
+                         #we wind up the retrieve operation.  
+                         #return json.JSONEncoder().encode(address_tuple) 
+                         return(json.JSONEncoder().encode(OrderedDict(sorted(address_tuple.items(), key=lambda t: t[0])))) 
+                         
+                         #session.close()
+                         #engine.dispose()
+                         #dbconn.close()
+                         #result["AD00"]["ContactID"]=-1
+                         #return (json.JSONEncoder().encode(result))
+	            else: 
+                         
+                         for addrbk_rec,group_rec in res: 
+                              contact_ids_exclude.append(addrbk_rec.id);
+                              contact_ids_exclude=self.insertionSort(contact_ids_exclude)
+                        
+                            
+
+                         res= session.query(AddressBook).order_by(AddressBook.first_name).order_by(AddressBook.last_name).all()
+                         for addrbk_rec in res:
+                              #do a binary search to check if the retrieved id belong to the list of contact ids t be excluded
+                              found=self.binary_search(contact_ids_exclude,addrbk_rec.id)
+                              if found == True:
+                                   continue # skip this record
+
+                                                       
+                              if level_one_json_counter<10:
+                                   key1="AD0"# append a zero. This is important in ordering keys alphabetically
+                              else:
+                                  key1="AD"
+                              dobstr="%s"%addrbk_rec.birth_date #convert date to string
+
+                              address_tuple[key1+"%d"%level_one_json_counter]={"ContactID":addrbk_rec.id, "first_name":addrbk_rec.first_name, "middle_name":addrbk_rec.middle_name, "last_name":addrbk_rec.last_name, "ward":addrbk_rec.ward, "district":addrbk_rec.district, "region":addrbk_rec.region, "country":addrbk_rec.country}
+                              level_one_json_counter=level_one_json_counter+1
+                         
+                         session.close()  
+                         engine.dispose()   
+                         dbconn.close()
+                         #we wind up the retrieve operation.  
+                         #return json.JSONEncoder().encode(address_tuple) 
+                         return(json.JSONEncoder().encode(OrderedDict(sorted(address_tuple.items(), key=lambda t: t[0]))))   	
+                    
+               else:
+                   
+                    group_id=self.myjson["GroupID"]
+                    res= session.query(AddressBook,GroupMember).filter(AddressBook.id==GroupMember.contact_id).filter(GroupMember.group_id==group_id).order_by(AddressBook.first_name).order_by(AddressBook.last_name).all() 
+                    if len(res) ==0:
+                         session.close()
+                         engine.dispose()
+                         dbconn.close()
+                         contacterror={}
+                         contacterror["ContactID"]=-1
+                         result["AD00"]=contacterror
+                         return (json.JSONEncoder().encode(result))
+	            else: 
+                         for addrbk_rec,group_rec in res: 
+                                                            
+                              if level_one_json_counter<10:
+                                   key1="AD0"# append a zero. This is important in ordering keys alphabetically
+                              else:
+                                  key1="AD"
+                              dobstr="%s"%addrbk_rec.birth_date #convert date to string
+
+                              address_tuple[key1+"%d"%level_one_json_counter]={"ContactID":addrbk_rec.id, "first_name":addrbk_rec.first_name, "middle_name":addrbk_rec.middle_name, "last_name":addrbk_rec.last_name, "ward":addrbk_rec.ward, "district":addrbk_rec.district, "region":addrbk_rec.region, "country":addrbk_rec.country}
+                              level_one_json_counter=level_one_json_counter+1	
+         
+                         
+                         session.close()  
+                         engine.dispose()   
+                         dbconn.close()
+                         #we wind up the retrieve operation.  
+                         #return json.JSONEncoder().encode(address_tuple) 
+                         return(json.JSONEncoder().encode(OrderedDict(sorted(address_tuple.items(), key=lambda t: t[0]))))                   
           except Exception as e:
                #if we get here the entire operation has failed so we have wind up all attempts to transact and close the database and then notify the user about the failure.
                session.close()
@@ -424,9 +567,7 @@ class AddressBookManager:
                #return (json.JSONEncoder().encode(result))
      
      
-#myjson={}
-
-
+#myjson={"GroupID":"-1","Option":"-1"}
 #obj=AddressBookManager(myjson)
 #msg=obj.retrieveContactDetailsFromDB()
 #msg=obj.saveContactInDB()

@@ -89,7 +89,7 @@ class SaveSMS:
                     result["message"]=e
                     return (json.JSONEncoder().encode(result)) 
                
-               result["message"]="Your message has already been scheduled for sending"%
+               result["message"]="Your message has already been scheduled for sending"
                return (json.JSONEncoder().encode(result))
      
      

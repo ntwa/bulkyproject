@@ -17,6 +17,8 @@ class Feedback(Base):
     recipient_mobile=Column(String(20))
     message=Column(String(1000))
     status=Column(Boolean)
+    is_group_sms=Column(Boolean)
+    group_id=Column(Integer)
     
     
     def __init__(self,recipient_mobile,message):
@@ -31,11 +33,8 @@ class Feedback(Base):
         pass
     def __repr__(self):
         return str(self.id)
-
     def getID(self):
         return self.id
 
-    #def __repr__(self):
-    #    return str(self.intermediary_id)
 
 Base.metadata.create_all(db)

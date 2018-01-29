@@ -23,8 +23,6 @@ class SaveSMS:
           t=(calendar.monthrange(d.year,d.month))
           return datetime.date(d.year,d.month,t[1])
 
-    
-
 
      def saveSMSInDB(self):
           

@@ -2,11 +2,16 @@
 var VIEWING_MODE=1;
 var EDITING_MODE=2;
 var current_menu=null;
+var global_group_id="";
+var global_name="";
+var contact_ids_found=0;
 
  var site="http://localhost:8000/asasbulkysys/";
 
 $( document ).ready(function() {
     initializeMenu();
+   //var bootstrapButton = $.fn.button.noConflict()
+   //$.fn.bootstrapBtn = bootstrapButton;
 });
 
 
@@ -68,6 +73,38 @@ if((msgstr.length>0)&&(status))
 
 
 };
+//for sending SMS to a group
+var sendGroupSMS=function(group_id)
+{
+     var sms_generalization=$('input[name=smsoptradio]:checked').val(); 
+
+     jsonObject={MessageBody:$("#addresssmsbox").val(),MobNo:group_id,SMSAudience:"Bulky",SMSGeneralization:sms_generalization};
+      $("#myprogressbar").html('');
+      addLoadingCircle();
+      var urlstr=site;
+      urlstr=urlstr+"jsondata/SS/";// Send SMS to a group.
+      $.ajax({
+             url: urlstr,
+             dataType: "jsonp",
+             method: "POST",
+             data:JSON.stringify(jsonObject),
+             cache: false
+             })
+            .done(function( html ) {
+             //clearInterval(display_interval);
+             //$("#progresspopup").popup( "close"); // close the pop up for progress once the results are returned from the database
+             //alert("Message Sent");
+
+             removeLoadingCircle();
+             $("#myprogressbar").html('<b style=\"color:blue;\">Message Sent!</b>');
+             
+
+             });
+
+
+};
+
+
 
 //send one sms from the address book
 var sendOneSMS=function()
@@ -98,6 +135,55 @@ var sendOneSMS=function()
 
 
 };
+
+//bind to either group or individual SMS
+
+var bindSMSBroadCaster=function(recipient_type,option1,option2){
+
+
+var r_type=parseInt(recipient_type); // 1 is for individual SMS, 2 is for groupbinSMS
+if(r_type==1)
+ {
+  $("#smsgeneralization").hide();
+  $("#instantsmsbtn").unbind( "click" );
+
+ $(".startsmspopup").unbind( "click" ); //unbind any previous event
+  $(".startsmspopup").bind('click',function(){
+   $("#smsdialog" ).dialog( "open" );
+         
+  });
+
+  $("#instantsmsbtn").bind('click',function(){
+    sendOneSMS();
+       
+  });
+
+}
+else
+{
+  //simplesmscomposerid
+  $("#smsgeneralization").show();
+  global_group_id=option1;
+  option2="'<i>"+option2+"</i>' group";
+  $("#simplesmscomposerid").html(option2);
+ 
+  $("#instantsmsbtn").unbind( "click" );
+
+  $("#instantsmsbtn").bind('click',function(){
+   sendGroupSMS(global_group_id);
+     
+  });
+ $("#smsdialog" ).dialog( "open" ); 
+
+
+
+
+
+}
+
+
+};
+
 //For retrieving individual address item from local storage
 var retrieveAddressItem=function (item)
 {
@@ -127,6 +213,7 @@ var retrieveAddressItem=function (item)
      $("#simplesmscomposerid" ).html(nameofcontact);
     
     var mobile_object=json_obj[""+y+""]["mobiles"];
+    
     var total_no_mobiles=Object.keys(mobile_object).length;
     //incase we have more than one phone number we use a list to display them
     var list_item_open_tag="";
@@ -177,7 +264,9 @@ var retrieveAddressItem=function (item)
     {
      
      //append an option for sending sms 
-    ul_list_close_tag= ul_list_close_tag+"\n<br></br><a href=\"#popupaddressbooksms\" data-rel=\"popup\"><img id=\"startsmspopup\" src=\"http://localhost:8000/static/bulkysms/images/smsicon.jpg\"></a>";   
+    //ul_list_close_tag= ul_list_close_tag+"\n<br></br><a href=\"#popupaddressbooksms\" data-rel=\"popup\"><img id=\"startsmspopup\" src=\"http://localhost:8000/static/bulkysms/images/smsicon.jpg\"></a>";  
+
+ul_list_close_tag= ul_list_close_tag+"\n<br></br><a href=\"#\" style=\"cursor:pointer;\" data-rel=\"popup\"><img class=\"startsmspopup\" src=\"http://localhost:8000/static/bulkysms/images/smsicon.jpg\"></a>";  
 
     }
 
@@ -185,25 +274,37 @@ var retrieveAddressItem=function (item)
     phone_numbers=phone_numbers+ul_list_close_tag;
     $("#phone-numbers").html(phone_numbers);
     //alert(phone_numbers);
+   
     break;
     }
 
  }
 
+setTimeout(function(){
+initiateSMSDialog('1');
+
+},500);
+
 };
 
 //Retrieve address Book from Django Python App via our defined REST API
-var retrieveAddressBookContent=function ()
+var retrieveAddressBookContent=function (group_id,option)
 {     
      
       var urlstr=site;
       urlstr=urlstr+"jsondata/RABC/";
-      var jsonObjects={Empty:"Nothing"};
+      
+      if (typeof option === 'undefined') {
+       // the variable is not defined
+        option="-1";
+       }
 
+      var jsonObjects={GroupID:group_id,Option:option};
+     
       var request = $.ajax({
                             url:urlstr,
                             method: "POST",
-                            data: jsonObjects,
+                            data: JSON.stringify(jsonObjects),
                             dataType: "jsonp"
                     });
  
@@ -217,14 +318,15 @@ var retrieveAddressBookContent=function ()
                     if (Modernizr.localstorage) {
                         //store into a local storage
                         localStorage.setItem("Contacts",JSON.stringify(addressbookobj));
-                       
-
+                        //alert(addressbookobj["AD00"]["birthdate"]);
                         //alert("Local Storage Supported");
                       }
 
                     //addressbookobj1=JSON.parse(localStorage.getItem("Contacts"))
                     for(var x in addressbookobj)
                     {
+                        var randstr=JSON.stringify(addressbookobj);
+                       
                         contact_names[name_counter]="";
                         contact_names[name_counter]=contact_names[name_counter]+addressbookobj[""+x+""]["first_name"];
                         contact_names[name_counter]=contact_names[name_counter]+ " ";
@@ -275,9 +377,6 @@ var retrieveAddressBookContent=function ()
                   }
             
          
-
-
-
 
 
 
@@ -335,7 +434,7 @@ var retrieveAddressBookTemplate=function ()
                            //Now work on the slider
                            //handleSliderNav();
                             //});
-             retrieveAddressBookContent();
+             retrieveAddressBookContent('-1');
          
              });
 
@@ -368,7 +467,8 @@ var retrieveGroupAllocatioTemplate=function(){
              })
             .done(function(html) {
             $( "#main-content" ).html('');
-            $( "#main-content" ).append(html);//Now append that interface
+            $( "#main-content" ).append(html);
+               //Now append that interface
             
                            //$(document).ready(function () {
                            // Action after append is completly done
@@ -382,43 +482,73 @@ var retrieveGroupAllocatioTemplate=function(){
 
 
 };
+var retrieveGroupMembers=function(group_id){
 
-var retrieveAllContacts=function(){
+retrieveAllContacts(group_id);
 
+};
 
+var retrieveNonGroupMembers=function(group_id){
+
+retrieveAllContacts('-1',group_id);//This means we retrieve all contacts, excluding all members of the group
+setTimeout(function(){
+
+$('#groupandmembers').DataTable();
+
+},500);
+
+};
+var retrieveAllContacts=function(group_id,option){
 
       var urlstr=site;
       urlstr=urlstr+"jsondata/RABC/";
-      var jsonObjects={Empty:"Nothing"};
-
+      
+      var html_str="";
+      if (typeof option === 'undefined') {
+    // the variable is not defined
+       option=-1;
+       }
+      
+      var jsonObjects={GroupID:group_id,Option:option};
       var request = $.ajax({
                             url:urlstr,
                             method: "POST",
-                            data: jsonObjects,
+                            data: JSON.stringify(jsonObjects),
                             dataType: "jsonp"
                     });
  
-      request.done(function( contactsobj ) {
+      request.done(function(contactsobj ) {
                     
                   
-                    var contacts = new Array();
-                    var html_str="";
-                   
+                             
                   
                     var contacts_counter=0;
                     if (Modernizr.localstorage) {
                         //store into a local storage
-                        localStorage.setItem("AllContancts",JSON.stringify(contactsobj));
+                        localStorage.setItem("AllContacts",JSON.stringify(contactsobj));
                        
 
-                        //alert("Local Storage Supported");
                       }
 
 
+                       if(contactsobj["AD00"]["ContactID"]==-1){
+                           contact_ids_found=0;
+                            
+                             
+                        }
+                        else
+                        {
+                          contact_ids_found=1;
 
-                    //addressbookobj1=JSON.parse(localStorage.getItem("Contacts"))
-                    for(var x in contactsobj)
-                    {
+                        }
+                    
+                       for(var x in contactsobj)
+                       {
+                         
+                        if(!contact_ids_found)
+                              break;  
+                           
+                       
                         var contact_names="";
                         var contact_ward="";
                         var contact_district="";
@@ -431,8 +561,7 @@ var retrieveAllContacts=function(){
                         contact_names=contact_names+contactsobj[""+x+""]["first_name"];
                         contact_names=contact_names+ " ";
                         contact_names=contact_names+contactsobj[""+x+""]["last_name"];
-                        //contact_ids[name_counter]=addressbookobj[""+x+""]["ContactID"];
-                        //address_objects[name_counter]=""+x+"";
+                       
 
                         //get ward
                          contact_ward=contact_ward+contactsobj[""+x+""]["ward"];
@@ -446,16 +575,10 @@ var retrieveAllContacts=function(){
                          contact_region=contact_region+contactsobj[""+x+""]["region"];
 
 
-
+                         //get country
                          contact_country=contact_country+contactsobj[""+x+""]["country"];
                          
-                       
-                         //contacts[contacts_counter]=new Array();
-                         //contacts[contacts_counter]["Name"]=contact_names;
-                         //contacts[contacts_counter]["Ward"]=contact_ward;
-                         //contacts[contacts_counter]["District"]=contact_district;
-                         //contacts[contacts_counter]["Region"]=contact_region;
-                         //contacts[contacts_counter]["Country"]=contact_country;
+           
                          html_str=html_str+"\n<tr>\n";
                          html_str=html_str+"    <td>";
                          html_str=html_str+contact_names;
@@ -468,7 +591,7 @@ var retrieveAllContacts=function(){
 
 
                          html_str=html_str+"    <td>\n";
-                         html_str=html_str+contact_district
+                         html_str=html_str+contact_district;
                          html_str=html_str+"    </td>\n";
 
           
@@ -486,12 +609,13 @@ var retrieveAllContacts=function(){
                        
 
                          
-                    }
-                    //alert(html_str);
-                    $("#allcontacts").html(html_str);
+                        }
+                   //(html_str);
+                       $("#allcontacts").html(html_str);
 
              });
 
+  
 
 };
 
@@ -590,21 +714,74 @@ current_menu=record_id;
 };
 
 
-var expandGroup=function(group_id,menu_id){
+var expandGroup=function(group_id,menu_id,group_name){
 
  var record_id=menu_id+"";
  record_id=record_id+group_id;
  if(current_menu==record_id)
      return;
-//alert("Expand Group.."+group_id);
+global_group_id=group_id;
+global_group_name=group_name;
+
 retrieveGroupAllocatioTemplate();
 //$.noConflict();
 
 
-setTimeout(function(){retrieveAllContacts();},20);
+setTimeout(function(){retrieveGroupMembers(global_group_id);},20);
 
-setTimeout(function(){$('#example').DataTable();},60);
+setTimeout(function(){
+
+$('#groupandmembers').DataTable();
+
+var members_str="<h3>Members of '<i>"+global_group_name+"</i>' group</h3>";
+$("#group_members_header").html(members_str);
+
+},500);
 current_menu=record_id;
+
+//add click event handler for viewing current members
+setTimeout(function(){
+$("#groupmembers").on("click", function(event){
+
+retrieveGroupMembers(global_group_id);
+$('#groupandmembers').DataTable().destroy();//destroy the old data table
+
+var members_str="<h3>Members of '<i>"+global_group_name+"</i>' group</h3>";
+$("#group_members_header").html(members_str);
+setTimeout(function(){
+$('#groupandmembers').DataTable();
+
+},100)
+});
+
+
+},200);
+
+
+//add click event handler for viewing non members. This is important when adding new members to a group
+setTimeout(function(){
+
+$("#newmembership").on("click", function(event){
+
+retrieveNonGroupMembers(global_group_id);
+
+$('#groupandmembers').DataTable().destroy(); //destroy the old data table
+var members_str="<h3>Contacts not in '<i>"+global_group_name+"</i>' group</h3>";
+$("#group_members_header").html(members_str);
+setTimeout(function(){
+$('#groupandmembers').DataTable();
+
+},100);
+
+});
+
+
+
+
+},200);
+
+
+
 
 };
 
@@ -695,7 +872,8 @@ var retrieveGroupsContent=function ()
                         html_str=html_str+"\n  <td>";
 
 
-                        html_str=html_str+retrieved_group_name;   
+                        html_str=html_str+retrieved_group_name;
+                   
                         html_str=html_str+"\n  </td>";
 
                         //var long_str=resjson[""+x+""]["group_description"];
@@ -741,18 +919,26 @@ var retrieveGroupsContent=function ()
 
                         html_str=html_str+"\n <td class=\"iconbuttons\">";
 
-                        html_str=html_str+"\n   <button style=\"font-size:24px;color:blue\" onclick=\"editGroup('";
+                        html_str=html_str+"\n   <br><button style=\"font-size:24px;color:orange;\" title=\"Send SMS to this group\" onclick=\"initiateSMSDialog('2','";
+                        html_str=html_str+resjson[""+x+""]["GroupID"];
+                        html_str=html_str+"','";
+                        html_str=html_str+resjson[""+x+""]["group_name"];
+                        html_str=html_str+"')\"><i class=\"glyphicon glyphicon-envelope\"></i></button>"; 
+
+                        html_str=html_str+"\n   <button style=\"font-size:24px;color:blue\" title=\"Edit this group\" onclick=\"editGroup('";
                         html_str=html_str+resjson[""+x+""]["GroupID"];
                         html_str=html_str+"','EDITGROUP')\"><i class=\"fa fa-pencil\"></i></button>";
 
 
-                        html_str=html_str+"\n   <button style=\"font-size:24px;color:red;\" onclick=\"deleteGroup('";
+                        html_str=html_str+"\n   <button style=\"font-size:24px;color:red;\" title=\"Delete this group\" onclick=\"deleteGroup('";
                         html_str=html_str+resjson[""+x+""]["GroupID"];
                         html_str=html_str+"','DELETEGROUP')\"><i class=\"fa fa-trash-o\"></i></button>";
                     
-                        html_str=html_str+"\n   <button style=\"font-size:24px;color:green;\" onclick=\"expandGroup('";
+                        html_str=html_str+"\n   <button style=\"font-size:24px;color:green;\" title=\"Edit Group Members\" onclick=\"expandGroup('";
                         html_str=html_str+resjson[""+x+""]["GroupID"];
-                        html_str=html_str+"','EXPANDGROUP')\"><i class=\"glyphicon glyphicon-expand\"></i></button>";
+                        html_str=html_str+"','EXPANDGROUP','";
+                        html_str=html_str+resjson[""+x+""]["group_name"];
+                        html_str=html_str+"')\"><i class=\"glyphicon glyphicon-expand\"></i></button>";
                         html_str=html_str+"\n   </td>";
 
                      
@@ -894,6 +1080,7 @@ if(!initialized)//check if the menu has note been prviously initialized
           $(".menuimage").on("click", function(event){
 
              var item=$(this).attr("value");
+             $( "#smsdialog").dialog( "close" );//close if the dialog was left open.
             
         
 
@@ -976,6 +1163,7 @@ $(id2).html(""+remaining+" remaining");
 
 };
 
+
 /*
 $(document).ready(function(){
   $(".searchabletable").on("keyup", function() {
@@ -988,6 +1176,54 @@ $(document).ready(function(){
 });
 
 */
+/*
+    $( function() {
+    $( "#smartsmspopup" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "blind",
+        duration: 1000
+      },
+      hide: {
+        effect: "explode",
+        duration: 1000
+      }
+    });
+ 
+    $( "#smartsmspopup" ).on( "click", function() {
+      alert("Got here");
+      $( "#dialog" ).dialog( "open" );
+    });
+  } ); */
+
+    $( function() {
+    $( "#smsdialog" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "blind",
+        duration: 500
+      },
+      hide: {
+        effect: "explode",
+        duration: 500
+      }
+    });
+ 
+  } ); 
+
+var initiateSMSDialog=function(sms_type,option1,option2){
+   
+   bindSMSBroadCaster(sms_type,option1,option2);
+
+  
+  /*
+    $( ".startsmspopup" ).on( "click", function() {
+     
+      $( "#smsdialog" ).dialog( "open" );
+    });*/
+
+};
+  
 
 
 
