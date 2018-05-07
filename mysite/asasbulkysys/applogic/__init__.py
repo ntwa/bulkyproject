@@ -1,1 +1,1 @@
-__all__ = ['manage_contacts']
+__all__ = []

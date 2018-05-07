@@ -12,6 +12,7 @@ import datetime,calendar
 from django.template.loader import render_to_string
 from applogic.manage_contacts import AddressBookManager
 from applogic.save_sms import SaveSMS
+from applogic.manage_campaign import ManageCampaign 
 from applogic.manage_groups import GroupsManager
 
 def index(request):
@@ -35,6 +36,11 @@ def retrieveGroups(myjson):
 def saveGroups(myjson):
     obj=GroupsManager(myjson)
     msg=obj.saveGroupInDB()
+    return msg
+
+def retrieveCampaigns(myjson):
+    obj=ManageCampaign(myjson)
+    msg=obj.retrieveCampaignDetailsFromDB()
     return msg
 
 def saveSMS(myjson):
@@ -65,9 +71,31 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
           #return HttpResponse(status, content_type='application/json')
 
+
+
+     elif command_id =="RCT":#Command for retrieving template for displaying campaigns
+          context = RequestContext(request)
+          return render_to_response('campaigns.html', context)
+
+     elif command_id == "ROCT":#Command for retrieving template for display one campaign for editing
+          context = RequestContext(request)
+          return render_to_response('campaign_edit.html', context)
+
+
+     elif command_id =="RCC":#Command for retrieving content for campaigns 
+          #myjson=json.loads(request.body)
+          myjson={}
+          status=retrieveCampaigns(myjson)
+          #return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
+                
+                
+          return HttpResponse(status, content_type='application/json')
+
      elif command_id =="RGT":#Command for retrieving template for displaying groups
           context = RequestContext(request)
           return render_to_response('groups.html', context)
+
+    
 
      elif command_id =="RGC":#Command for retrieving for retrieving groups' details
           myjson=json.loads(request.body)
@@ -78,7 +106,7 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
 
 
 
-     elif command_id =="SGR":#Command for retrieving for retrieving groups' details
+     elif command_id =="SGD":#Command for saving groups' details
           myjson=json.loads(request.body)
           #myjson={}
           status=saveGroups(myjson)

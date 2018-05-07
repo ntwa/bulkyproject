@@ -37,7 +37,6 @@ class QueueFeedback:
 
 
 
-         
      def getQueuedSMS(self):
           result={}
           posn=0

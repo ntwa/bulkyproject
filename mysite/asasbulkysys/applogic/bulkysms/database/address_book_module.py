@@ -10,10 +10,26 @@ from collections import OrderedDict
 import sms_feedback_module
 
 #db = create_engine(connstr,pool_size=20, max_overflow=0)
-db = create_engine(connstr,poolclass=NullPool)
-dbconn=db.connect()
+#db = create_engine(connstr,poolclass=NullPool)
+#dbconn=db.connect()
 
-Base = declarative_base()
+try:
+     db 
+except NameError as e:
+     db = create_engine(connstr,poolclass=NullPool)
+
+
+try:
+     dbconn
+except NameError as e:
+
+     dbconn=db.connect()
+
+
+try:
+     Base
+except NameError as e:
+     Base = declarative_base()
 
        
 class AddressBook(Base):
@@ -158,6 +174,9 @@ class GroupMember(Base):
          self.contact_id=contact_id
          self.group_id=group_id
         
+
+
+
 
 
 

@@ -109,8 +109,10 @@ var sendGroupSMS=function(group_id)
 //send one sms from the address book
 var sendOneSMS=function()
 {
+   var sms_generalization=$('input[name=smsoptradio]:checked').val(); 
 
-     jsonObject={MessageBody:$("#addresssmsbox").val(),MobNo:$("#primarymobile").val()};
+     
+   jsonObject={MessageBody:$("#addresssmsbox").val(),MobNo:$("#primarymobile").val(),SMSAudience:"Bulky",SMSGeneralization:sms_generalization};
       $("#myprogressbar").html('');
       addLoadingCircle();
       var urlstr=site;
@@ -629,8 +631,8 @@ else
     jsonObject={GroupID:group_id,GroupName:$("#group_name_edit").val(),GroupDescr:$("#group_descr_edit").val()};
 
    
-        var urlstr=site;
-      urlstr=urlstr+"jsondata/SGR/";// Retrieve
+      var urlstr=site;
+      urlstr=urlstr+"jsondata/SGD/";// Retrieve
       $.ajax({
              url: urlstr,
              dataType: "jsonp",
@@ -993,6 +995,229 @@ var retrieveGroupsTemplate=function ()
 
   };//end of retrieveAddressBookTemplate 
 
+//Display campaigns
+
+//Retrieve Content for campaigns
+var retrieveCampaignsContent=function ()
+{     
+     
+     jsonObject={Empty:""};
+     
+      var urlstr=site;
+      urlstr=urlstr+"jsondata/RCC/";// Retrieve Campaign Content
+      $.ajax({
+             url: urlstr,
+             dataType: "jsonp",
+             method: "POST",
+             data:JSON.stringify(jsonObject),
+             cache: false
+             })
+            .done(function( resjson ) {
+               //alert(resjson.AD00.messagestxt.MTXT00);
+
+              //return resjson;
+              if (Modernizr.localstorage) {
+                        //store into a local storage
+                        localStorage.setItem("Campaigns",JSON.stringify(resjson));
+                        //alert("Local Storage Supported");
+                      }
+
+                
+
+                   
+
+          
+
+             });
+
+
+
+  };
+
+
+var displayCampaignsContent=function(display_type,campaign_id){
+  //display type, 1 -- Viewing Mode,  2 -- Editing Mode
+  //campaign_id is NULL in Viewing Mode, while in Editing Mode it will contain an id of a campaign to be edited
+ 
+  //alert("Got here");
+  retrieveCampaignsContent();
+  if(display_type==EDITING_MODE)
+    {
+    retrieveEditingCampaignTemplate(campaign_id);
+
+    }
+ 
+  setTimeout(function(){
+   
+                    
+
+                    var campaign_objects=[];
+                    var campaign_counter=0;
+                    var html_str="\n"
+              
+                    var resjson=JSON.parse(localStorage.getItem("Campaigns"));
+                    //alert("Group Content Loaded"+resjson["AD00"]["group_description"]);
+                    for(var x in resjson)
+                    {//start for loop
+                        var retrieved_campaign_id=resjson[""+x+""]["CampaignID"];
+                        var retrieved_campaign_name="";
+                        var retrieved_campaign_descr="";
+                        retrieved_campaign_name=resjson[""+x+""]["campaign_name"];  ;
+                        retrieved_campaign_descr=resjson[""+x+""]["campaign_description"];  
+
+
+
+
+                        //deciding on displaying mode whether the content should be viewing in editing mode or just normal viewing mode
+                        if((display_type==EDITING_MODE)&&(campaign_id==retrieved_campaign_id)){
+                         
+                          // this is editing mode so it should be viewed in text box ready for editing
+                           //retrieved_campaign_name="<input type=\"text\" value=\""+resjson[""+x+""]["campaign_name"]+"\" id=\"campaign_name\" maxlength=\"50\">" ;
+                           
+                          //retrieved_campaign_descr="<textarea id=\"campaign_descr\"  rows=\"5\" cols=\"20\" maxlength=\"200\">"+resjson[""+x+""]["campaign_description"]+"</textarea>" ;
+                          $("#campaign_name").val(retrieved_campaign_name);
+                          $("#campaign_descr").val(retrieved_campaign_descr);
+                          msgtxtobj=resjson[""+x+""]["messagestxt"];
+                         
+                       
+                          for(var y in msgtxtobj)
+                          {
+                          //alert(msgtxtobj[""+y+""]);
+                          campaign_msg_box="<textarea id=\"campaign_descr\"  rows=\"5\" cols=\"20\" id=\"";
+                          campaign_msg_box=campaign_msg_box+y;
+                          campaign_msg_box=campaign_msg_box+"\" maxlength=\"200\">" ;
+                          campaign_msg_box=campaign_msg_box+msgtxtobj[""+y+""];
+                          campaign_msg_box=campaign_msg_box+"</textarea>" ;
+                            
+                           html_str=html_str+"<tr>\n";
+                           html_str=html_str+"\n  <td>";
+                           //html_str=html_str+msgtxtobj[""+y+""];
+                           html_str=html_str+campaign_msg_box;
+                           html_str=html_str+"\n  </td>";
+                           html_str=html_str+"<tr>\n";
+
+                          }
+                          
+                          $("#tbl_messages").html(html_str);
+
+                          break;
+                        }
+                        else{
+                          //retrieved_campaign_name=resjson[""+x+""]["campaign_name"];  ;
+                          //retrieved_campaign_descr=resjson[""+x+""]["campaign_description"]; 
+
+
+
+                        html_str=html_str+"<tr>\n";
+
+                        html_str=html_str+"\n  <td>";
+
+
+                        html_str=html_str+retrieved_campaign_name;
+                   
+                        html_str=html_str+"\n  </td>";
+
+                        
+
+                        
+                        
+                        html_str=html_str+"\n  <td style=\"overflow:hidden; width:200px;\">"
+                        html_str=html_str+retrieved_campaign_descr;
+                        html_str=html_str+"\n  </td>";
+
+                        html_str=html_str+"\n  <td>"
+                        html_str=html_str+"N/A";
+                        html_str=html_str+"\n  </td>";
+
+
+                        html_str=html_str+"\n <td class=\"iconbuttons\">";
+
+                      
+                        html_str=html_str+"\n   <button style=\"font-size:24px;color:blue\" title=\"Edit this campaign\" onclick=\"editCampaign('";
+                        html_str=html_str+resjson[""+x+""]["CampaignID"];
+                        html_str=html_str+"','EDITCAMPAIGN')\"><i class=\"fa fa-pencil\"></i></button>";
+
+
+                        html_str=html_str+"\n   <button style=\"font-size:24px;color:red;\" title=\"Delete this CAMPAIGN\" onclick=\"deleteCampaign('";
+                        html_str=html_str+resjson[""+x+""]["CampaignID"];
+                        html_str=html_str+"','DELETECAMPAIGN')\"><i class=\"fa fa-trash-o\"></i></button>";
+                    
+                        
+
+                        html_str=html_str+"\n</tr>\n";
+                        $("#campaigns").html(html_str); 
+                    
+                      
+                         }
+                  
+                   
+
+                     }
+
+                      
+
+
+
+
+  },100);
+
+  
+
+
+
+
+
+ };
+
+//Retrieve Template for groups
+var retrieveCampaignsTemplate=function ()
+{     
+     
+      var urlstr=site;
+      urlstr=urlstr+"jsondata/RCT/";// Retrieve campaign template
+      $.ajax({
+             url: urlstr,
+             cache: false
+             })
+            .done(function( html ) {
+            //$( "#main-content" ).html( html );
+              //handleSliderNav();
+              //alert("Done");
+             $("#main-content").html(html);
+            //retrieveAddressBookContent();
+             });
+
+
+
+  };//end of retrieveAddressBookTemplate 
+
+
+var retrieveEditingCampaignTemplate=function (campaign_id)
+{     
+      
+      var urlstr=site;
+      urlstr=urlstr+"jsondata/ROCT/";// Retrieve one campaign editing template
+      $.ajax({
+             url: urlstr,
+             cache: false
+             })
+            .done(function( html ) {
+            
+              $("#main-content").html(html);
+              $("#savecampaignbtn").unbind( "click" ); // Remove the previous click handlers.
+              $("#savecampaignbtn").bind('click',function(){
+                saveCampaign(campaign_id,'SAVECAMPAIGN','2');
+              
+                });
+           
+             });
+
+
+
+  };//end of retrieveAddressBookTemplate 
+
+//end of  displaying campaigns
+
 var resetToHome=function(menu_id)
 {
 
@@ -1002,7 +1227,7 @@ var resetToHome=function(menu_id)
 
 $("#main-content").html(homeStr);
  
- current_menu=menu_id;  
+current_menu=menu_id;  
 
 
 
@@ -1058,9 +1283,12 @@ var manageCampaigns=function(menu_id)
 
  
 
-alert("Manage Campaigns");
+//alert("Manage Campaigns");
 if(current_menu==menu_id)
      return; 
+
+retrieveCampaignsTemplate();
+displayCampaignsContent(VIEWING_MODE);
 current_menu=menu_id;
 };
 
@@ -1138,6 +1366,19 @@ $("#groups tr").filter(function() {
 
 };
 
+var searchCampaignTable=function(){
+
+var value=$("#searchablecampaigntable").val();
+value=value.toLowerCase();
+$("#campaigns tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+     
+          
+
+    });
+
+};
+
 //count remaining chars to type
 var countRemaining=function(maxval,id1,id2){
 
@@ -1160,6 +1401,91 @@ $(id2).css("color","red");
 }
 }
 $(id2).html(""+remaining+" remaining");
+
+};
+
+
+var saveCampaign=function(campaign_id,menu_id,save_type){
+
+ var record_id=menu_id+"";
+ record_id=record_id+campaign_id;
+ //if(save_type=='1')
+ //     jsonObject={CampaignID:campaign_id,CampaignName:$("#campaign_name").val(),CampaignDescr:$("#campaign_descr").val()};
+//else
+ jsonObject={CampaignID:campaign_id,CampaignName:$("#campaign_name").val(),CampaignDescr:$("#campaign_descr").val()};
+
+ alert(jsonObject.CampaignName);
+return;  
+        var urlstr=site;
+      urlstr=urlstr+"jsondata/SCD/";// Save Campaign Details
+      $.ajax({
+             url: urlstr,
+             dataType: "jsonp",
+             method: "POST",
+             data:JSON.stringify(jsonObject),
+             cache: false
+             })
+            .done(function( result ) {
+             //clearInterval(display_interval);
+             //$("#progresspopup").popup( "close"); // close the pop up for progress once the results are returned from the database
+              //alert(result["message"]);
+
+            
+             
+
+             });
+
+
+
+
+
+ 
+ 
+
+
+setTimeout(function(){
+
+displayCampaignsContent(VIEWING_MODE);
+
+
+},10);
+
+if(save_type=="0"){
+    //alert("I am here");
+                //retain the previous search
+                setTimeout(function(){
+                searchCampaignTable();
+
+
+
+},200);
+
+}
+
+//Now retrieve group content for editing
+current_menu=record_id;
+
+};
+
+var editCampaign=function(campaign_id,menu_id){
+
+ var record_id=menu_id+"";
+ record_id=record_id+campaign_id;
+ //if(current_menu==record_id)
+ //    return;  
+
+//alert("Edit Group.."+group_id);
+
+//now call a function to save records
+
+
+displayCampaignsContent(EDITING_MODE,campaign_id);
+
+setTimeout(function(){
+           searchCampaignTable();
+          },100);
+//Now retrieve group content for editing
+current_menu=record_id;
 
 };
 

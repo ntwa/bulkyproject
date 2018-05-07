@@ -20,8 +20,7 @@ class SaveSMS:
           return datetime.date(d.year,d.month,t[1])
 
 
- 
-    
+        
 
 
      def saveOneSMSInDB(self):
@@ -85,7 +84,7 @@ class SaveSMS:
 
      
      
-#myjson={"MessageBody":"Hello. We wish you happy new year...","MobNo":"+255742340759"}
-#obj=SaveSMS(myjson)
+myjson={}
+obj=SaveSMS(myjson)
 #msg=obj.saveOneSMSInDB()
 #print msg

@@ -18,11 +18,7 @@ class SaveSMS:
      def last_day_of_month(self,d):
           t=(calendar.monthrange(d.year,d.month))
           return datetime.date(d.year,d.month,t[1])
-
-
-
-
-    
+       
     
 
 
@@ -87,7 +83,7 @@ class SaveSMS:
 
      
      
-#myjson={"MessageBody":"Hello. We wish you happy new year...","MobNo":"+255742340759"}
+#myjson={}
 #obj=SaveSMS(myjson)
 #msg=obj.saveOneSMSInDB()
 #print msg
