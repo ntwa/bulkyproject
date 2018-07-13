@@ -38,6 +38,11 @@ def saveGroups(myjson):
     msg=obj.saveGroupInDB()
     return msg
 
+def saveCampaigns(myjson):
+    obj=ManageCampaign(myjson)
+    msg=obj.saveOneCampaignInDB()
+    return msg
+
 def retrieveCampaigns(myjson):
     obj=ManageCampaign(myjson)
     msg=obj.retrieveCampaignDetailsFromDB()
@@ -47,6 +52,31 @@ def saveSMS(myjson):
     obj=SaveSMS(myjson)
     msg=obj.saveOneSMSInDB()
     return msg
+
+@csrf_exempt 
+def dataupdate(request,command_id):#REST API used by the client side of web application to load data for display
+     myjson={}
+     if command_id =="SS":#Command for sending one SMS
+          #myjson={"MessageBody":"Hello. We wish you happy new year...","MobNo":"+255742340759"}
+          myjson=json.loads(request.body)
+          status=saveSMS(myjson)
+          #myjson=json.JSONEncoder().encode(myjson)
+          return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
+
+     elif command_id =="SGD":#Command for saving groups' details
+          myjson=json.loads(request.body)
+          #myjson={}
+          status=saveGroups(myjson)
+          return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
+
+     elif command_id =="SCD":#Command for saving campaigns' details
+          myjson=json.loads(request.body)
+          #myjson={}
+          status=saveCampaigns(myjson)
+          return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
+
+  
+
 
 @csrf_exempt 
 def dataloader(request,command_id):#REST API used by the client side of web application to load data for display
@@ -63,12 +93,7 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
           context = RequestContext(request)
           return render_to_response('addressbook.html', context)
 
-     elif command_id =="SS":#Command for sending one SMS
-          #myjson={"MessageBody":"Hello. We wish you happy new year...","MobNo":"+255742340759"}
-          myjson=json.loads(request.body)
-          status=saveSMS(myjson)
-          #myjson=json.JSONEncoder().encode(myjson)
-          return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
+
           #return HttpResponse(status, content_type='application/json')
 
 
@@ -105,12 +130,6 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
           #return HttpResponse(status, content_type='application/json')
 
 
-
-     elif command_id =="SGD":#Command for saving groups' details
-          myjson=json.loads(request.body)
-          #myjson={}
-          status=saveGroups(myjson)
-          return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
 
      elif command_id =="RGAT":#Command for retrieving template for displaying all contacts. This used for assigning members to groups
           context = RequestContext(request)

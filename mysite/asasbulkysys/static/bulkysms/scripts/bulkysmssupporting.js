@@ -1,10 +1,14 @@
 //Declaration of site global variables
 var VIEWING_MODE=1;
-var EDITING_MODE=2;
+var EDITING_MODE=2; //Editing group or campaign
 var current_menu=null;
-var global_group_id="";
+var global_group_id=""; 
 var global_name="";
 var contact_ids_found=0;
+
+
+
+var total_no_msg_box=0;// This variable is important when defining the number of messages to be used in a campaign
 
  var site="http://localhost:8000/asasbulkysys/";
 
@@ -82,7 +86,7 @@ var sendGroupSMS=function(group_id)
       $("#myprogressbar").html('');
       addLoadingCircle();
       var urlstr=site;
-      urlstr=urlstr+"jsondata/SS/";// Send SMS to a group.
+      urlstr=urlstr+"jsonupdate/SS/";// Send SMS to a group.
       $.ajax({
              url: urlstr,
              dataType: "jsonp",
@@ -632,7 +636,7 @@ else
 
    
       var urlstr=site;
-      urlstr=urlstr+"jsondata/SGD/";// Retrieve
+      urlstr=urlstr+"jsonupdate/SGD/";// Retrieve
       $.ajax({
              url: urlstr,
              dataType: "jsonp",
@@ -1286,6 +1290,8 @@ var manageCampaigns=function(menu_id)
 //alert("Manage Campaigns");
 if(current_menu==menu_id)
      return; 
+//Reset previosly defined campaign messages to Zero.
+total_no_msg_box=0;
 
 retrieveCampaignsTemplate();
 displayCampaignsContent(VIEWING_MODE);
@@ -1405,6 +1411,84 @@ $(id2).html(""+remaining+" remaining");
 };
 
 
+
+//delete all boxes
+
+var removeMsgBoxes=function()
+{
+$("#camp_msg_grp").html('');
+$("#del_msg_boxes").hide(); 
+total_no_msg_box=0;//reset the number of boxes
+};
+
+//append extra text boxes for defining cambaign messages
+var addMessageBox=function()
+{
+
+var new_msg_box_id="campaignmsgbx_"+total_no_msg_box;
+
+total_no_msg_box=total_no_msg_box+1;//increment the number of messages to be defined for a campaign
+
+if(total_no_msg_box==1){
+
+  $("#del_msg_boxes").show(); //hide 
+}
+//now create html for new message box and update the current boxes by appending a new box html
+
+//var new_msg_box=current_boxes;
+var new_msg_box="";
+new_msg_box=new_msg_box+"<b>Message ";
+new_msg_box=new_msg_box+total_no_msg_box;
+new_msg_box=new_msg_box+"</b>: <span id=\"charcounter_"; //for counting number of characters
+new_msg_box=new_msg_box+new_msg_box_id;
+new_msg_box=new_msg_box+"\">0</span> <i><b>characters</b></i></br><textarea id=\"";
+new_msg_box=new_msg_box+new_msg_box_id;
+new_msg_box=new_msg_box+"\"";
+new_msg_box=new_msg_box+" onkeyup=\"countTyped('200','#";
+new_msg_box=new_msg_box+new_msg_box_id;
+new_msg_box=new_msg_box+"','#charcounter_";
+
+new_msg_box=new_msg_box+new_msg_box_id;
+new_msg_box=new_msg_box+"');\"";
+new_msg_box=new_msg_box+ " rows=\"3\" cols=\"40\" maxlength=\"450\">";
+new_msg_box=new_msg_box+"</textarea>";
+new_msg_box=new_msg_box+"<br/><br/>";
+
+//now append with the updated html content
+
+$("#camp_msg_grp").append(new_msg_box);
+
+};
+
+
+//Count how many characters have been typed into a campaign message box
+var countTyped=function(maxval,id1,id2){
+
+
+var current_str=$(id1).val();
+
+var remaining=parseInt(maxval)-current_str.length;
+var typed=current_str.length;
+var current_percentage=(current_str.length*100)/parseInt(maxval);
+
+if(current_percentage<30){
+    $(id2).css("color","black");
+
+}
+else{
+    if(current_percentage<70){
+     $(id2).css("color","blue");
+     }
+     else{
+    $(id2).css("color","red");
+
+    }
+}
+$(id2).html(""+typed+"");
+
+};
+
+
 var saveCampaign=function(campaign_id,menu_id,save_type){
 
  var record_id=menu_id+"";
@@ -1412,12 +1496,56 @@ var saveCampaign=function(campaign_id,menu_id,save_type){
  //if(save_type=='1')
  //     jsonObject={CampaignID:campaign_id,CampaignName:$("#campaign_name").val(),CampaignDescr:$("#campaign_descr").val()};
 //else
- jsonObject={CampaignID:campaign_id,CampaignName:$("#campaign_name").val(),CampaignDescr:$("#campaign_descr").val()};
 
- alert(jsonObject.CampaignName);
+ //append all messages into one JSON object called messages
+ var msgJSONstring="";
+ var non_empty_boxes=0;
+ var msg_box_id="";
+ var msg_content="";
+ for(var num=0;num<total_no_msg_box;num++){
+    if(num==0)
+    {
+      msgJSONstring=msgJSONstring+"{";
+
+    }
+    msg_box_id="#campaignmsgbx_"+num;
+    msg_content=$(msg_box_id).val();
+    
+    msgJSONstring=msgJSONstring+'"Message'+num+'":"';
+    msgJSONstring=msgJSONstring+msg_content+'"';
+
+    if(num==(total_no_msg_box-1)) //You ar at the last message
+    {
+      msgJSONstring=msgJSONstring+'}'; //We have iterated through all message items
+
+    }
+    else
+    {
+      msgJSONstring=msgJSONstring+','; //Still more items to append
+
+
+    }
+
+
+ }
+ if(total_no_msg_box==0){ //It implies there were no messages and the loop never opened
+   
+   msgobj=msgJSONstring; //This will be empty
+ }
+ else
+    {
+      msgobj=JSON.parse(msgJSONstring);
+
+    }
+//alert(myjson["Message0"]);
+//return;
+
+ jsonObject={CampaignID:campaign_id,CampaignName:$("#campaign_name").val(),CampaignDescr:$("#campaign_descr").val(),Messages:msgobj,NumMessages:total_no_msg_box};
+
+alert(jsonObject.NumMessages);
 return;  
-        var urlstr=site;
-      urlstr=urlstr+"jsondata/SCD/";// Save Campaign Details
+      var urlstr=site;
+      urlstr=urlstr+"jsonupdate/SCD/";// Save Campaign Details
       $.ajax({
              url: urlstr,
              dataType: "jsonp",

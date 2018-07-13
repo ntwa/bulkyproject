@@ -18,14 +18,13 @@
                                   
                                     <td>
                                       Campaign Messages
-
                                     </td>
 
                                   
                                   
                               
                                   
-                                    <td style="text-align:center;">
+                                   <td align="center">
                                      <table id="tbl_messages">
                                          <tr><td>&nbsp;</td></tr>
                                      </table>

@@ -1,10 +1,14 @@
 //Declaration of site global variables
 var VIEWING_MODE=1;
-var EDITING_MODE=2;
+var EDITING_MODE=2; //Editing group or campaign
 var current_menu=null;
-var global_group_id="";
+var global_group_id=""; 
 var global_name="";
 var contact_ids_found=0;
+
+
+
+var total_no_msg_box=0;// This variable is important when defining the number of messages to be used in a campaign
 
  var site="http://localhost:8000/asasbulkysys/";
 
@@ -1286,6 +1290,8 @@ var manageCampaigns=function(menu_id)
 //alert("Manage Campaigns");
 if(current_menu==menu_id)
      return; 
+//Reset previosly defined campaign messages to Zero.
+total_no_msg_box=0;
 
 retrieveCampaignsTemplate();
 displayCampaignsContent(VIEWING_MODE);
@@ -1401,6 +1407,73 @@ $(id2).css("color","red");
 }
 }
 $(id2).html(""+remaining+" remaining");
+
+};
+
+
+//append extra text boxes for defining cambaign messages
+var addMessageBox=function()
+{
+
+var new_msg_box_id="campaignmsgbx_"+total_no_msg_box;
+
+total_no_msg_box=total_no_msg_box+1;//increment the number of messages to be defined for a campaign
+
+
+//now create html for new message box and update the current boxes by appending a new box html
+
+//var new_msg_box=current_boxes;
+var new_msg_box="";
+new_msg_box=new_msg_box+"<b>Message ";
+new_msg_box=new_msg_box+total_no_msg_box;
+new_msg_box=new_msg_box+"</b>: <span id=\"charcounter_"; //for counting number of characters
+new_msg_box=new_msg_box+new_msg_box_id;
+new_msg_box=new_msg_box+"\">0</span> <i><b>characters</b></i></br><textarea id=\"";
+new_msg_box=new_msg_box+new_msg_box_id;
+new_msg_box=new_msg_box+"\"";
+new_msg_box=new_msg_box+" onkeyup=\"countTyped('200','#";
+new_msg_box=new_msg_box+new_msg_box_id;
+new_msg_box=new_msg_box+"','#charcounter_";
+//new_msg_box=new_msg_box+" onkeyup=\"countTyped('200','";
+new_msg_box=new_msg_box+new_msg_box_id;
+new_msg_box=new_msg_box+"');\"";
+new_msg_box=new_msg_box+ " rows=\"3\" cols=\"40\" maxlength=\"450\">";
+new_msg_box=new_msg_box+"</textarea><br/><br/>";
+alert(new_msg_box);
+
+//now append with the updated html content
+
+$("#camp_msg_grp").append(new_msg_box);
+
+
+
+};
+
+
+//Count how many characters have been typed into a campaign message box
+var countTyped=function(maxval,id1,id2){
+
+
+var current_str=$(id1).val();
+
+var remaining=parseInt(maxval)-current_str.length;
+var typed=current_str.length;
+var current_percentage=(current_str.length*100)/parseInt(maxval);
+
+if(current_percentage<30){
+    $(id2).css("color","black");
+
+}
+else{
+    if(current_percentage<70){
+     $(id2).css("color","blue");
+     }
+     else{
+    $(id2).css("color","red");
+
+    }
+}
+$(id2).html(""+typed+"");
 
 };
 

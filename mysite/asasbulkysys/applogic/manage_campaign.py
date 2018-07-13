@@ -115,7 +115,7 @@ class ManageCampaign:
   
 
 
-               campaign_name=self.myjson["GroupName"]
+               campaign_name=self.myjson["CampaignName"]
                campaign_descr=self.myjson["CampaignDescr"]
                campaign_category=self.myjson["CampaignCategory"]
                target_level=self.myjson["Target_Level"]

@@ -3,8 +3,6 @@
           <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#managecampaigns">Manage Campaigns</button>  
         <div style="height:400px;border:solid 2px orange;overflow:scroll;overflow-x:hidden;overflow-y:scroll;">
   
-		
-
 		<div id="createcampaign" class="collapse">
  <hr style="color:green;border-color:green;background-color:green;"></hr> 
               			<div><h3 id="savingcampaignheader">Create New Campaign</h3></div> 
@@ -13,10 +11,26 @@
               			<td>Campaign Name:<br>(Max (50 chars)<br><div id="cnamelabel1" style="color:black;">50 remaining</div></td><td><input type="text" name="campaignname" id="campaign_name" maxlength="50" onkeyup="countRemaining('50','#campaign_name','#cnamelabel1');"/><input id="hiddencampaignid" type="hidden"/></td> 
               			</tr> 
               			<tr> 
-              			<td>Campaign Description:<br>(Max:200 chars)<br><div id="cdescrlabel1" style="color:black;">200 remaining</div></td><td><textarea name="description" id="campaign_descr" rows="5" cols="32" maxlength=200" onkeyup="countRemaining('200','#campaign_descr','#cdescrlabel1');"></textarea></td> 
-              			</tr> 
+              			<td>Campaign Description:<br>(Max:200 chars)<br><div id="cdescrlabel1" style="color:black;">200 remaining</div></td><td><textarea name="description" id="campaign_descr" rows="5" cols="32" maxlength="200" onkeyup="countRemaining('200','#campaign_descr','#cdescrlabel1');"></textarea></td> 
+              			</tr>
+                                <tr>
+                                   <td style="border:1;" colspan="2" align="center">
+                                       <b>Define Campaign Messages</b><br/>
+                                      <a href="#" class="btn btn-info btn-lg" style="font-size:15px;color:white;background-color:5bc0de;" onclick="addMessageBox();">
+                                          <span class="glyphicon glyphicon-plus-sign"></span>Message<br/>
+                                    
+                                          <!--<i class="fa fa-plus" style="font-size:48px;color:red"></i>-->
+                                      </a> 
+                                       <div id="camp_msg_grp"></div> 
+                                       <div id="del_msg_boxes" hidden>
+                                          <button style="font-size:24px;color:red;" title="Remove all boxes" onclick="removeMsgBoxes();">
+                                             <i class="fa fa-trash-o"></i>
+                                          </button>
+                                      </div>        
+                                   </td>
+                                </tr> 
               			<tr> 
-              			<td colspan=2 align="center"> 
+              			                 <td colspan=2 align="center"> 
                                       <a href="#" class="btn btn-info btn-lg" style="font-size:15px;color:white;background-color:5bc0de;"onclick="saveCampaign('-1','SAVECAMPAIGN','1');">
                                       <span class="glyphicon glyphicon-ok"></span> Save 
                                       </a>               
@@ -27,6 +41,7 @@
               			
               			</td> 
               			</tr> 
+
               			</table> 
 		</div>
             <!--End of div for layer 1-->
