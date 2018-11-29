@@ -55,7 +55,7 @@ class AddressBookManager:
 
           return alist
  
-     def verify_country_code(self,country,mobile_no):
+     def verify_country_code_format(self,country,mobile_no):
           
           mob_len=len(mobile_no)
           start_point=mob_len-9 # get the last nine digits of a mobile number
@@ -324,54 +324,103 @@ class AddressBookManager:
           
           # Get data from fields
           try:
-               '''             
-               firstname=self.myjson["FName"] 
-               middlename=self.myjson["MName"] 
-               lastname=self.myjson["LName"] 
+               contact_id=self.myjson["contact_id"]             
+               first_name=self.myjson["First Name"] 
+               middle_name=self.myjson["Middle Name"] 
+               last_name=self.myjson["Last Name"] 
                dob=self.myjson["DOB"] 
-               gender=self.myjson["Gender"] 
+               gender=self.myjson["Gender"]
+               
+           
                ward=self.myjson["Ward"]
                district=self.myjson["District"]
 	       region=self.myjson["Region"]
-	       country=self.myjson["Country"]  
-               mobile1=self.myjson["Mobile1"] 
-               mobile2=self.myjson["Mobile2"] 
-               mobile3=self.myjson["Mobile3"]  
-	       email1=self.myjson["Email1"]
-	       email2=self.myjson["Email2"]
-	       email3=self.myjson["Email3"]       
+	       country=self.myjson["Country"]
+                
+               mobile1=self.myjson["Mobile Phone #1"] 
+               mobile2=self.myjson["Mobile Phone #2"] 
+               mobile3=self.myjson["Mobile Phone #3"]  
+            
+	       email1=self.myjson["Email Address #1"]
+	       email2=self.myjson["Email Address #2"]
+	       email3=self.myjson["Email Address #3"]       
                
-               '''
+              
                
-               first_name="Ntwa"
-               middle_name="Andalwisye" 
-               last_name="Katule" 
-               dob="2013-02-23"
-               gender="Male"
-               ward="Mbuyuni"
-               district="Morogoro"
-	       region="Morogoro"
-	       country="Tanzania"
-	       mobile1="0718255585"
-               mobile2="0742340759"
-               mobile3="0656867676"
-               email1="katulentwa@gmail1.com"
-	       email2="nkatule@aru.ac.tz"
-	       email3="lucatec.ceo@gmail.com"
+               #first_name="Ntwa"
+               #middle_name="Andalwisye" 
+               #last_name="Katule" 
+               #dob="2013-02-23"
+               #gender="Male"
+               #ward="Mbuyuni"
+               #district="Morogoro"
+	       #region="Morogoro"
+	       #country="Tanzania"
+	       #mobile1="0718255585"
+               #mobile2="0742340759"
+               #mobile3="0656867676"
+               #email1="katulentwa@gmail1.com"
+	       #email2="nkatule@aru.ac.tz"
+	       #email3="lucatec.ceo@gmail.com"
 
-               #Ensure mobile numbers are appended with country code
-               mobile_numbers=[mobile1,mobile2,mobile3]
+               #Ensure mobile numbers are appended with
+               #mobile_numbers=[mobile1,mobile2,mobile3]
+               mobile_numbers=[]
+
+               #Now parse mobile numbers to know how many of them needs to be updated to te database. For instance if no number was provided then we should insert anything. The maximum number of mobile numbers is three
+
+               if mobile1 is None:
+                    pass
+               else:
+                    mobile_numbers.append(mobile1)
+
+
+               if mobile2 is None:
+                    pass
+               else:
+                    mobile_numbers.append(mobile2)
+
+
+               if mobile3 is None:
+                    pass
+               else:
+                    mobile_numbers.append(mobile3)
+
+          
+
                current=0
                for mob_no in mobile_numbers:
 		    #first_for_chars=mob_no[0:4]
                     #now check if the country code is appended
-                    modified_number=self.verify_country_code(country,mob_no)
+                    modified_number=self.verify_country_code_format(country,mob_no)
                     if "Error:" in modified_number:
 			 result["message"]="'%s' in editing the contact details for '%s %s %s'. Check if the mobile numbers have been entered correctly. The correct format is (+ABC)(XYZ)(NNNNNN) where '+ABC' stands for country code, XYZ stands for service provider number i.e 0656,0718 etc and NNNNNN stands for the last 8 digits of the mobile phone number. If the error persists contact the developer"%(modified_number, first_name,middle_name,last_name) 
                          return (json.JSONEncoder().encode(result))
                     
                     mobile_numbers[current]=modified_number  
-                    current=current+1                      
+                    current=current+1
+
+
+               email_addresses=[]
+
+               #Now parse mobile numbers to know how many of them needs to be updated to te database. For instance if no number was provided then we should insert anything. The maximum number of mobile numbers is three
+
+               if email1 is None:
+                    pass
+               else:
+                    email_addresses.append(email1)
+
+
+               if email2 is None:
+                    pass
+               else:
+                    email_addresses.append(email2)
+
+
+               if email3 is None:
+                    pass
+               else:
+                    email_addresses.append(email3)                      
                                                                                 
          
 
@@ -381,14 +430,14 @@ class AddressBookManager:
                 
           except Exception as e:
                #print "Content-type: text/html\n" 
-               result["message"]="Error: '%s' encountered in editing the 'Address Book'. If the error persists contact the developer"%e
+               result["opstatus"]={"success":-1,"message":"Error: '%s' encountered in editing the 'Address Book'. If the error persists contact the developer"%e}
                return (json.JSONEncoder().encode(result)) 
                #sys.exit() 
           
 
           if(first_name=="None") and (middle_name=="None") and (last_name=="None") and (gender=="None") and (dob=="None") and (ward=="None") and (district=="None") and (region=="None") and (country=="None"):
                #print "Content-type: text/html\n" 
-               result["message"]="Error: You did not enter any details"
+               result["opstatus"]={"success":-1,"message":"Error: You did not enter any details"}
                return (json.JSONEncoder().encode(result)) 
                #sys.exit()
 
@@ -402,7 +451,7 @@ class AddressBookManager:
                session = Session()
                                    
                # querying for a record if it exists already.
-               res= session.query(AddressBook).filter(AddressBook.first_name==first_name).first()
+               res= session.query(AddressBook).filter(AddressBook.id==contact_id).first()
                
                if res is None:
                     session.close()
@@ -413,13 +462,13 @@ class AddressBookManager:
                     address_part1_record=res
                     address_part1_record.first_name=first_name
                     address_part1_record.middle_name=middle_name
-		    address_part1_record.last_name=last_name
+                    address_part1_record.last_name=last_name
                     address_part1_record.gender=gender
                     address_part1_record.birth_date=dob
                     address_part1_record.ward=ward
                     address_part1_record.district=district
-		    address_part1_record.region=region
-		    address_part1_record.country=country
+                    address_part1_record.region=region
+                    address_part1_record.country=country
 
 		    
                     contact_id=res.id
@@ -431,31 +480,74 @@ class AddressBookManager:
                     
                     
                     #initialize counter to zero before start changing each mobile phone number
-                    counter=0
+                    counter=len(mobile_numbers)
                    
                     if len(res2) ==0:
-                       #Incase the contact existed but mobile details didn't exists then attempt to create them
-                       #
-                       res.mobile_number.append(MobileDetails(mobile_numbers[0],1))
-                       res.mobile_number.append(MobileDetails(mobile_numbers[1],0))
-                       res.mobile_number.append(MobileDetails(mobile_numbers[2],0))
-                       session.merge(res)
+                         #Incase the contact existed but mobile details didn't exists then attempt to create them
+                       
+                         #First do the checking
+                         count_mobiles=0
+                         if mobile1 is None:
+                              pass
+                         else:
+                              res.mobile_number.append(MobileDetails(mobile_numbers[count_mobiles],1))
+                              count_mobiles+=1
+
+
+                         if mobile2 is None:
+                              pass
+                         else:
+                           
+                              if count_mobiles==0:
+                                   res.mobile_number.append(MobileDetails(mobile_numbers[count_mobiles],1))
+                              else:
+                                   res.mobile_number.append(MobileDetails(mobile_numbers[count_mobiles],0))
+     
+                              count_mobiles+=1
+
+
+                         if mobile3 is None:
+                              pass
+                         else:
+                           
+                              if count_mobiles==0:
+                                   res.mobile_number.append(MobileDetails(mobile_numbers[count_mobiles],1))
+                              else:
+                                   res.mobile_number.append(MobileDetails(mobile_numbers[count_mobiles],0))
+     
+                              count_mobiles+=1
+
+
+                         #res.mobile_number.append(MobileDetails(mobile_numbers[0],1))
+                         #res.mobile_number.append(MobileDetails(mobile_numbers[1],0))
+                         #res.mobile_number.append(MobileDetails(mobile_numbers[2],0))
+                         session.merge(res)
                      
 			 
                     else:
+                         count_mobiles=0
                          for mobile in res2:
-                              mobile.mobile_number=mobile_numbers[counter]
-                                  
-			      counter=counter+1
-                         if counter>2:
+                              mobile.mobile_number=mobile_numbers[count_mobiles]
+                              if count_mobiles==0: 
+                                   mobile.is_it_primary_number=1 
+  
+			      count_mobiles=count_mobiles+1
+
+                             
+                         if count_mobiles>2:
                               pass # It means there were three phone numbers in the database and have been updated successfully
 
                          else: #less than three phone number existed in the database hence add the new ones too
                              # append the new records that were not part of the previous records
                              #initialize index to the last value of counter
-                            
-                             for index in range(counter,3):
-	   			   res.mobile_number.append(MobileDetails(mobile_numbers[index],0))
+                             
+                             for index in range(counter):
+	   			   #But check this if this number arleady exists or not a duplication of an existing number
+                                   mobileexist= session.query(MobileDetails).filter(MobileDetails.contact_id==contact_id).filter(MobileDetails.mobile_number==mobile_numbers[index]).first()
+                                   if mobileexist is None:
+                                        #Then proceed with appending
+                                        res.mobile_number.append(MobileDetails(mobile_numbers[index],0))
+                                
                              session.merge(res) 
                                    
                          
@@ -464,40 +556,84 @@ class AddressBookManager:
                     email_addresses=[email1,email2,email3]
                     
                     #initialize counter to zero before start changing each email address
-                    counter=0
-     	    	    
+                  
+     	    	    counter=len(email_addresses)
                     if len(res2)==0:
 			 
                          #Incase the contact existed but mobile details didn't exists then attempt to create them
+
                        
-                         res.email_address.append(EmailDetails(email1,1))
-                         res.email_address.append(EmailDetails(email2,0))
-                         res.email_address.append(EmailDetails(email3,0))
+                         #First do the checking
+                         count_emails=0
+                         if email1 is None:
+                              pass
+                         else:
+                              res.email_address.append(EmailDetails(email_addresses[count_emails],1))
+                              count_emails+=1
+
+
+                         if email2 is None:
+                              pass
+                         else:
+                           
+                              if count_emails==0:
+                                   res.email_address.append(EmailDetails(email_addresses[count_emails],1))
+                              else:
+                                   res.email_address.append(EmailDetails(email_addresses[count_emails],0))
+     
+                              count_emails+=1
+
+
+                         if email3 is None:
+                              pass
+                         else:
+                           
+                              if count_emails==0:
+                                   res.email_address.append(EmailDetails(email_addresses[count_emails],1))
+                              else:
+                                   res.email_address.append(EmailDetails(email_addresses[count_emails],0))
+     
+                              count_emails+=1
+                       
+                 
                          session.merge(res)
+                       
                     
                     else:
+                         count_emails=0
                          for email in res2:
-                              email.email_address=email_addresses[counter] 
-			      counter=counter+1 
+                              email.email_address=email_addresses[count_emails]
+                              if count_emails==0: 
+                                   email.is_it_primary_email=1
+  
+			      count_emails+=1 
                          
-                         if counter>2:
+                         if count_emails>2:
                               pass # It means there were three email addresses in the database and have been updated successfully
 
                          else: #less than three phone number existed in the database hence add the new ones too
                              # append the new records that were not part of the previous records
                              #initialize index to the last value of counter
                             
-                             for index in range(counter,3):
-	   			   res.email_address.append(EmailDetails(email_addresses[index],0))
+                             for index in range(counter):
+                                   emailexists= session.query(EmailDetails).filter(EmailDetails.contact_id==contact_id).filter(EmailDetails.email_address==email_addresses[index]).first()
+                                   if emailexists is None:
+                                        #Then proceed with appending
+                                        res.email_address.append(EmailDetails(email_addresses[index],0))
+                                
+
+
+
+	   			   
                              session.merge(res)               
                               
                     
                                                 
                     session.commit() #Now commit this session                         
-                    allow_insert=0 #Reset allow to zero so that the code doesn't attempt to insert a new record
+                    allow_insert=0 #Reset allow_insert to zero so that the code doesn't attempt to insert a new record
                     #size=size-1 #ignore the last value because it has arleady been updated
                     
-                    result["message"]="The record for '%s %s %s' already existed hence has been updated"%(first_name,middle_name,last_name)
+                    result["opstatus"]={"success":1,"message":"The record for '%s %s %s' already existed hence has been updated"%(first_name,middle_name,last_name)}
                     session.close()  
                     engine.dispose()   
                     dbconn.close()
@@ -512,7 +648,7 @@ class AddressBookManager:
 
                #print "Content-type: text/html\n" 
                                    
-               result["message"]="Error: %s. (Line 245)"%e
+               result["opstatus"]={"success":-1,"message":"Error: %s"%e}
                #print      
                return (json.JSONEncoder().encode(result))
                #sys.exit()
@@ -524,18 +660,66 @@ class AddressBookManager:
                     
                 
                     new_address=AddressBook(first_name,middle_name,last_name,gender,dob,ward,district,region, country)
-                    new_mobiles=[MobileDetails(mobile_numbers[0],1),MobileDetails(mobile_numbers[0],0),MobileDetails(mobile_numbers[2],0)]#packed all three mobile numbers
-                    
-                    new_address.mobile_number=[]
-                    new_address.mobile_number.extend(new_mobiles)
+                    new_mobiles=[]
+                    count_mobiles=0
+
+                    if mobile1 is None:
+                         pass
+                    else:
+                         new_mobiles.append(MobileDetails(mobile_numbers[count_mobiles],1))
+                         count_mobiles+=1
 
 
-		    new_emails=[EmailDetails(email1,1),EmailDetails(email2,0),EmailDetails(email3,0)]#packed all three email addresses
+                    if mobile2 is None:
+                         pass
+                    else:
+                         new_mobiles.append(MobileDetails(mobile_numbers[count_mobiles],1))
+                         count_mobiles+=1
+
+
+                    if mobile3 is None:
+                         pass
+                    else:
+                         new_mobiles.append(MobileDetails(mobile_numbers[count_mobiles],1))
+                         count_mobiles+=1
+
                     
-                    new_address.email_address=[]
-                    new_address.email_address.extend(new_emails)
-      
-                   
+
+
+                    #new_mobiles=[MobileDetails(mobile_numbers[0],1),MobileDetails(mobile_numbers[0],0),MobileDetails(mobile_numbers[2],0)]#packed all three mobile numbers
+                    
+                    if count_mobiles>0: # We only extend if we have at least one mobile number
+                         new_address.mobile_number=[]
+                         new_address.mobile_number.extend(new_mobiles)
+
+                    #Now extend emails
+
+                    new_emails=[]
+                    count_emails=0
+
+		    if email1 is None:
+                         pass
+                    else:
+                         new_emails.append(EmailDetails(email_addresses[count_emails],1))
+                         count_emails+=1
+
+
+                    if email2 is None:
+                         pass
+                    else:
+                         new_emails.append(EmailDetails(email_addresses[count_emails],1))
+                         count_emails+=1
+
+
+                    if email3 is None:
+                         pass
+                    else:
+                         new_emails.append(EmailDetails(email_addresses[count_emails],1))
+                         count_emails+=1
+
+                    if count_emails>0:
+                         new_address.email_address=[]
+                    	 new_address.email_address.extend(new_emails)
                                                 
                                  
                     
@@ -547,18 +731,18 @@ class AddressBookManager:
                     
                     
                     session.commit()
-		    session.close()
+                    session.close()
                     engine.dispose()
                     dbconn.close()
                      
-                    result["R00"]={"F1":1,"F0":"The contact was added sucessfully"}
+                    result["opstatus"]={"success":1,"message":"The contact was added sucessfully"}
                     return (json.JSONEncoder().encode(result))                 
                      
                     
                except Exception as e:
                     session.close()
                     engine.dispose()
-                    result["R00"]={"F1":-6,"F0":e.message}
+                    result["opstatus"]={"success":-1,"message":e.message}
                     dbconn.close()
                     return (json.JSONEncoder().encode(result)) 
             
@@ -566,7 +750,7 @@ class AddressBookManager:
                #result["R00"]={"F1":1,"F0":"The contact was recorded sucessfully"}
                #return (json.JSONEncoder().encode(result))
      
-     
+#myjson={"contact_id":2,"First Name":"Ntwa","Middle Name":"Andalwisye", "Last Name":"Mwanyendwa","Gender":"Male","DOB":"1980-03-13","Ward":"Kunduchi","District":"Kinondoni","Region":"Dar es salaam","Country":"Tanzania","Mobile Phone #1":"0718255585","Mobile Phone #2":"0742340759","Mobile Phone #3":None,"Email Address #1":"katulentwa@gmail.com","Email Address #2":"katulentwa@hotmail.com","Email Address #3":"nkatule@aru.ac.tz"}     
 #myjson={"GroupID":"-1","Option":"-1"}
 #obj=AddressBookManager(myjson)
 #msg=obj.retrieveContactDetailsFromDB()

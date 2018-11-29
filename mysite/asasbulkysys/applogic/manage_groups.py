@@ -1,10 +1,26 @@
 #!/usr/bin/env python
 import datetime
 import sys,json
-from sqlalchemy import create_engine
+#from sqlalchemy import create_engine,distinct,func
+from sqlalchemy import distinct,func
 from sqlalchemy.orm import sessionmaker
-from bulkysms.database.address_book_module import AddressBook, Group, GroupMember,db,dbconn
+#from bulkysms.database.address_book_module import AddressBook, Group, GroupMember,db,dbconn
+
+#from sqlalchemy import ForeignKey, ForeignKeyConstraint
+#from sqlalchemy import Column, Date, Integer, String, Boolean, Enum, Time, Float
+#from sqlalchemy.orm import relationship, backref,sessionmaker
+#from sqlalchemy.pool import NullPool
+#from sqlalchemy.ext.declarative import declarative_base
+
+
 from collections import OrderedDict
+from bulkysms.database.base  import Base
+from bulkysms.database.dbinit import db,dbconn
+import bulkysms.database.address_book_module
+
+Base.metadata.create_all(db)
+
+from bulkysms.database.address_book_module import AddressBook, Group, GroupMember
 
 class switch(object):
           value = None
@@ -130,10 +146,19 @@ class GroupsManager:
                               key1="AD0"# append a zero. This is important in ordering keys alphabetically
                          else:
                               key1="AD"
+
+
+                         members_count_res=session.query(func.count(distinct(GroupMember.contact_id))).filter(GroupMember.group_id==group_rec.id).first()
+                         retrieved_members_counter=0# initialize how many distinct dates are in the database
+                         for retrieved_members_counter in members_count_res:
+                              break
+                         
                         
 
-                         group_tuple[key1+"%d"%level_one_json_counter]={"GroupID":group_rec.id, "group_name":group_rec.group_name, "group_description":group_rec.group_description}
+                         group_tuple[key1+"%d"%level_one_json_counter]={"GroupID":group_rec.id, "group_name":group_rec.group_name, "group_description":group_rec.group_description,"NumMembers":retrieved_members_counter}
                          level_one_json_counter=level_one_json_counter+1 # After getting the first record add 1 to the counter	
+
+                         
          
                          
                     session.close()  
@@ -280,7 +305,7 @@ class GroupsManager:
                #return (json.JSONEncoder().encode(result))
      
      
-myjson={"GroupID":12,"GroupName":"Customers in Kinondoni B","GroupDescr":"This group is for customers in Kinondoni areas."}
+#myjson={"GroupID":12,"GroupName":"Customers in Kinondoni B","GroupDescr":"This group is for customers in Kinondoni areas."}
  
 
 #obj=GroupsManager(myjson)

@@ -3,12 +3,21 @@ import datetime
 import sys,json
 #sys.path.insert(0, 'C:\\workspace\\test\\helloword\\sqlalchemy.zip')
 #sys.path.insert(0, 'sqlalchemy.zip')
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from bulkysms.database.sms_feedback_module import Feedback,db,dbconn
+#from sqlalchemy import create_engine
+#from sqlalchemy.orm import sessionmaker
+#from bulkysms.database.sms_feedback_module import Feedback,db,dbconn
+
 from collections import OrderedDict
 import urllib2,urllib
 import time
+
+import bulkysms.database.base
+from bulkysms.database.dbinit import db,dbconn
+
+import bulkysms.database.sms_feedback_module
+from manage_message_template import ManageMessageTemplates
+
+Base.metadata.create_all(db)
 
 
 
@@ -37,7 +46,6 @@ class QueueFeedback:
 
 
 
-         
      def getQueuedSMS(self):
           result={}
           posn=0
@@ -61,7 +69,7 @@ class QueueFeedback:
                        msg_id=msg.id
   
                        #mobile="27%s"%mobile[1:]
-                       message="%s.... [From ASAS Dairies]"%message
+                       message="%s.... [Auto Generated SMS]"%message
                        '''
                        values = {'user' : 'wellnessapp',
                        'password' : 'AbGXWETGaKdEdD',
@@ -73,13 +81,13 @@ class QueueFeedback:
                        values={"content": message,
                                "to": [mobile]}
 			       #"from": "ASAS Dairies"}
-#"binary": false,
-#"clientMessageId": "b3itx5JgS-O7nc7xJ9KVlw==",
-#"scheduledDeliveryTime": "yyyy-MM-dd'T'HH:mm:ssZ",
-#"userDataHeader": "0605040B8423F0",
-#"validityPeriod": 0,
-#"charset": "UTF-8"
-#}
+              #"binary": false,
+              #"clientMessageId": "b3itx5JgS-O7nc7xJ9KVlw==",
+              #"scheduledDeliveryTime": "yyyy-MM-dd'T'HH:mm:ssZ",
+              #"userDataHeader": "0605040B8423F0",
+              #"validityPeriod": 0,
+              #"charset": "UTF-8"
+              #}
                        url="https://platform.clickatell.com/messages"
                        #url="http://api.clickatell.com/http/sendmsg?"+urllib.urlencode(values)
                        #url="https://platform.clickatell.com/messages/http/send?apiKey=-eKVKLmnSEiQhYNaR5UApQ==&to=255718255585&content=Test again"
@@ -303,7 +311,7 @@ class QueueFeedback:
 #obj=QueueFeedback(myjson)
 #result=obj.getQueuedSMS()
 #result=obj.saveFeedbackInDB()
-#result=obj.sendOneSMS(114)
+#result=obj.sendOneSMS(112)
 #print result
 #msg_ids=json.loads(result)
 

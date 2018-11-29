@@ -130,10 +130,19 @@ class GroupsManager:
                               key1="AD0"# append a zero. This is important in ordering keys alphabetically
                          else:
                               key1="AD"
+
+
+                         members_count_res=session.query(func.count(distinct(GroupMember.contact_id))).filter(GroupMember.group_id==group_rec.id).first()
+                         retrieved_members_counter=0# initialize how many distinct dates are in the database
+                         for retrieved_members_counter in members_count_res:
+                              break
+                         
                         
 
-                         group_tuple[key1+"%d"%level_one_json_counter]={"GroupID":group_rec.id, "group_name":group_rec.group_name, "group_description":group_rec.group_description}
+                         group_tuple[key1+"%d"%level_one_json_counter]={"GroupID":group_rec.id, "group_name":group_rec.group_name, "group_description":group_rec.group_description,"NoMembers":retrieved_members_counter}
                          level_one_json_counter=level_one_json_counter+1 # After getting the first record add 1 to the counter	
+
+                         
          
                          
                     session.close()  
@@ -201,6 +210,8 @@ class GroupsManager:
                # create a Session
                Session = sessionmaker(bind=engine)
                session = Session()
+
+               #check if the name exists.
                                    
                # querying for a record if it exists already.
                res= session.query(Group).filter(Group.id==group_id).first()

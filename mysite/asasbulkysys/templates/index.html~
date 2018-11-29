@@ -66,23 +66,24 @@
 <script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/bulkysmssupporting.js" %}"></script>
 
 <script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/modernizr.custom.87504.js" %}"></script> 
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>-->
+
   <!--CSS for address book ends here-->
 
   <!--<link rel="stylesheet" href="{% static "bulkysms/css/jquery.mobile-1.4.5.min.css" %}">-->
  
 
-
- 
- 
-
 <!--End of script and css for datatables-->
   
 <style>
+
+
   .table-striped > tbody > tr:nth-child(2n+1) > td {
    background-color: #b6e0ef;
 }
-
-
 
 
 
@@ -102,11 +103,20 @@ text-align:center;
 
 }
 /*background: url('{% static "django_facebook/images/arrows.png" %}') no-repeat left top;*/
-.ui-dialog > .ui-widget-header {background: #8b9dc3;}
+/*.ui-dialog > .ui-widget-header {background: #8b9dc3;}*/
+
+/*.templatedialog > .ui-widget-header {background: #339933;}*/
+
+/*.templatedialogclass.ui-dialog > .ui-widget-header{background: #339933;}
 
 
+.smsdialogclass .ui-dialog > .ui-widget-header {background: #8b9dc3;} */
 
 
+.templatedialogclass > .ui-widget-header{background: #ffbf00;}
+
+
+.smsdialogclass > .ui-widget-header {background: #8b9dc3;}
 
 
 .charge {
@@ -131,7 +141,7 @@ text-align:center;
     background: #8b9dc3;
     padding: 20px; 
     width: 250px;
-    height: 450px;    
+    height: 550px;    
 }
 
 .content {
@@ -179,6 +189,12 @@ td.smsboxindividual {
 td.progressbox {
     border: 1px solid #9A9A9A; 
 }
+
+td.smstemplatebox {
+    border: 1px solid #9A9A9A; 
+    text-align: center;
+}
+
 
 .btn-circle {
     width: 30px;
@@ -261,16 +277,25 @@ td.progressbox {
 	<tr>
            <td><img src="{% static "bulkysms/images/companyname.png" %}" alt="COMPANY LOGO"/></td>
        
-    	<td align="center" class="company-theme"><h1>Customer Relationship Management System</h1></td>
-       </tr>
+    	<td align="center" class="company-theme"><h1><i>Mambo Yote SMS</i></h1></td>
+  </tr>
    </table>      
   </div>
   <div class="row">
     <div class="col-sm-3" align="center">
 
            <div class="vertical-menu" id="rcorners1" align="left">
-            <a href="#" class="active menuimage" value="Home">Home</a>
+            
+
             <a href="#"><table border=0>
+                  <tr>
+                     <td><img src="{% static "bulkysms/images/home.jpg" %}" alt="" width="50" height="50" class="menuimage" style="cursor:pointer" value="Home"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="Home">Home</td>
+                  </tr>
+              </table>
+            </a>
+           
+
+          <a href="#"><table border=0>
                   <tr>
                      <td><img src="{% static "bulkysms/images/addressbook.jpeg" %}" alt="" width="40" height="50" class="menuimage" style="cursor:pointer" value="AddressBook"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="AddressBook">Address Book</td>
                   </tr>
@@ -309,14 +334,20 @@ td.progressbox {
                   </tr>
               </table>
             </a>
+
+            <a href="#"><table border=0>
+                  <tr>
+                     <td><img src="{% static "bulkysms/images/recharge5.png" %}" alt="" width="40" height="50" class="menuimage" style="cursor:pointer" value="Settings"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="Recharge Your Account">Account Recharge</td>
+                  </tr>
+              </table>
+            </a>
         </div>
 
 
 
-       
        <!--<div data-role="popup" id="popupaddressbooksms1" class="ui-content">-->
-      <div id="smsdialog" title="SMS Composer">
-        
+      <div id="smsdialog" class="smsdialogclass"  title="SMS Composer">
+          
             <table>
 
            
@@ -334,10 +365,15 @@ td.progressbox {
 
               <b><i>Send an SMS to</i></b>:<div id="simplesmscomposerid"></div><br>
                <div id="smsgeneralization" hidden>
-                 <input type="radio" name="smsoptradio" checked>Personalized
-                 <input type="radio" name="smsoptradio">General
+                 <input type="radio" name="smsoptradio" checked value="Personalized">Personalized
+                 <input type="radio" name="smsoptradio" value="General">General
+          
                </div>
-              
+                <div id="greeting">
+                   <button type="button" class="btn btn-info" title="Append Templates" id="viewsmstemplatesbtn" style="cursor:pointer">View Templates</button>  
+                    
+               </div>
+                
              <!--<div class="nothing loader" id="progressbar">&nbsp;</div>-->
              <input type="hidden" value="" id="primarymobile">
              <textarea name="addresssmsbox" id="addresssmsbox" rows="5" cols="22" onchange="clearFeedback(1);" onfocus="clearFeedback(0);" onkeypress="typingFeedback();"></textarea>
@@ -351,9 +387,71 @@ td.progressbox {
           </tr>
          </table>
 
-
   
       </div>
+
+     
+      <div id="smstemplatesdialog" class="templatedialogclass" title="SMS Templates">
+            
+            <table style="height:100%;width:100%; position: absolute; top: 0; bottom: 0; left: 0; right: 0;border:1px solid">
+            <tr> 
+
+              <td class="smstemplatebox">
+                
+              Template categories:</td>
+
+
+           
+              
+                 <td class="smstemplatebox">
+                    <select id="selecttemplatecategory" onchange="showSMSTemplates();">
+                        <!--<option value="Template 1" title="This is my lengthy explanation of what this selection really means, so since you only see 1 on the drop down list you really know that you're opting to elect me as King of Willywarts!  Always be sure to read the fine print!">Template 1</option>
+                         <option value="Template 2" title="This is my lengthy explanation of what this selection really means, so since you only see 1 on the drop down list you really know that you're opting to elect me as King of Willywarts!  Always be sure to read the fine print!">Template 2</option>-->
+                  </select>
+
+                 </td>
+            </tr>
+
+            <tr>
+                  <td class="smstemplatebox">
+                  Template list:
+                  </td>
+              
+
+                  <td class="smstemplatebox">
+                    <select id="selecttemplate" onchange="showSelectedSMSTemplate();">
+                        <!--<option value="Template 1" title="This is my lengthy explanation of what this selection really means, so since you only see 1 on the drop down list you really know that you're opting to elect me as King of Willywarts!  Always be sure to read the fine print!">Template 1</option>
+                         <option value="Template 2" title="This is my lengthy explanation of what this selection really means, so since you only see 1 on the drop down list you really know that you're opting to elect me as King of Willywarts!  Always be sure to read the fine print!">Template 2</option>-->
+                  </select>
+          
+          
+                  </td>
+            </tr>
+            <tr>
+                  <td id="selectedtemplatecontent" colspan="2">
+                   <h2>Selected Template:</h2> <div id="selected_template_content">None</div>
+                  </td>
+
+
+              </tr>
+
+            <tr>
+
+
+             
+              <td class="smstemplatebox" colspan="2"> 
+
+             <img src="http://localhost:8000/static/bulkysms/images/selecttemplate.jpeg" %}" id="selecttemplatebtn"  style="cursor:pointer" onclick="loadToSMSTXTBox();">
+             
+             </td>
+
+          </tr>
+         </table>
+      
+  
+      </div>
+
+
 
 
 
@@ -377,8 +475,7 @@ td.progressbox {
 </div>
     <!--<div class="col-sm-4" style="background-color:lavenderblush;">.col-sm-4</div>-->
     <div id="main-content" class="col-sm-9">
-         <h2 style="color:green;"><i>Handle relationship with customers through SMS, email and social media</i></h2>
-
+         <h2 style="color:green;"><i>Mambo Yote SMS is for multipurpose use: from handling relationship with your customers to communicating with your various teams such as sales and marketing</i></h2>
 
  
    <!--Declare pop up for sending message-->

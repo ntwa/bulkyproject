@@ -1,0 +1,357 @@
+
+
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <title>AngularJS Custom Modal Example & Tutorial</title>
+
+    <!-- application less -->
+    <link href="_content/modal.less" rel="stylesheet/less" type="text/css" />
+    <link href="_content/app.less" rel="stylesheet/less" type="text/css" />
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.3/less.min.js"></script>
+</head>
+<body>
+    <!-- main app container -->
+    <div>
+        <nav>
+            <a href="#/">Home</a>
+            <a href="#/test-page">Test Page</a>
+        </nav>
+        <ui-view></ui-view>
+    </div>
+
+    <!-- credits -->
+    <div class="credits">
+        <p>
+            <a href="http://jasonwatmore.com/post/2016/07/13/AngularJS-Custom-Modal-Example-Tutorial.aspx" target="_top">AngularJS Custom Modal Example & Tutorial</a>
+        </p>
+        <p>
+            <a href="http://jasonwatmore.com" target="_top">JasonWatmore.com</a>
+        </p>
+    </div>
+
+    <!-- jquery -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+    <!-- underscore -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
+    <!-- angular -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.min.js"></script>
+
+    <!-- app -->
+    <script src="app.js"></script>
+    <script src="home/index.controller.js"></script>
+    <script src="test-page/index.controller.js"></script>
+    <script src="_directives/modal.directive.js"></script>
+    <script src="_services/modal.service.js"></script>
+</body>
+</html>
+
+<style>
+/* EXAMPLE STYLES
+-------------------------------*/
+body {
+    font-family: roboto;
+    padding: 20px;
+}
+
+nav {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    
+    a {
+        margin-right: 8px;
+    }
+}
+
+h1 {
+    font-weight: normal;
+    margin-top: 0;
+}
+
+input[type="text"] {
+    display:block;
+    width: 100%;
+    font-family: roboto;
+}
+
+.credits {
+    margin-top: 30px;
+    border-top: 1px solid #ddd;
+    text-align: center;
+}
+
+(function () {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('Home.IndexController', Controller);
+
+    function Controller(ModalService) {
+        var vm = this;
+
+        vm.openModal = openModal;
+        vm.closeModal = closeModal;
+
+        initController();
+
+        function initController() {
+            vm.bodyText = 'This text can be updated in modal 1';
+        }
+        
+        function openModal(id){
+            ModalService.Open(id);
+        }
+
+        function closeModal(id){
+            ModalService.Close(id);
+        }
+    }
+
+})();
+</script>
+
+<div class="col-md-6 col-md-offset-3">
+    <h1>Home</h1>
+    <p>{{vm.bodyText}}</p>
+    <button ng-click="vm.openModal('custom-modal-1')">Open Modal 1</button>
+    <button ng-click="vm.openModal('custom-modal-2')">Open Modal 2</button>
+</div>
+
+<modal id="custom-modal-1">
+    <div class="modal">
+        <div class="modal-body">
+            <h1>A Custom Modal!</h1>
+            <p>
+                Home page text: <input type="text" ng-model="vm.bodyText" />
+            </p>
+            <button ng-click="vm.closeModal('custom-modal-1');">Close</button>
+        </div>
+    </div>
+    <div class="modal-background"></div>
+</modal>
+
+<modal id="custom-modal-2">
+    <div class="modal">
+        <div class="modal-body">
+            <h1 style="height:1000px">A Tall Custom Modal!</h1>
+            <button ng-click="vm.closeModal('custom-modal-2');">Close</button>
+        </div>
+    </div>
+    <div class="modal-background"></div>
+</modal>
+
+</script>
+(function () {
+    'use strict';
+
+    angular
+        .module('app', ['ui.router'])
+        .config(config)
+        .run(run);
+
+    function config($stateProvider, $urlRouterProvider) {
+        // default route
+        $urlRouterProvider.otherwise("/");
+
+        // app routes
+        $stateProvider
+            .state('home', {
+                url: '/',
+                templateUrl: 'home/index.view.html',
+                controller: 'Home.IndexController',
+                controllerAs: 'vm'
+            })
+            .state('test-page', {
+                url: '/test-page',
+                templateUrl: 'test-page/index.view.html',
+                controller: 'TestPage.IndexController',
+                controllerAs: 'vm'
+            });
+    }
+
+    function run() {
+    }
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('app')
+        .directive('modal', Directive);
+
+    function Directive(ModalService) {
+        return {
+            link: function (scope, element, attrs) {
+                // ensure id attribute exists
+                if (!attrs.id) {
+                    console.error('modal must have an id');
+                    return;
+                }
+
+                // move element to bottom of page (just before </body>) so it can be displayed above everything else
+                element.appendTo('body');
+
+                // close modal on background click
+                element.on('click', function (e) {
+                    var target = $(e.target);
+                    if (!target.closest('.modal-body').length) {
+                        scope.$evalAsync(Close);
+                    }
+                });
+
+                // add self (this modal instance) to the modal service so it's accessible from controllers
+                var modal = {
+                    id: attrs.id,
+                    open: Open,
+                    close: Close
+                };
+                ModalService.Add(modal);
+            
+                // remove self from modal service when directive is destroyed
+                scope.$on('$destroy', function() {
+                    ModalService.Remove(attrs.id);
+                    element.remove();
+                });                
+
+                // open modal
+                function Open() {
+                    element.show();
+                    $('body').addClass('modal-open');
+                }
+
+                // close modal
+                function Close() {
+                    element.hide();
+                    $('body').removeClass('modal-open');
+                }
+            }
+        };
+    }
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('app')
+        .factory('ModalService', Service);
+
+    function Service() {
+        var modals = []; // array of modals on the page
+        var service = {};
+
+        service.Add = Add;
+        service.Remove = Remove;
+        service.Open = Open;
+        service.Close = Close;
+
+        return service;
+
+        function Add(modal) {
+            // add modal to array of active modals
+            modals.push(modal);
+        }
+        
+        function Remove(id) {
+            // remove modal from array of active modals
+            var modalToRemove = _.findWhere(modals, { id: id });
+            modals = _.without(modals, modalToRemove);
+        }
+
+        function Open(id) {
+            // open modal specified by id
+            var modal = _.findWhere(modals, { id: id });
+            modal.open();
+        }
+
+        function Close(id) {
+            // close modal specified by id
+            var modal = _.findWhere(modals, { id: id });
+            modal.close();
+        }
+    }
+
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('app')
+        .controller('TestPage.IndexController', Controller);
+
+    function Controller() {
+        var vm = this;
+
+        initController();
+
+        function initController() {
+        }
+    }
+
+})();
+</script>
+
+<div class="col-md-6 col-md-offset-3">
+    <h1>Test Page</h1>
+    <p>This one doesn't have any modals...</p>
+</div>
+<style type="text/css">
+/* MODAL STYLES
+-------------------------------*/
+modal {
+    /* modals are hidden by default */
+    display: none;
+
+    .modal {
+        /* modal container fixed across whole screen */
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        /* z-index must be higher than .modal-background */
+        z-index: 1000;
+        
+        /* enables scrolling for tall modals */
+        overflow: auto;
+
+        .modal-body {
+            padding: 20px;
+            background: #fff;
+
+            /* margin exposes part of the modal background */
+            margin: 40px;
+        }
+    }
+
+    .modal-background {
+        /* modal background fixed across whole screen */
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        /* semi-transparent black  */
+        background-color: #000;
+        opacity: 0.75;
+        
+        /* z-index must be below .modal and above everything else  */
+        z-index: 900;
+    }
+}
+
+body.modal-open {
+    /* body overflow is hidden to hide main scrollbar when modal window is open */
+    overflow: hidden;
+}
+</style>

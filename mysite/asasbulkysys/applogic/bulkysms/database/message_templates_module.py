@@ -1,0 +1,64 @@
+from abc import ABCMeta, abstractmethod
+#from sqlalchemy import *
+#from sqlalchemy import create_engine, ForeignKey, ForeignKeyConstraint
+from sqlalchemy import ForeignKey, ForeignKeyConstraint
+from sqlalchemy import Column, Date, Integer, String, Boolean,Enum,Time
+#from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, backref
+#from dbconn import connstr
+#from dbinit import db,dbconn
+from base import Base
+#from sqlalchemy.pool import NullPool
+#import json,sys
+#from collections import OrderedDict
+#import enum
+'''
+try:
+     db 
+except NameError as e:
+     db = create_engine(connstr,poolclass=NullPool)
+
+try:
+     dbconn
+except NameError as e:
+     dbconn=db.connect()
+
+
+try:
+     Base
+except NameError as e:
+     Base = declarative_base()
+
+'''
+#campaign definition
+class TemplateCategory(Base):
+    __tablename__="sms_template_categories"
+    id=Column("template_category_id",Integer,primary_key=True)
+    template_category_name=Column(String(200))
+    template_messages = relationship("MessageTemplates", backref=backref("sms_template_categories", order_by=id))
+    
+    def __init__(self,template_category_name):
+        self.template_category_name=template_category_name        
+
+class MessageTemplates(Base):
+    __tablename__="sms_templates"
+    id=Column("sms_template_id",Integer,primary_key=True)
+    template_class_id=Column(Integer, ForeignKey("sms_template_categories.template_category_id"))
+    template_content=Column(String(500))
+
+
+    def __init__(self,template_content):
+        self.template_content=template_content
+
+class MessageSignature(Base):
+    __tablename__="sms_signatures"
+    id=Column("sms_signature_id",Integer,primary_key=True)
+    signature_content=Column(String(50))
+    signature_status=Column(Boolean) #1 if it is the primary signature, 0 if it is not the primary signature. The default signature to be used for every out going email isprimary
+
+    def __init__(self,signature_content,signature_status):
+        self.signature_content=signature_content
+        self.signature_status=signature_status
+
+
+#Base.metadata.create_all(db)

@@ -24,6 +24,7 @@ class SaveSMS:
      def saveOneCampaignInDB(self):
          
           allow_insert=1
+          result={}
           
           # Get data from fields
           try:
@@ -46,17 +47,19 @@ class SaveSMS:
                
                '''
                
-               campaign_name="Birthday Greetings"
-               campaign_descr="This campaign is specifically for birthday greetings to customers"
-               campaign_category="Individual Best Wishes"
-               target_level="Individual"
-               frequency_in_days="SelectiveDays"
-               is_it_life_time=1 
-               is_annual_delivery_date_constant=1
-               msg1="We wish you happy birthday. Thank you for being our loyal customer"
-               msg2="Happy birthday. We value you as esteemed customer"
-               msg2="As you celebrate your birthday, we wish you more success in business. Thank for being with us all this time.
-               msglst=[msg1,msg2,msg3]
+               #campaign_name="Birthday Greetings"
+               #campaign_descr="This campaign is specifically for birthday greetings to customers"
+               #campaign_category="Individual Best Wishes"
+               #target_level="Individual"
+               #frequency_in_days="SelectiveDays"
+               #is_it_life_time=1 
+               #is_annual_delivery_date_constant=1
+               #msg1="We wish you happy birthday. Thank you for being our loyal customer"
+               #msg2="Happy birthday. We value you as esteemed customer"
+               #msg2="As you celebrate your birthday, we wish you more success in business. Thank for being with us all this time.
+               #msglst=[msg1,msg2,msg3]
+               #print self.myjson["Text"]
+
                                
           except Exception as e:
                #print "Content-type: text/html\n" 
@@ -92,11 +95,11 @@ class SaveSMS:
                     campaign_part1_record=res
                     campaign_part1_record.campaign_name=campaign_name
                     campaign_part1_record.campaign_descr=campaign_descr
-		    campaign_part1_record.campaign_category=campaign_category
+		                campaign_part1_record.campaign_category=campaign_category
                     campaign_part1_record.target_level=target_level
                     campaign_part1_record.frequency_in_days=frequency_in_days
                     campaign_part1_record.is_it_life_time=is_it_life_time
-		    campaign_part1_record.is_annual_delivery_date_constant=is_annual_delivery_date_constant
+		                campaign_part1_record.is_annual_delivery_date_constant=is_annual_delivery_date_constant
 
                     campaign_id=res.id
                     
@@ -189,7 +192,7 @@ class SaveSMS:
                     
                     
                     session.commit()
-		    session.close()
+		                session.close()
                     engine.dispose()
                     dbconn.close()
                      
@@ -275,7 +278,7 @@ class SaveSMS:
 
      
      
-myjson={}
-obj=ManageCampaign(myjson)
-msg=obj.saveOneCampaignInDB()
-print msg
+#myjson={}
+#obj=ManageCampaign(myjson)
+#msg=obj.saveOneCampaignInDB()
+#print msg
