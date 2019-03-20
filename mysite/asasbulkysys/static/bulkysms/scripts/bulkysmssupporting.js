@@ -1121,6 +1121,29 @@ var downloadUpdateTemplate=function(){
 };
 
 
+
+var downloadReminderTemplate=function(){
+     var urlstr=site;
+    urlstr=urlstr+"jsondata/RDD/";
+     window.open(urlstr);
+      /*
+      alert("Demo");
+      var urlstr=site;
+      urlstr=urlstr+"jsondata/ADD/";// Retrieve
+      $.ajax({
+             url: urlstr,
+             cache: false
+             })
+            .done(function( html ) {
+              
+             });
+
+            */
+
+};
+
+
+
 //user interface for selecting members to assign
 var assignMembersToGroupIAddressBookTenterface=function(group_id){
 
@@ -2844,6 +2867,32 @@ var attachEventToGroupsCampaign=function(){
                                  
                                        
     });
+
+
+    //For Campaign category
+    
+    $("#campaigncategory option").off( "mousedown" ); //unbind any previous event
+
+                              
+      $("#campaigncategory option").on('mousedown',function(e){
+
+                //Hide or Show functionality for uploading reminders file depending on whether individualized reminders' options is not chosen or it is chosen
+                e.preventDefault();
+
+                if($(this).val()=='IR'){
+
+                $(".remindertemplates").show();
+
+
+                }
+                else{
+                     $(".remindertemplates").hide();
+
+                }
+                
+                                 
+                                       
+    });  
 
 
 };

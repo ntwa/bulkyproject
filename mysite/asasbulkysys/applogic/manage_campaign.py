@@ -19,10 +19,9 @@ import bulkysms.database.sms_feedback_module
 
 Base.metadata.create_all(db)
 
-#ab_module=bulkysms.database.address_book_module
-#sf_module=bulkysms.database.sms_feedback_module
 
-from bulkysms.database.sms_feedback_module import Campaign,CampaignStartDay,CampaignEndDay,CampaignDefinedMessages,SelectedDeliveryDayofWeek,SelectedDeliveryTime,CampaignAudienceSMS 
+
+from bulkysms.database.sms_feedback_module import Campaign,CampaignStartDay,CampaignEndDay,CampaignDefinedMessages,SelectedDeliveryDayofWeek,SelectedDeliveryTime,CampaignAudienceSMS, IndividualizedReminder 
 from bulkysms.database.address_book_module import Group
 
 class ManageCampaign:

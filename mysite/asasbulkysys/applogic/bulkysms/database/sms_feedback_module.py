@@ -1,37 +1,22 @@
 from abc import ABCMeta, abstractmethod
-#from sqlalchemy import *
-#from sqlalchemy import create_engine, ForeignKey
-from sqlalchemy import ForeignKey
-from sqlalchemy import Column, Date, Integer, String,Float,Boolean,Enum,Time
-#from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, backref
-#from dbconn import connstr
-#from sqlalchemy.pool import NullPool
-#from dbinit import db,dbconn
-from base import Base
-#import address_book_module
 
-#import enum
+#from sqlalchemy import ForeignKey
+
+#from sqlalchemy import Column, Date, Integer, String,Float,Boolean,Enum,Time
+
+#from sqlalchemy.orm import relationship, backref,relation
+
+#from base import Base
+
 import datetime
-#db = create_engine(connstr,pool_size=20, max_overflow=0)
 
-'''
-try:
-     db 
-except NameError as e:
-     db = create_engine(connstr,poolclass=NullPool)
 
-try:
-     dbconn
-except NameError as e:
+from sqlalchemy import *
+from base  import Base
+from sqlalchemy.orm import relationship,backref
 
-     dbconn=db.connect()
 
-try:
-     Base
-except NameError as e:
-     Base = declarative_base()
-'''
+#Beneficiaries of this system: Hospitals, Schools, SMEs, Government Agents such as TRA to remind people to pay their property tax on time or to pay all overdued taxes, or even to file tax/VAT returns
 
 #This class stores all outgoint messages (status:sent 0 and waiting to be sent: 1 )
 class Feedback(Base):
@@ -83,6 +68,7 @@ class Campaign(Base):
      selected_delivery_time= relationship("SelectedDeliveryTime", backref=backref("delivery_time", order_by=id))
 
      sms_campaign_audience = relationship("CampaignAudienceSMS", backref=backref("campaignaudience", order_by=id))
+     #individualized_reminders=relationship("IndividualizedReminders", backref=backref("individualized_reminders", order_by=id))
      
      def __init__(self,campaign_name,campaign_descr,delivery_mechanism,campaign_category,target_level):
           self.campaign_name=campaign_name
@@ -181,20 +167,22 @@ class CampaignAudienceWhatsapp(Base):
      campaign_id= Column(Integer, ForeignKey("campaigns.campaign_id"),primary_key=True)
      def __init__(self):
           pass
-
-
+'''
 #Tracking individualiezeReminder as dates may vary. For instance there may be customers that owe the company with different deadlines for payments. So each reminder need to be individualized. Or it may be about company drivers renew of driver licence/ car insurance or service due
 class IndividualizedReminder(Base):
      __tablename__="individualized_reminders"
      id=Column("individualized_reminders_id",Integer,primary_key=True)
      campaign_id=Column(Integer, ForeignKey("campaigns.campaign_id"))
-     first_name=Column(String(50),ForeignKey("address_book.first_name"))
-     last_name=Column(String(50),ForeignKey("address_book.last_name"))
-     campaign_end_date=Column(Date)
-     mobile_number=Column(String(15),ForeignKey("mobile_details.mobile_number"))
-     days_to_start_trigger=Column(Integer)
-     reason_for_reminder=Column(String(200))
+     contact_id=Column(Integer,ForeignKey("address_book.contact_id"))
+     reminder_deadline_date=Column(Date)
+     no_running_days_before_deadline=Column(Integer)
+     no_running_days_after_deadline=Column(Integer)
+     reason_for_reminder=Column(String(200)) #Examples, expiry of driving licence or insurance, debt to be paid for rendered service or school fees, clinical appointment etc.
+     def __init__(self,campaign_id,contact_id,reminder_deadline_date,no_running_days_before_deadline,no_running_days_after_deadline,reason_for_reminder):
+          self.group_id=group_id
+     
 
+'''
 #Keeping track of all messages sent out 
 class CampaignDeliveryHistory(Base):
      __tablename__="campaign_delivery_history"

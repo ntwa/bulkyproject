@@ -308,8 +308,8 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
           #myjson={"GroupID":"-1","Option":"-1"}
           #myjson={"GroupID":"-1"}  
           alldata=retrieveAddressBookContent(myjson)
-          #return HttpResponse(alldata, content_type='application/json')
-          return HttpResponse('%s(%s)' % (request.GET.get('callback'),alldata), content_type='application/json')
+          return HttpResponse(alldata, content_type='application/json')
+          #return HttpResponse('%s(%s)' % (request.GET.get('callback'),alldata), content_type='application/json')
 
      elif command_id =="RABT":#RABT stands for Retrieve Address Book Template
           context = RequestContext(request)
@@ -370,6 +370,127 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
 
           #return HttpResponse(status, content_type='application/json')
+
+     elif command_id == "RDD":
+          #Reminder Download Data
+          response = HttpResponse(content_type='application/ms-excel')
+          response['Content-Disposition'] = 'attachment; filename="reminders.xls"'
+
+
+          wb = xlwt.Workbook(encoding='utf-8')
+          ws = wb.add_sheet('UsersWithReminders')
+
+
+          row_num = 2
+           
+          #font style for first header 
+          font_style = xlwt.XFStyle()
+          font_style.font.bold = True
+          font_style.font.height = 320
+          font_style.num_format_str= '@'
+
+
+          date_format = xlwt.XFStyle()
+          date_format.num_format_str = 'dd/mm/yyyy'
+          #date_format.align="horiz center"
+
+
+          number_format=xlwt.XFStyle()
+          number_format.num_format_str='0'
+          #umber_format.align="horiz center"
+          
+          #ws.write(0, 0, "Mambo Yote SMS Address Book", font_style)
+          #ws.write_merge(0, 1, 0, 8, "Mambo Yote SMS Address Book", font_style)
+          ws.write_merge(0, 1, 0, 15, "Mambo Yote SMS Reminders Template",xlwt.easyxf("pattern: pattern solid, fore_color light_blue ; font: color white, height 320, bold True; align: horiz center; borders: top_color red, bottom_color red, right_color red, left_color red, left thin, right thin, top thin, bottom thin;"))
+          
+          columns = ['contact_id','First Name', 'Last Name', 'Deadline','Number of Days Running Before Deadline','Number of Days Running After Deadline',"Reason For Reminder"]
+
+          #font style for columns' headings
+          font_style = xlwt.XFStyle()
+          font_style.font.bold = True
+          font_style.font.height = 280
+          #ont_style.align="horiz center"
+          font_style.num_format_str= '@'
+          for col_num in range(len(columns)):
+               #ws.write(row_num, col_num, columns[col_num], font_style)
+
+               cwidth = ws.col(col_num).width
+               if (len(columns[col_num])*367) > cwidth:  
+                    ws.col(col_num).width = (len(columns[col_num])*367)+400 
+
+
+               #ws.write_merge(row_num, row_num+1, col_num, col_num, columns[col_num], font_style)
+               ws.write_merge(row_num, row_num+1, col_num, col_num, columns[col_num], xlwt.easyxf("pattern: pattern solid, fore_color light_orange; font: color black, height 240, bold True; align: horiz center; borders: top_color red, bottom_color red, right_color red, left_color red, left thin, right thin, top thin, bottom thin;"))
+
+               #xlwt.easyxf("pattern: pattern solid, fore_color yellow; font: color white; align: horiz right")
+
+          row_num = row_num+1
+
+              # Sheet body, remaining rows
+          font_style = xlwt.XFStyle()
+          font_style.num_format_str= '@'
+          #font_style.font.align="horiz center"
+
+          rows = IndividualizedReminders.objects.all().values_list('contact_id','reminder_deadline_date', 'middle_name','last_name', 'gender','birth_date','ward','district','region','country')
+          
+          for row in rows:
+               row_num += 1
+               last_column=0
+               total_mobiles=0
+               for col_num in range(len(row)):
+                    if columns[col_num]=='contact_id': #col_num==0:
+                         ws.write(row_num, col_num, row[col_num], number_format)
+
+                    elif columns[col_num]=='DOB':#col_num==5:
+                         #It means we dealing with date hence it should be formated as date
+                         ws.write(row_num, col_num, row[col_num], date_format)
+                    else:
+                         ws.write(row_num, col_num, row[col_num], font_style)
+                    last_column=last_column+1
+
+               #Get all the mobile numbers for this contact  
+               no_mobiles=0   
+               subrows=MobileDetails.objects.values_list('mobile_number').filter(contact_id=row[0])
+               for subrow in subrows:
+                   
+                    for col_num in range(len(subrow)):
+                         ws.write(row_num, last_column, subrow[0], font_style)  
+                         last_column=last_column+1
+                         no_mobiles+=1
+
+               while no_mobiles<3:#Just skip columns for missing mobiles
+                    last_column+=1
+                    no_mobiles+=1
+
+
+
+               #Get all the email addresses for this contact  
+               no_email_addresses=0
+               subrows=EmailDetails.objects.values_list('email_address').filter(contact_id=row[0])
+               for subrow in subrows:
+                    
+                    for col_num in range(len(subrow)):
+                         ws.write(row_num, last_column, subrow[0], font_style)  
+                         last_column=last_column+1
+                         no_email_addresses+=1
+
+               while no_email_addresses<3:#Just skipp columns for missing mobiles
+                    last_column+=1
+                    no_email_addresses+=1
+
+
+
+
+          wb.save(response)
+
+
+
+
+          return response
+      
+
+
+          
 
 
      elif command_id =="ADD":

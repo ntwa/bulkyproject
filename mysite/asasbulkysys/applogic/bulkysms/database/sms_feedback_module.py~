@@ -4,13 +4,13 @@ from abc import ABCMeta, abstractmethod
 from sqlalchemy import ForeignKey
 from sqlalchemy import Column, Date, Integer, String,Float,Boolean,Enum,Time
 #from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref,relation
 #from dbconn import connstr
 #from sqlalchemy.pool import NullPool
 #from dbinit import db,dbconn
 from base import Base
-#import address_book_module
-
+#from address_book_module import AddressBook, MobileDetails
+#from address_book_module import AddressBook
 #import enum
 import datetime
 #db = create_engine(connstr,pool_size=20, max_overflow=0)
@@ -83,6 +83,7 @@ class Campaign(Base):
      selected_delivery_time= relationship("SelectedDeliveryTime", backref=backref("delivery_time", order_by=id))
 
      sms_campaign_audience = relationship("CampaignAudienceSMS", backref=backref("campaignaudience", order_by=id))
+     individualized_reminders=relationship("IndividualizedReminders", backref=backref("individualized_reminders", order_by=id))
      
      def __init__(self,campaign_name,campaign_descr,delivery_mechanism,campaign_category,target_level):
           self.campaign_name=campaign_name
@@ -138,7 +139,7 @@ class SelectedDeliveryDayofWeek(Base):
      def __init__(self,selected_day):
           self.selected_day=selected_day
 
-class SelectedDeliveryTime:
+class SelectedDeliveryTime(Base):
      __tablename__="selected_time_of_delivery"
      #id=Column("selected_day_id",Integer, primary_key=True)
      #PRimary key to ensure a campaign can't pick the same time twice
@@ -182,18 +183,17 @@ class CampaignAudienceWhatsapp(Base):
      def __init__(self):
           pass
 
-
 #Tracking individualiezeReminder as dates may vary. For instance there may be customers that owe the company with different deadlines for payments. So each reminder need to be individualized. Or it may be about company drivers renew of driver licence/ car insurance or service due
 class IndividualizedReminder(Base):
      __tablename__="individualized_reminders"
      id=Column("individualized_reminders_id",Integer,primary_key=True)
      campaign_id=Column(Integer, ForeignKey("campaigns.campaign_id"))
-     first_name=Column(String(50),ForeignKey("address_book.first_name"))
-     last_name=Column(String(50),ForeignKey("address_book.last_name"))
-     campaign_end_date=Column(Date)
-     mobile_number=Column(String(15),ForeignKey("mobile_details.mobile_number"))
-     days_to_start_trigger=Column(Integer)
+     contact_id=Column(String(50),ForeignKey("address_book.contact_id"))
+     reminder_end_date=Column(Date)
+     trigger_days_from_deadline=Column(Integer)
      reason_for_reminder=Column(String(200))
+     #contact_id_targeted = relation("AddressBook",primaryjoin=contact_id=="AddressBook.contact_id",uselist=False)
+
 
 #Keeping track of all messages sent out 
 class CampaignDeliveryHistory(Base):

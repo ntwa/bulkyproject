@@ -1,0 +1,1 @@
+This is line {'content': u'Testing sending of several messages, sent at: 2018-12-08 17:23:59.372638. Batch No(Mod2): 4', 'to': [u'+255742340759']}:End {'status': 1, 'message': 'SMS was sent successfully'}:

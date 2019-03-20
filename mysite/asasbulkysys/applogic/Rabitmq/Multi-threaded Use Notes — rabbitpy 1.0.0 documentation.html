@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths" style="" lang="en"><!--<![endif]--><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Multi-threaded Use Notes — rabbitpy 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+
+  
+    <link rel="stylesheet" href="Multi-threaded%20Use%20Notes%20%E2%80%94%20rabbitpy%201.0.0%20documentation_files/sphinx_rtd_theme.css" type="text/css">
+  
+
+  
+    <link rel="top" title="rabbitpy 1.0.0 documentation" href="https://rabbitpy.readthedocs.io/en/latest/index.html"> 
+
+  
+  <script type="text/javascript" async="" src="Multi-threaded%20Use%20Notes%20%E2%80%94%20rabbitpy%201.0.0%20documentation_files/ga.js"></script><script src="Multi-threaded%20Use%20Notes%20%E2%80%94%20rabbitpy%201.0.0%20documentation_files/modernizr.js"></script>
+
+
+<!-- RTD Extra Head -->
+
+<!-- 
+Always link to the latest version, as canonical.
+http://docs.readthedocs.org/en/latest/canonical.html
+-->
+<link rel="canonical" href="http://rabbitpy.readthedocs.io/en/latest/threads.html">
+
+<link rel="stylesheet" href="Multi-threaded%20Use%20Notes%20%E2%80%94%20rabbitpy%201.0.0%20documentation_files/readthedocs-doc-embed.css" type="text/css">
+
+<script type="text/javascript" src="Multi-threaded%20Use%20Notes%20%E2%80%94%20rabbitpy%201.0.0%20documentation_files/readthedocs-data.js"></script>
+
+<!-- Add page-specific data, which must exist in the page js, not global -->
+<script type="text/javascript">
+READTHEDOCS_DATA['page'] = 'threads'
+</script>
+
+<script type="text/javascript" src="Multi-threaded%20Use%20Notes%20%E2%80%94%20rabbitpy%201.0.0%20documentation_files/readthedocs-dynamic-include.js"></script>
+
+<!-- end RTD <extrahead> --></head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="https://rabbitpy.readthedocs.io/en/latest/index.html" class="icon icon-home"> rabbitpy
+          
+
+          
+          </a>
+
+          
+            
+            
+            
+              <div class="version">
+                latest
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input name="q" placeholder="Search docs" type="text">
+    <input name="check_keywords" value="yes" type="hidden">
+    <input name="area" value="default" type="hidden">
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="https://rabbitpy.readthedocs.io/en/latest/simple.html">Simple API Methods</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="https://rabbitpy.readthedocs.io/en/latest/api/amqp.html">AMQP Adapter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://rabbitpy.readthedocs.io/en/latest/api/channel.html">Channel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://rabbitpy.readthedocs.io/en/latest/api/connection.html">Connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://rabbitpy.readthedocs.io/en/latest/api/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://rabbitpy.readthedocs.io/en/latest/api/exchange.html">Exchange</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://rabbitpy.readthedocs.io/en/latest/api/message.html">Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://rabbitpy.readthedocs.io/en/latest/api/queue.html">Queue</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://rabbitpy.readthedocs.io/en/latest/api/tx.html">Transactions</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="https://rabbitpy.readthedocs.io/en/latest/examples/consumer.html">Message Consumer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://rabbitpy.readthedocs.io/en/latest/examples/getter.html">Message Getter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://rabbitpy.readthedocs.io/en/latest/examples/ha_queues.html">Declaring HA Queues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://rabbitpy.readthedocs.io/en/latest/examples/publisher_confirms.html">Mandatory Publishing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://rabbitpy.readthedocs.io/en/latest/examples/transactional_publisher.html">Transactional Publisher</a></li>
+</ul>
+
+            
+          
+        </div>
+      <div id="rtd-og11yinq" class="ethical-rtd ethical-dark-theme"><div class="ethical-sidebar"><div class="ethical-content"><a href="https://readthedocs.org/sustainability/click/423/Kyzi5hV7DRGn/" rel="nofollow" target="_blank" class="ethical-image-link"><img src="Multi-threaded%20Use%20Notes%20%E2%80%94%20rabbitpy%201.0.0%20documentation_files/a.png"></a><div class="ethical-text"><a href="https://readthedocs.org/sustainability/click/423/Kyzi5hV7DRGn/" rel="nofollow" target="_blank">monday.com</a>: Plan. Organize. Track. In one visual, collaborative space. <a href="https://readthedocs.org/sustainability/click/423/Kyzi5hV7DRGn/" rel="nofollow" target="_blank">Try now for free</a>.</div></div><div class="ethical-callout"><small><em><a href="https://readthedocs.org/sustainability/advertising/">Sponsored</a><span> · </span><a href="https://docs.readthedocs.io/en/latest/ethical-advertising.html">Ads served ethically</a></em></small></div></div><img src="Multi-threaded%20Use%20Notes%20%E2%80%94%20rabbitpy%201.0.0%20documentation_files/a.png" style="display: none;"></div></div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="https://rabbitpy.readthedocs.io/en/latest/index.html">rabbitpy</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="https://rabbitpy.readthedocs.io/en/latest/index.html">Docs</a> »</li>
+      
+    <li>Multi-threaded Use Notes</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="https://github.com/gmr/rabbitpy/blob/master/docs/threads.rst" class="fa fa-github"> Edit on GitHub</a>
+          
+        
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="multi-threaded-use-notes">
+<h1>Multi-threaded Use Notes<a class="headerlink" href="#multi-threaded-use-notes" title="Permalink to this headline">¶</a></h1>
+<p>To ensure that the network communication module at the core of rabbitpy is
+thread safe, the <code class="xref py py-class docutils literal"><span class="pre">rabbitpy.io.IO</span></code> class is a daemonic Python thread
+that uses a combination of <a class="reference external" href="https://docs.python.org/2/library/threading.html#threading.Event" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">threading.Event</span></code></a>, <a class="reference external" href="https://docs.python.org/2/library/queue.html#Queue.Queue" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">Queue.Queue</span></code></a>,
+and a local cross-platform implementation of a read-write socket pair in
+<code class="xref py py-attr docutils literal"><span class="pre">rabbitpy.IO.write_trigger</span></code>.</p>
+<p>While ensuring that the core socket IO and dispatching of AMQP frames across
+threads goes a long way to make sure that multi-threaded applications can safely
+use rabbitpy, it does not protect against cross-thread channel utilization.</p>
+<p>Due to the way that channels events are managed, it is recommend that you restrict
+the use of a channel to an individual thread. By not sharing channels across
+threads, you will ensure that you do not accidentally create issues with
+channel state in the AMQP protocol. As an asynchronous RPC style protocol, when
+you issue commands, such as a queue declaration, or are publishing a message,
+there are expectations in the conversation on a channel about the order of
+events and frames sent and received.</p>
+<p>The following example uses the main Python thread to connect to RabbitMQ and
+then spawns a thread for publishing and a thread for consuming.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">rabbitpy</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="n">EXCHANGE</span> <span class="o">=</span> <span class="s1">'threading_example'</span>
+<span class="n">QUEUE</span> <span class="o">=</span> <span class="s1">'threading_queue'</span>
+<span class="n">ROUTING_KEY</span> <span class="o">=</span> <span class="s1">'test'</span>
+<span class="n">MESSAGE_COUNT</span> <span class="o">=</span> <span class="mi">100</span>
+
+
+<span class="k">def</span> <span class="nf">consumer</span><span class="p">(</span><span class="n">connection</span><span class="p">):</span>
+    <span class="sd">"""Consume MESSAGE_COUNT messages on the connection and then exit.</span>
+
+<span class="sd">    :param rabbitpy.Connection connection: The connection to consume on</span>
+
+<span class="sd">    """</span>
+    <span class="n">received</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">with</span> <span class="n">connection</span><span class="o">.</span><span class="n">channel</span><span class="p">()</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">rabbitpy</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">QUEUE</span><span class="p">)</span><span class="o">.</span><span class="n">consume_messages</span><span class="p">():</span>
+            <span class="k">print</span> <span class="n">message</span><span class="o">.</span><span class="n">body</span>
+            <span class="n">message</span><span class="o">.</span><span class="n">ack</span><span class="p">()</span>
+            <span class="n">received</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">received</span> <span class="o">==</span> <span class="n">MESSAGE_COUNT</span><span class="p">:</span>
+                <span class="k">break</span>
+
+
+<span class="k">def</span> <span class="nf">publisher</span><span class="p">(</span><span class="n">connection</span><span class="p">):</span>
+    <span class="sd">"""Pubilsh up to MESSAGE_COUNT messages on connection</span>
+<span class="sd">    on an individual thread.</span>
+
+<span class="sd">    :param rabbitpy.Connection connection: The connection to publish on</span>
+
+<span class="sd">    """</span>
+    <span class="k">with</span> <span class="n">connection</span><span class="o">.</span><span class="n">channel</span><span class="p">()</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">MESSAGE_COUNT</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">rabbitpy</span><span class="o">.</span><span class="n">Message</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="s1">'Message #</span><span class="si">%i</span><span class="s1">'</span> <span class="o">%</span> <span class="n">index</span><span class="p">)</span>
+            <span class="n">message</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">EXCHANGE</span><span class="p">,</span> <span class="n">ROUTING_KEY</span><span class="p">)</span>
+
+
+<span class="c1"># Connect to RabbitMQ</span>
+<span class="k">with</span> <span class="n">rabbitpy</span><span class="o">.</span><span class="n">Connection</span><span class="p">()</span> <span class="k">as</span> <span class="n">connection</span><span class="p">:</span>
+
+    <span class="c1"># Open the channel, declare and bind the exchange and queue</span>
+    <span class="k">with</span> <span class="n">connection</span><span class="o">.</span><span class="n">channel</span><span class="p">()</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+
+        <span class="c1"># Declare the exchange</span>
+        <span class="n">exchange</span> <span class="o">=</span> <span class="n">rabbitpy</span><span class="o">.</span><span class="n">Exchange</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">EXCHANGE</span><span class="p">)</span>
+        <span class="n">exchange</span><span class="o">.</span><span class="n">declare</span><span class="p">()</span>
+
+        <span class="c1"># Declare the queue</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">rabbitpy</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">QUEUE</span><span class="p">)</span>
+        <span class="n">queue</span><span class="o">.</span><span class="n">declare</span><span class="p">()</span>
+
+        <span class="c1"># Bind the queue to the exchange</span>
+        <span class="n">queue</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">EXCHANGE</span><span class="p">,</span> <span class="n">ROUTING_KEY</span><span class="p">)</span>
+
+
+    <span class="c1"># Pass in the kwargs</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'connection'</span><span class="p">:</span> <span class="n">connection</span><span class="p">}</span>
+
+    <span class="c1"># Start the consumer thread</span>
+    <span class="n">consumer_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">consumer</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">consumer_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="c1"># Start the pubisher thread</span>
+    <span class="n">publisher_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">publisher</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">publisher_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="c1"># Join the consumer thread, waiting for it to consume all MESSAGE_COUNT messages</span>
+    <span class="n">consumer_thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr><div><div id="rtd-67ham6nwl" class="ethical-rtd"></div></div>
+
+  <div role="contentinfo">
+    <p>
+        © Copyright 2013, Gavin M. Roy.
+      
+        <span class="commit">
+          Revision <code>109e4439</code>.
+        </span>
+      
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org/">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Read the Docs</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions"><!-- Inserted RTD Footer -->
+<div class="injected">
+
+  
+
+      
+      
+      
+      <dl>
+        <dt>Versions</dt>
+        
+         <strong> 
+        <dd><a href="https://rabbitpy.readthedocs.io/en/latest/threads.html">latest</a></dd>
+         </strong> 
+        
+        
+        <dd><a href="https://rabbitpy.readthedocs.io/en/stable/threads.html">stable</a></dd>
+        
+        
+        
+        <dd><a href="https://rabbitpy.readthedocs.io/en/1.0.0/threads.html">1.0.0</a></dd>
+        
+        
+        
+        <dd><a href="https://rabbitpy.readthedocs.io/en/0.27.1/threads.html">0.27.1</a></dd>
+        
+        
+        
+        <dd><a href="https://rabbitpy.readthedocs.io/en/0.26.2/threads.html">0.26.2</a></dd>
+        
+        
+      </dl>
+      
+      
+
+      
+      
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="https://readthedocs.org/projects/rabbitpy/downloads/pdf/latest/">PDF</a></dd>
+        
+        <dd><a href="https://readthedocs.org/projects/rabbitpy/downloads/htmlzip/latest/">HTML</a></dd>
+        
+        <dd><a href="https://readthedocs.org/projects/rabbitpy/downloads/epub/latest/">Epub</a></dd>
+        
+      </dl>
+      
+      
+
+      
+      <dl>
+        <!-- These are kept as relative links for internal installs that are http -->
+        <dt>On Read the Docs</dt>
+        <dd>
+          <a href="https://readthedocs.org/projects/rabbitpy/">Project Home</a>
+        </dd>
+        <dd>
+          <a href="https://readthedocs.org/projects/rabbitpy/builds/">Builds</a>
+        </dd>
+        <dd>
+          <a href="https://readthedocs.org/projects/rabbitpy/downloads/">Downloads</a>
+        </dd>
+      </dl>
+      
+
+      
+
+      
+      <dl>
+        <dt>On GitHub</dt>
+        <dd>
+          <a href="https://github.com/gmr/rabbitpy/blob/master/docs/threads.rst">View</a>
+        </dd>
+        
+      </dl>
+      
+      
+
+      
+      <dl>
+        <dt>Search</dt>
+        <dd>
+          <div style="padding: 6px;">
+            <form id="flyout-search-form" class="wy-form" target="_blank" action="//readthedocs.org/projects/rabbitpy/search/" method="get">
+              <input name="q" placeholder="Search docs" type="text">
+              </form>
+          </div>
+        </dd>
+      </dl>
+      
+
+
+
+      <hr>
+      
+        <small>
+          <span>Hosted by <a href="https://readthedocs.org/">Read the Docs</a></span>
+          <span> · </span>
+          <a href="https://docs.readthedocs.io/en/latest/privacy-policy.html">Privacy Policy</a>
+        </small>
+      
+
+      
+
+</div>
+</div>
+  </div>
+
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="Multi-threaded%20Use%20Notes%20%E2%80%94%20rabbitpy%201.0.0%20documentation_files/jquery-2.js"></script>
+      <script type="text/javascript" src="Multi-threaded%20Use%20Notes%20%E2%80%94%20rabbitpy%201.0.0%20documentation_files/jquery-migrate-1.js"></script>
+      <script type="text/javascript" src="Multi-threaded%20Use%20Notes%20%E2%80%94%20rabbitpy%201.0.0%20documentation_files/underscore.js"></script>
+      <script type="text/javascript" src="Multi-threaded%20Use%20Notes%20%E2%80%94%20rabbitpy%201.0.0%20documentation_files/doctools.js"></script>
+      <script type="text/javascript" src="Multi-threaded%20Use%20Notes%20%E2%80%94%20rabbitpy%201.0.0%20documentation_files/readthedocs-doc-embed.js"></script>
+
+  
+
+  
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+
+</body></html>

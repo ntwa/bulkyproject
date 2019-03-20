@@ -1,15 +1,8 @@
 #!/usr/bin/env python
 import datetime
 import sys,json
-#from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-#from bulkysms.database.address_book_module import AddressBook,MobileDetails,EmailDetails,GroupMember,db,dbconn
 
-#from sqlalchemy import ForeignKey, ForeignKeyConstraint
-#from sqlalchemy import Column, Date, Integer, String, Boolean, Enum, Time, Float
-#from sqlalchemy.orm import relationship, backref,sessionmaker
-#from sqlalchemy.pool import NullPool
-#from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 
 from collections import OrderedDict
@@ -18,12 +11,13 @@ from bulkysms.database.base  import Base
 from bulkysms.database.dbinit import db,dbconn
 
 import bulkysms.database.address_book_module
+
 import bulkysms.database.sms_feedback_module
 
 Base.metadata.create_all(db)
 
 from bulkysms.database.address_book_module import AddressBook,MobileDetails,EmailDetails,GroupMember
-
+from bulkysms.database.sms_feedback_module import Campaign
 
 
 class switch(object):

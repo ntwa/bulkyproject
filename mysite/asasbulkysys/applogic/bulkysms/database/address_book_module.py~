@@ -55,7 +55,7 @@ class AddressBook(Base):
      mobile_number = relationship("MobileDetails", backref=backref("address_book_mobile", order_by=id))
      email_address = relationship("EmailDetails", backref=backref("address_book_emails", order_by=id))
      group_member_contact = relationship("GroupMember", backref=backref("group_member_contact", order_by=id))
-    
+     individual_campaign  = relationship("IndividualizedReminder", backref=backref("individualized_reminder_contact", order_by=id))
 
      def __init__(self,first_name,middle_name,last_name,gender,birth_date,ward,district,region,country):
           self.first_name=first_name

@@ -1,0 +1,228 @@
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0  34132  3412 ?        Ss   11:08   0:01 /sbin/init
+root         2  0.0  0.0      0     0 ?        S    11:08   0:00 [kthreadd]
+root         3  0.0  0.0      0     0 ?        S    11:08   0:00 [ksoftirqd/0]
+root         5  0.0  0.0      0     0 ?        S<   11:08   0:00 [kworker/0:0H]
+root         7  0.0  0.0      0     0 ?        S    11:08   0:10 [rcu_sched]
+root         8  0.0  0.0      0     0 ?        S    11:08   0:02 [rcuos/0]
+root         9  0.0  0.0      0     0 ?        S    11:08   0:02 [rcuos/1]
+root        10  0.0  0.0      0     0 ?        S    11:08   0:02 [rcuos/2]
+root        11  0.0  0.0      0     0 ?        S    11:08   0:03 [rcuos/3]
+root        12  0.0  0.0      0     0 ?        S    11:08   0:00 [rcuos/4]
+root        13  0.0  0.0      0     0 ?        S    11:08   0:00 [rcuos/5]
+root        14  0.0  0.0      0     0 ?        S    11:08   0:00 [rcuos/6]
+root        15  0.0  0.0      0     0 ?        S    11:08   0:00 [rcuos/7]
+root        16  0.0  0.0      0     0 ?        S    11:08   0:00 [rcu_bh]
+root        17  0.0  0.0      0     0 ?        S    11:08   0:00 [rcuob/0]
+root        18  0.0  0.0      0     0 ?        S    11:08   0:00 [rcuob/1]
+root        19  0.0  0.0      0     0 ?        S    11:08   0:00 [rcuob/2]
+root        20  0.0  0.0      0     0 ?        S    11:08   0:00 [rcuob/3]
+root        21  0.0  0.0      0     0 ?        S    11:08   0:00 [rcuob/4]
+root        22  0.0  0.0      0     0 ?        S    11:08   0:00 [rcuob/5]
+root        23  0.0  0.0      0     0 ?        S    11:08   0:00 [rcuob/6]
+root        24  0.0  0.0      0     0 ?        S    11:08   0:00 [rcuob/7]
+root        25  0.0  0.0      0     0 ?        S    11:08   0:08 [migration/0]
+root        26  0.0  0.0      0     0 ?        S    11:08   0:00 [watchdog/0]
+root        27  0.0  0.0      0     0 ?        S    11:08   0:00 [watchdog/1]
+root        28  0.0  0.0      0     0 ?        S    11:08   0:06 [migration/1]
+root        29  0.0  0.0      0     0 ?        S    11:08   0:00 [ksoftirqd/1]
+root        31  0.0  0.0      0     0 ?        S<   11:08   0:00 [kworker/1:0H]
+root        32  0.0  0.0      0     0 ?        S    11:08   0:00 [watchdog/2]
+root        33  0.0  0.0      0     0 ?        S    11:08   0:06 [migration/2]
+root        34  0.0  0.0      0     0 ?        S    11:08   0:00 [ksoftirqd/2]
+root        36  0.0  0.0      0     0 ?        S<   11:08   0:00 [kworker/2:0H]
+root        37  0.0  0.0      0     0 ?        S    11:08   0:00 [watchdog/3]
+root        38  0.0  0.0      0     0 ?        S    11:08   0:03 [migration/3]
+root        39  0.0  0.0      0     0 ?        S    11:08   0:00 [ksoftirqd/3]
+root        41  0.0  0.0      0     0 ?        S<   11:08   0:00 [kworker/3:0H]
+root        42  0.0  0.0      0     0 ?        S<   11:08   0:00 [khelper]
+root        43  0.0  0.0      0     0 ?        S    11:08   0:00 [kdevtmpfs]
+root        44  0.0  0.0      0     0 ?        S<   11:08   0:00 [netns]
+root        45  0.0  0.0      0     0 ?        S<   11:08   0:00 [writeback]
+root        46  0.0  0.0      0     0 ?        S<   11:08   0:00 [kintegrityd]
+root        47  0.0  0.0      0     0 ?        S<   11:08   0:00 [bioset]
+root        49  0.0  0.0      0     0 ?        S<   11:08   0:00 [kblockd]
+root        50  0.0  0.0      0     0 ?        S<   11:08   0:00 [ata_sff]
+root        51  0.0  0.0      0     0 ?        S    11:08   0:00 [khubd]
+root        52  0.0  0.0      0     0 ?        S<   11:08   0:00 [md]
+root        53  0.0  0.0      0     0 ?        S<   11:08   0:00 [devfreq_wq]
+root        54  0.0  0.0      0     0 ?        S    11:08   0:04 [kworker/1:1]
+root        56  0.0  0.0      0     0 ?        S    11:08   0:00 [khungtaskd]
+root        57  0.0  0.0      0     0 ?        S    11:08   0:00 [kswapd0]
+root        58  0.0  0.0      0     0 ?        S<   11:08   0:00 [vmstat]
+root        59  0.0  0.0      0     0 ?        SN   11:08   0:00 [ksmd]
+root        60  0.0  0.0      0     0 ?        SN   11:08   0:04 [khugepaged]
+root        61  0.0  0.0      0     0 ?        S    11:08   0:00 [fsnotify_mark]
+root        62  0.0  0.0      0     0 ?        S    11:08   0:00 [ecryptfs-kthrea]
+root        63  0.0  0.0      0     0 ?        S<   11:08   0:00 [crypto]
+root        75  0.0  0.0      0     0 ?        S<   11:08   0:00 [kthrotld]
+root        97  0.0  0.0      0     0 ?        S<   11:08   0:00 [deferwq]
+root        98  0.0  0.0      0     0 ?        S<   11:08   0:00 [charger_manager]
+root       155  0.0  0.0      0     0 ?        S<   11:08   0:00 [kpsmoused]
+root       156  0.0  0.0      0     0 ?        S    11:08   0:00 [scsi_eh_0]
+root       157  0.0  0.0      0     0 ?        S    11:08   0:00 [scsi_eh_1]
+root       174  0.0  0.0      0     0 ?        S    11:08   0:01 [jbd2/sda1-8]
+root       175  0.0  0.0      0     0 ?        S<   11:08   0:00 [ext4-rsv-conver]
+root       298  0.0  0.0  19476   644 ?        S    11:08   0:00 upstart-udev-bridge --daemon
+root       304  0.0  0.0  51992  2024 ?        Ss   11:08   0:00 /lib/systemd/systemd-udevd --daemon
+root       368  0.0  0.0      0     0 ?        S    11:08   0:00 [irq/64-mei_me]
+root       387  0.0  0.0      0     0 ?        S<   11:08   0:00 [hd-audio0]
+root       411  0.0  0.0      0     0 ?        S<   11:08   0:00 [kmemstick]
+root       413  0.0  0.0      0     0 ?        S<   11:08   0:00 [kworker/u17:1]
+root       415  0.0  0.0      0     0 ?        S<   11:08   0:00 [cfg80211]
+root       421  0.0  0.0      0     0 ?        S    11:08   0:00 [irq/67-iwlwifi]
+root       423  0.0  0.0      0     0 ?        S<   11:08   0:00 [hd-audio1]
+root       427  0.0  0.0      0     0 ?        S<   11:08   0:00 [hci0]
+root       428  0.0  0.0      0     0 ?        S<   11:08   0:00 [hci0]
+root       429  0.0  0.0      0     0 ?        S<   11:08   0:00 [kworker/u17:2]
+root       516  0.0  0.0  15260   624 ?        S    11:08   0:00 upstart-socket-bridge --daemon
+root       608  0.0  0.0      0     0 ?        S<   11:08   0:00 [ttm_swap]
+root       690  0.0  0.1 316764  9208 ?        Ss   11:09   0:00 smbd -F
+message+   734  0.0  0.0  40624  2516 ?        Ss   11:09   0:01 dbus-daemon --system --fork
+root       739  0.0  0.0  15276   624 ?        S    11:09   0:00 upstart-file-bridge --daemon
+syslog     749  0.0  0.0 255840  1632 ?        Ssl  11:09   0:00 rsyslogd
+root       754  0.0  0.0 334476  5012 ?        Ssl  11:09   0:00 /usr/sbin/ModemManager
+root       805  0.0  0.0  19400  2108 ?        Ss   11:09   0:00 /usr/sbin/bluetoothd
+root       812  0.0  0.0      0     0 ?        S<   11:09   0:00 [krfcommd]
+avahi      845  0.1  0.0  33012  2352 ?        S    11:09   0:22 avahi-daemon: running [ntwa-HP-ProBook-4530s.local]
+avahi      850  0.0  0.0  32224   464 ?        S    11:09   0:00 avahi-daemon: chroot helper
+root       878  0.0  0.0  43520  1940 ?        Ss   11:09   0:00 /lib/systemd/systemd-logind
+root       884  0.0  0.0 345280  6748 ?        Ssl  11:09   0:01 NetworkManager
+root       890  0.0  0.0 281172  5172 ?        Sl   11:09   0:00 /usr/lib/policykit-1/polkitd --no-debug
+root       918  0.0  0.0  20016   968 tty4     Ss+  11:09   0:00 /sbin/getty -8 38400 tty4
+root       922  0.0  0.0  20016   956 tty5     Ss+  11:09   0:00 /sbin/getty -8 38400 tty5
+root       930  0.0  0.0      0     0 ?        S<   11:09   0:00 [hd-audio2]
+root       934  0.0  0.0  20016   968 tty2     Ss+  11:09   0:00 /sbin/getty -8 38400 tty2
+root       935  0.0  0.0  20016   968 tty3     Ss+  11:09   0:00 /sbin/getty -8 38400 tty3
+root       940  0.0  0.0  20016   956 tty6     Ss+  11:09   0:00 /sbin/getty -8 38400 tty6
+root       989  0.0  0.0 215168  3484 ?        Ssl  11:09   0:00 gdm
+root      1038  0.0  0.0  23652  1048 ?        Ss   11:09   0:00 cron
+root      1067  0.0  0.0  19196   764 ?        Ss   11:09   0:02 /usr/sbin/irqbalance
+root      1076  0.0  0.0  75496  3420 ?        Ss   11:09   0:00 /usr/sbin/cups-browsed
+root      1090  0.0  0.0  30628  2772 ?        Ss   11:09   0:00 /sbin/wpa_supplicant -B -P /run/sendsigs.omit.d/wpasupplicant.pid -u -s -O /var/run/wpa_supplicant
+mysql     1098  0.0  0.7 550132 56856 ?        Ssl  11:09   0:18 /usr/sbin/mysqld
+root      1105  0.0  0.0   4368   696 ?        Ss   11:09   0:02 acpid -c /etc/acpi/events -s /var/run/acpid.socket
+whoopsie  1106  0.0  0.0 435076  7284 ?        Ssl  11:09   0:00 whoopsie
+root      1107  0.0  0.0 308672  2792 ?        S    11:09   0:00 smbd -F
+root      1137  0.0  0.0   4444   644 ?        Ss   11:09   0:00 /bin/sh -e /proc/self/fd/9
+root      1144  0.0  0.0  16000  1588 ?        S    11:09   0:00 initctl emit plymouth-ready
+kernoops  1167  0.0  0.0  37148  1008 ?        Ss   11:09   0:00 /usr/sbin/kerneloops
+root      1184  0.0  0.0 316764  3756 ?        S    11:09   0:00 smbd -F
+root      1274  0.0  0.0      0     0 ?        S    11:09   0:00 [kworker/3:2]
+root      1285  0.0  0.0      0     0 ?        S    11:09   0:00 [kauditd]
+rabbitmq  1300  0.0  0.0   7500   312 ?        S    11:09   0:00 /usr/lib/erlang/erts-5.10.4/bin/epmd -daemon
+rabbitmq  1367  0.0  0.0   4444   600 ?        S    11:09   0:00 /bin/sh /usr/sbin/rabbitmq-server
+rabbitmq  1407  0.6  0.6 2176892 52496 ?       Sl   11:09   2:21 /usr/lib/erlang/erts-5.10.4/bin/beam.smp -W w -K true -A30 -P 1048576 -- -root /usr/lib/erlang -progname erl -- -home /var/lib/rabbitmq -- -pa /usr/lib/rabbitmq/lib/rabbitmq_server-3.2.4/sbin/../ebin -noshell -noinput -s rabbit boot -sname rabbit@ntwa-HP-ProBook-4530s -boot start_sasl -kernel inet_default_connect_options [{nodelay,true}] -sasl errlog_type error -sasl sasl_error_logger false -rabbit error_logger {file,"/var/log/rabbitmq/rabbit@ntwa-HP-ProBook-4530s.log"} -rabbit sasl_error_logger {file,"/var/log/rabbitmq/rabbit@ntwa-HP-ProBook-4530s-sasl.log"} -rabbit enabled_plugins_file "/etc/rabbitmq/enabled_plugins" -rabbit plugins_dir "/usr/lib/rabbitmq/lib/rabbitmq_server-3.2.4/sbin/../plugins" -rabbit plugins_expand_dir "/var/lib/rabbitmq/mnesia/rabbit@ntwa-HP-ProBook-4530s-plugins-expand" -os_mon start_cpu_sup false -os_mon start_disksup false -os_mon start_memsup false -mnesia dir "/var/lib/rabbitmq/mnesia/rabbit@ntwa-HP-ProBook-4530s"
+rabbitmq  1601  0.0  0.0   7464   428 ?        Ss   11:09   0:00 inet_gethost 4
+rabbitmq  1602  0.0  0.0   9556   636 ?        S    11:09   0:00 inet_gethost 4
+root      1616  0.0  0.0 287612  4220 ?        Sl   11:09   0:00 /usr/lib/accountsservice/accounts-daemon
+root      1649  0.0  0.0      0     0 ?        S<   11:09   0:00 [iprt-VBoxWQueue]
+root      1651  0.0  0.0      0     0 ?        S    11:09   0:00 [iprt-VBoxTscThr]
+root      1726  0.0  0.2 315252 19328 ?        Ss   11:09   0:00 /usr/sbin/apache2 -k start
+root      1773  0.0  0.0  20016   952 tty1     Ss+  11:09   0:00 /sbin/getty -8 38400 tty1
+root      1834  0.0  0.0 239464  6776 ?        Sl   11:09   0:00 /usr/lib/upower/upowerd
+nobody    2039  0.0  0.0  35224  1528 ?        S    11:09   0:02 /usr/sbin/dnsmasq --no-resolv --keep-in-foreground --no-hosts --bind-interfaces --pid-file=/run/sendsigs.omit.d/network-manager.dnsmasq.pid --listen-address=127.0.1.1 --conf-file=/var/run/NetworkManager/dnsmasq.conf --cache-size=0 --proxy-dnssec --enable-dbus=org.freedesktop.NetworkManager.dnsmasq --conf-dir=/etc/NetworkManager/dnsmasq.d
+colord    2095  0.0  0.0 301704  7956 ?        Sl   11:09   0:00 /usr/lib/colord/colord
+root      2208  0.0  0.0 278176  7156 ?        Ss   11:09   0:00 /usr/sbin/winbindd -F
+root      2217  0.1  0.0 231456  2968 ?        Ss   11:09   0:27 nmbd -D
+root      2219  0.0  0.0 278308  3328 ?        S    11:09   0:00 /usr/sbin/winbindd -F
+root      3026  0.0  0.0 298748  4248 ?        Sl   11:23   0:00 /usr/lib/gdm/gdm-simple-slave --display-id /org/gnome/DisplayManager/Displays/_0
+root      3031  3.1  1.2 428644 102036 tty7    Ssl+ 11:23  10:49 /usr/bin/X :0 -background none -verbose -auth /var/run/gdm/auth-for-gdm-U12yjm/database -seat seat0 -nolisten tcp vt7
+rtkit     3095  0.0  0.0 168916  1296 ?        SNl  11:23   0:00 /usr/lib/rtkit/rtkit-daemon
+root      3170  0.0  0.0 271412  5352 ?        Sl   11:25   0:00 gdm-session-worker [pam/gdm-password]
+ntwa      3177  0.0  0.0 444668  6128 ?        SLl  11:25   0:00 /usr/bin/gnome-keyring-daemon --daemonize --login
+ntwa      3179  0.0  0.0  40292  2676 ?        Ss   11:25   0:00 init --user
+ntwa      3279  0.0  0.0  40312  2476 ?        Ss   11:25   0:03 dbus-daemon --fork --session --address=unix:abstract=/tmp/dbus-XBQWnaoBeR
+ntwa      3290  0.0  0.0  22304  1176 ?        Ss   11:25   0:00 upstart-event-bridge
+ntwa      3296  0.0  0.0  78332  4632 ?        Ss   11:25   0:00 /usr/lib/x86_64-linux-gnu/hud/window-stack-bridge
+ntwa      3305  0.1  0.0 363772  6572 ?        Ssl  11:25   0:41 /usr/bin/ibus-daemon --daemonize --xim
+ntwa      3325  0.0  0.0  22400   700 ?        S    11:25   0:00 upstart-dbus-bridge --daemon --session --user --bus-name session
+ntwa      3326  0.0  0.0  30784   696 ?        S    11:25   0:00 upstart-file-bridge --daemon --user
+ntwa      3328  0.0  0.0  22312   392 ?        S    11:25   0:00 upstart-dbus-bridge --daemon --system --user --bus-name system
+ntwa      3331  0.0  0.0 196652  3184 ?        Sl   11:25   0:00 /usr/lib/gvfs/gvfsd
+ntwa      3345  0.0  0.2 815776 22504 ?        Ssl  11:25   0:01 /usr/lib/unity-settings-daemon/unity-settings-daemon
+ntwa      3349  0.0  0.5 728920 43168 ?        Ssl  11:25   0:07 /usr/lib/x86_64-linux-gnu/hud/hud-service
+ntwa      3351  0.0  0.0 337596  3480 ?        Ssl  11:25   0:00 /usr/lib/at-spi2-core/at-spi-bus-launcher --launch-immediately
+ntwa      3352  0.0  0.1 584216 11504 ?        Ssl  11:25   0:00 gnome-session --session=ubuntu
+ntwa      3357  0.0  0.0  39392  2052 ?        S    11:25   0:00 /bin/dbus-daemon --config-file=/etc/at-spi2/accessibility.conf --nofork --print-address 3
+ntwa      3358  0.0  0.4 583764 34756 ?        Ssl  11:25   0:11 /usr/lib/unity/unity-panel-service
+ntwa      3366  0.0  0.0 280900  5536 ?        Sl   11:25   0:00 /usr/lib/ibus/ibus-dconf
+ntwa      3367  0.0  0.2 555512 17036 ?        Sl   11:25   0:10 /usr/lib/ibus/ibus-ui-gtk3
+ntwa      3371  0.0  0.0 386912  7392 ?        Sl   11:25   0:00 /usr/lib/ibus/ibus-x11 --kill-daemon
+ntwa      3375  0.0  0.0 124916  3320 ?        Sl   11:25   0:00 /usr/lib/at-spi2-core/at-spi2-registryd --use-gnome-session
+ntwa      3402  0.0  0.1 624676 15492 ?        Sl   11:25   0:08 /usr/lib/x86_64-linux-gnu/bamf/bamfdaemon
+ntwa      3413  0.0  0.0 205156  3560 ?        Sl   11:25   0:11 /usr/lib/ibus/ibus-engine-simple
+ntwa      3422  0.0  0.0 345668  5180 ?        Sl   11:25   0:00 /usr/lib/gvfs/gvfsd-fuse /run/user/1000/gvfs -f -o big_writes
+ntwa      3429  0.0  0.0 178444  2920 ?        Sl   11:25   0:00 /usr/lib/dconf/dconf-service
+ntwa      3432  0.0  0.0  20236   944 ?        S    11:25   0:11 syndaemon -i 1.0 -t -K -R
+ntwa      3446  0.1  0.0 447768  6608 ?        S<l  11:25   0:24 /usr/bin/pulseaudio --start --log-target=syslog
+ntwa      3465  0.0  0.1 726264 15044 ?        Sl   11:25   0:00 /usr/lib/x86_64-linux-gnu/indicator-keyboard-service --use-gtk
+ntwa      3467  0.0  0.0 335548  3376 ?        Ssl  11:25   0:00 /usr/lib/x86_64-linux-gnu/indicator-messages/indicator-messages-service
+ntwa      3468  0.0  0.0 263664  2908 ?        Ssl  11:25   0:00 /usr/lib/x86_64-linux-gnu/indicator-bluetooth/indicator-bluetooth-service
+ntwa      3473  0.0  0.0 278484  3460 ?        Ssl  11:25   0:00 /usr/lib/x86_64-linux-gnu/indicator-power/indicator-power-service
+ntwa      3477  0.0  0.1 1162512 9216 ?        Ssl  11:25   0:00 /usr/lib/x86_64-linux-gnu/indicator-datetime/indicator-datetime-service
+ntwa      3481  0.0  0.1 479428  8520 ?        Ssl  11:25   0:00 /usr/lib/x86_64-linux-gnu/indicator-sound/indicator-sound-service
+ntwa      3487  0.0  0.1 446700 11424 ?        Ssl  11:25   0:00 /usr/lib/x86_64-linux-gnu/indicator-printers/indicator-printers-service
+ntwa      3494  0.0  0.0 828220  5932 ?        Ssl  11:25   0:00 /usr/lib/x86_64-linux-gnu/indicator-session/indicator-session-service
+ntwa      3499  0.0  0.0 286796  7068 ?        Ssl  11:25   0:00 /usr/lib/x86_64-linux-gnu/indicator-application/indicator-application-service
+ntwa      3525  0.0  0.1 1095432 12688 ?       Sl   11:25   0:00 /usr/lib/evolution/evolution-source-registry
+ntwa      3534  0.0  0.5 1074508 44636 ?       Sl   11:25   0:00 /usr/lib/evolution/evolution-calendar-factory
+ntwa      3625  0.0  0.2 497400 19780 ?        Sl   11:26   0:00 /usr/lib/x86_64-linux-gnu/notify-osd
+ntwa      3636  3.5  1.5 1621192 123116 ?      Sl   11:26  12:08 compiz
+ntwa      3642  0.0  0.1 477052  9432 ?        Sl   11:26   0:00 /usr/lib/unity-settings-daemon/unity-fallback-mount-helper
+ntwa      3646  0.0  0.2 741720 19452 ?        Sl   11:26   0:00 nm-applet
+ntwa      3654  0.4  1.6 1659952 131836 ?      Sl   11:26   1:23 nautilus -n
+ntwa      3657  0.0  0.1 331724  9572 ?        Sl   11:26   0:00 /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
+ntwa      3664  0.0  0.0 298844  4972 ?        Sl   11:26   0:00 /usr/lib/gvfs/gvfs-udisks2-volume-monitor
+ntwa      3672  0.0  0.0  58260  3720 ?        S    11:26   0:00 /usr/lib/x86_64-linux-gnu/gconf/gconfd-2
+root      3675  0.0  0.0 371240  7192 ?        Sl   11:26   0:02 /usr/lib/udisks2/udisksd --no-debug
+ntwa      3684  0.0  0.0 212452  3404 ?        Sl   11:26   0:00 /usr/lib/gvfs/gvfs-gphoto2-volume-monitor
+ntwa      3697  0.0  0.0 285976  3384 ?        Sl   11:26   0:00 /usr/lib/gvfs/gvfs-afc-volume-monitor
+ntwa      3706  0.0  0.0 200288  2832 ?        Sl   11:26   0:00 /usr/lib/gvfs/gvfs-mtp-volume-monitor
+ntwa      3824  0.0  0.0 270388  3080 ?        Sl   11:27   0:00 /usr/lib/gvfs/gvfsd-burn --spawner :1.6 /org/gtk/gvfs/exec_spaw/0
+ntwa      3831  0.0  0.0 433280  3832 ?        Sl   11:27   0:00 /usr/lib/gvfs/gvfsd-trash --spawner :1.6 /org/gtk/gvfs/exec_spaw/1
+ntwa      3939  0.0  0.0 129628  6548 ?        Sl   11:27   0:00 /usr/lib/gvfs/gvfsd-metadata
+ntwa      3945  0.0  0.1 414024  9972 ?        Sl   11:27   0:00 /usr/lib/gnome-user-share/gnome-user-share
+ntwa      3946  0.0  0.1 455112 12088 ?        Sl   11:27   0:00 telepathy-indicator
+ntwa      3952  0.0  0.0  58108  2592 ?        S    11:27   0:00 /usr/bin/obex-data-server --no-daemon 
+ntwa      3956  0.0  0.0 322540  7368 ?        Sl   11:27   0:00 /usr/lib/telepathy/mission-control-5
+ntwa      3977  0.0  0.1 551468 13404 ?        Sl   11:27   0:15 zeitgeist-datahub
+ntwa      3982  0.0  0.0 349168  5320 ?        Sl   11:27   0:00 /usr/bin/zeitgeist-daemon
+ntwa      3988  0.0  1.5 440452 126928 ?       Sl   11:27   0:04 /usr/lib/x86_64-linux-gnu/zeitgeist-fts
+ntwa      4005  0.0  0.0  11416   612 ?        S    11:27   0:00 /bin/cat
+ntwa      4007 11.9  6.2 3057620 503504 ?      Sl   11:27  41:07 /usr/lib/firefox/firefox
+ntwa      4090  5.2  9.3 2734504 755244 ?      Sl   11:27  17:54 /usr/lib/firefox/firefox -contentproc -childID 1 -isForBrowser -prefsLen 14497 -schedulerPrefs 0001,2 -greomni /usr/lib/firefox/omni.ja -appomni /usr/lib/firefox/browser/omni.ja -appdir /usr/lib/firefox/browser 4007 true tab
+ntwa      4169  3.3  5.3 2255768 435096 ?      Sl   11:27  11:30 /usr/lib/firefox/firefox -contentproc -childID 2 -isForBrowser -prefsLen 17692 -schedulerPrefs 0001,2 -greomni /usr/lib/firefox/omni.ja -appomni /usr/lib/firefox/browser/omni.ja -appdir /usr/lib/firefox/browser 4007 true tab
+ntwa      4224  0.0  0.2 499112 16304 ?        Sl   11:27   0:00 update-notifier
+www-data  4439  0.0  0.0 315276  7668 ?        S    11:28   0:00 /usr/sbin/apache2 -k start
+www-data  4440  0.0  0.0 315276  7668 ?        S    11:28   0:00 /usr/sbin/apache2 -k start
+www-data  4441  0.0  0.0 315276  7668 ?        S    11:28   0:00 /usr/sbin/apache2 -k start
+www-data  4442  0.0  0.0 315292  7912 ?        S    11:28   0:00 /usr/sbin/apache2 -k start
+www-data  4443  0.0  0.0 315276  7668 ?        S    11:28   0:00 /usr/sbin/apache2 -k start
+root      4487  0.0  0.0  78112  5216 ?        Ss   11:28   0:00 /usr/sbin/cupsd -f
+lp        4495  0.0  0.0  63164  2240 ?        S    11:28   0:00 /usr/lib/cups/notifier/dbus dbus:// 
+lp        4496  0.0  0.0  63164  2248 ?        S    11:28   0:00 /usr/lib/cups/notifier/dbus dbus:// 
+ntwa      4510  0.0  0.0 377904  4152 ?        Sl   11:28   0:00 /usr/lib/x86_64-linux-gnu/deja-dup/deja-dup-monitor
+root      4519  0.0  0.0  10228  3736 ?        S    11:28   0:00 /sbin/dhclient -d -sf /usr/lib/NetworkManager/nm-dhcp-client.action -pf /run/sendsigs.omit.d/network-manager.dhclient-eth2.pid -lf /var/lib/NetworkManager/dhclient-5dc0beed-0aea-4808-855f-73402a65cb35-eth2.lease -cf /var/lib/NetworkManager/dhclient-eth2.conf eth2
+root      4788  0.0  0.0      0     0 ?        S    11:30   0:03 [kworker/0:3]
+root      5259  0.0  0.0      0     0 ?        S    11:43   0:07 [kworker/3:1]
+ntwa      5486  0.0  0.8 1273556 67936 ?       Ssl  11:47   0:02 /opt/sublime_text/sublime_text
+ntwa      5500  0.0  0.1 123548 14488 ?        Sl   11:47   0:00 /opt/sublime_text/plugin_host 5486
+ntwa      5584  0.0  0.3 674932 25780 ?        Sl   11:49   0:02 eog /home/ntwa/Documents/Ntwa Data 2018/PassportSize/passport_Ntwa_Katule.png
+ntwa      6567  2.7  4.6 2164736 372648 ?      Sl   12:32   7:34 /usr/lib/firefox/firefox -contentproc -childID 6 -isForBrowser -prefsLen 18301 -schedulerPrefs 0001,2 -greomni /usr/lib/firefox/omni.ja -appomni /usr/lib/firefox/browser/omni.ja -appdir /usr/lib/firefox/browser 4007 true tab
+ntwa      6599  4.7  8.0 2378412 653624 ?      Sl   12:32  13:11 /usr/lib/firefox/firefox -contentproc -childID 7 -isForBrowser -prefsLen 18301 -schedulerPrefs 0001,2 -greomni /usr/lib/firefox/omni.ja -appomni /usr/lib/firefox/browser/omni.ja -appdir /usr/lib/firefox/browser 4007 true tab
+ntwa      6642  0.0  0.2 728528 22896 ?        Sl   12:34   0:09 gnome-terminal
+ntwa      6651  0.0  0.0  14824   804 ?        S    12:34   0:00 gnome-pty-helper
+ntwa      6652  0.0  0.0  27428  4544 pts/1    Ss   12:34   0:00 bash
+root      6924  0.0  0.0      0     0 ?        S    12:45   0:06 [kworker/2:1]
+ntwa      8237  0.0  0.2 742280 18980 ?        Sl   13:47   0:00 /usr/lib/x86_64-linux-gnu/unity-scope-home/unity-scope-home
+ntwa      8250  0.0  0.2 599600 23124 ?        Sl   13:47   0:00 /usr/bin/unity-scope-loader applications/applications.scope applications/scopes.scope commands.scope
+ntwa      8254  0.0  0.1 659860 11352 ?        Sl   13:47   0:00 /usr/lib/x86_64-linux-gnu/unity-lens-files/unity-files-daemon
+ntwa      8280  0.0  0.1 346188  9244 ?        Sl   13:47   0:00 /usr/lib/x86_64-linux-gnu/unity-lens-music/unity-music-daemon
+root      8579  0.0  0.0      0     0 ?        S    14:02   0:04 [kworker/0:0]
+root      8584  0.0  0.0      0     0 ?        S    14:02   0:04 [kworker/1:2]
+root      8591  0.0  0.0      0     0 ?        S    14:02   0:00 [kworker/2:2]
+root     11242  0.0  0.0      0     0 ?        S    15:40   0:01 [kworker/u16:0]
+ntwa     12200  1.0  0.5 893440 45120 ?        Sl   16:25   0:28 gedit /home/ntwa/Documents/Development/Projects/mysite/asasbulkysys/applogic/Rabitmq/install_yote_daemon.sh
+root     12449  0.0  0.0      0     0 ?        S    16:36   0:00 [kworker/u16:2]
+ntwa     13156  0.0  0.0  22648  1316 pts/1    R+   17:11   0:00 ps aux

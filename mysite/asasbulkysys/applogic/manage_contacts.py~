@@ -1,10 +1,30 @@
 #!/usr/bin/env python
 import datetime
 import sys,json
-from sqlalchemy import create_engine
+#from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from bulkysms.database.address_book_module import AddressBook,MobileDetails,EmailDetails,GroupMember,db,dbconn
+#from bulkysms.database.address_book_module import AddressBook,MobileDetails,EmailDetails,GroupMember,db,dbconn
+
+#from sqlalchemy import ForeignKey, ForeignKeyConstraint
+#from sqlalchemy import Column, Date, Integer, String, Boolean, Enum, Time, Float
+#from sqlalchemy.orm import relationship, backref,sessionmaker
+#from sqlalchemy.pool import NullPool
+#from sqlalchemy.ext.declarative import declarative_base
+
+
 from collections import OrderedDict
+
+from bulkysms.database.base  import Base
+from bulkysms.database.dbinit import db,dbconn
+
+import bulkysms.database.address_book_module
+import bulkysms.database.sms_feedback_module
+
+Base.metadata.create_all(db)
+
+from bulkysms.database.address_book_module import AddressBook,MobileDetails,EmailDetails,GroupMember
+from bulkysms.database.sms_feedback_module import Campaign, IndividualizedReminder
+
 
 class switch(object):
           value = None
@@ -24,7 +44,7 @@ class AddressBookManager:
 	  last = len(item_list)-1
 	  found = False
 	  while( first<=last and not found):
-               mid = (first + last)//2
+               mid = (first + last)/2
 	       if item_list[mid] == item :
 		    found = True
 	       else:
@@ -752,6 +772,7 @@ class AddressBookManager:
      
 #myjson={"contact_id":2,"First Name":"Ntwa","Middle Name":"Andalwisye", "Last Name":"Mwanyendwa","Gender":"Male","DOB":"1980-03-13","Ward":"Kunduchi","District":"Kinondoni","Region":"Dar es salaam","Country":"Tanzania","Mobile Phone #1":"0718255585","Mobile Phone #2":"0742340759","Mobile Phone #3":None,"Email Address #1":"katulentwa@gmail.com","Email Address #2":"katulentwa@hotmail.com","Email Address #3":"nkatule@aru.ac.tz"}     
 #myjson={"GroupID":"-1","Option":"-1"}
+#myjson={}
 #obj=AddressBookManager(myjson)
 #msg=obj.retrieveContactDetailsFromDB()
 #msg=obj.saveContactInDB()

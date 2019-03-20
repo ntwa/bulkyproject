@@ -67,6 +67,65 @@
                                </select> 
                             </td>
                        </tr>
+                      <!--file for individualized reminders-->
+
+
+                                                            <tr class="remindertemplates">
+
+                                      <td colspan="2" align="center">Download template for preparing individual reminders<br><button style="font-size:24px;cursor:pointer" onclick="downloadReminderTemplate();"> <i class="fa fa-download" style="font-size:48px;color:GREEN"></i></button><br><br></td></tr>
+                                      <tr class="remindertemplates">
+                                       
+                                          <td colspan="2" align="center">
+                                                   Once template updated, upload it.
+                                               <br>
+                                                    <table>
+                                                       <tr>
+
+                                                       <td align="center">
+                                                       
+                                                        <form enctype="multipart/form-data" id="remindersuploadfileform">
+                                                   
+                                                        <span class="btn btn-primary fileinput-button">
+
+
+                                     
+                                        <i class="fa fa-fw fa-folder-o"></i>
+                                        <span>Select file...</span>
+                                       <input name="reminderfile" type="file" id="reminderfile" />
+                                    </span>
+                                    <div id="addfilename">
+                                      <b>File</b>: No File
+                                    </div>
+                                    </form>
+                                                     
+                                                     <!--<div role="button" class="btn btn-primary mr-2">-->
+ 
+
+                                                     <!--
+                                                <form enctype="multipart/form-data" id="addressuploadfileform">
+                                    <input name="addressfile" type="file" id="addressfile" />
+                                  
+                                </form>-->
+                                                    
+                                               </td>
+                                               </tr>
+                                               <tr>
+                                               <td align="center">
+
+                                              <button style="font-size:24px; cursor:pointer" id="uploadaddressbtn"><i class="fa fa-upload" style="font-size:48px;color:orange"></i></button></td>
+                                              </tr>
+
+                                              </table>
+                                              <br>
+
+                                      </td>
+                                  </tr>
+
+
+
+
+
+                      <!--end of file for indivudakuzed reminders-->
                        <tr>
                             <td>Start Date</td>
                             <td style="color:black; font-size: 12px">

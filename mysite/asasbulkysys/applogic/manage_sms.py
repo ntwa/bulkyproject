@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 import datetime,time,calendar
 import sys,json
+import pika
+#import thread
+import threading
 #from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 #from save_sms_feedback import QueueFeedback
@@ -11,6 +14,7 @@ import time
 from bulkysms.database.base import Base
 from bulkysms.database.dbinit import db,dbconn
 import bulkysms.database.address_book_module
+import bulkysms.database.sms_feedback_module
 Base.metadata.create_all(db)
 
 from bulkysms.database.address_book_module import AddressBook,MobileDetails,GroupMember
@@ -152,7 +156,7 @@ class ScheduleSMS:
 
 
 
-
+     '''
      def sendOneSMS(self,msg_id):
           result={}
           posn=0
@@ -240,7 +244,34 @@ class ScheduleSMS:
           #print "Finish 3"             
           #result["message"]="SMS was sent successfully"
           return (json.JSONEncoder().encode(result))                   
+     '''
+     def sendOneSMS(self, msg_id):
+          result={}
+          try:
+              
+          
+               message={}  
+               message["msgID"]="Default"    
+               mobile_number=self.myjson["recipient"]
+               outgoing_message=self.myjson["message"]
+               connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+               channel = connection.channel()
+               channel.queue_declare(queue='yote_sms_multithreading')
+               message["to"]=mobile_number
+               message["content"]=outgoing_message
+               message_out=json.JSONEncoder().encode(message)
+               channel.basic_publish(exchange='',routing_key='yote_sms_multithreading', body=message_out)
+               print " [x] Scheduled message: '%s' to be sent to '%s'"%(message["content"],message["to"])
+               connection.close()
+               #result["message"]="SMS was scheduled successfully for sending"
 
+          except Exception as e:
+               print "Failed to schedule a message with ID '%s'"%msg_id
+               #result["message"]="Error in sending message with the following code: %s"%error
+
+          return (json.JSONEncoder().encode(result)) 
+
+                    
      def storeSMSInDB(self):
           
           
@@ -332,10 +363,6 @@ class ScheduleSMS:
 
 
 
-
-        
-
-
      def saveOneSMSInDB(self):
           
           sms_details="" 
@@ -422,16 +449,21 @@ class ScheduleSMS:
                           msg_id=int(resmsg["ID"])
               
                           if msg_id>=0:
-                                #ressnd=obj.sendOneSMS(msg_id)
-                                ressnd=self.sendOneSMS(msg_id)
-
-                                ressnd=json.loads(ressnd)
-                                
-                                #result["ID"]=msg_id
-                                #result["message"]="Your message has already been scheduled for sending"
-                                result["message"]="%s"%ressnd["message"]
-
-                               
+                            
+                                #ressnd=self.sendOneSMS(msg_id)
+                                #ressnd=json.loads(ressnd)
+                                #result["message"]="%s"%ressnd["message"]
+                              	try:
+                              
+                              		t1 = threading.Thread(target=self.sendOneSMS,args=(msg_id,))
+       
+                              		t1.start()
+      
+        		      		t1.join()
+                              		result["message"]="Message to Group has already been submitted to be scheduled for sending"
+        
+                          	except Exception as e:
+                              		result["message"]="Failed to start a thread for scheduling this message"
 
                                 #Now change the status of a message to one to indicate already sent message
                           else:
@@ -468,13 +500,25 @@ class ScheduleSMS:
               
                     if msg_id>=0:
 
-                          #res=obj.sendOneSMS(msg_id)
-                          ressnd=self.sendOneSMS(msg_id)
-                          ressnd=json.loads(ressnd)
+                        
+                          #ressnd=self.sendOneSMS(msg_id)
+                          #ressnd=json.loads(ressnd)
+                          try:
+                              #print "Thread started"
+                              #thread.start_new_thread(self.sendOneSMS, (msg_id, ) )
+                              t1 = threading.Thread(target=self.sendOneSMS,args=(msg_id,))
+       
+                              t1.start()
+      
+        		      t1.join()
+                              result["message"]="Your message has already been submitted to be scheduled for sending"
+        
+                          except Exception as e:
+                              result["message"]="Failed to start a thread for scheduling this message"
 
                           #result["ID"]=msg_id
-                          #result["message"]="Your message has already been scheduled for sending"
-                          result["message"]="%s"%ressnd["message"]
+                          
+                          #result["message"]="%s"%ressnd["message"]
                     else:
                           result["message"]="Fail to send the message" 
                     return (json.JSONEncoder().encode(result))         
@@ -487,7 +531,8 @@ class ScheduleSMS:
 
      
      
-myjson={"MobNo":"+255742340759","MessageBody":"Hello Mr. @@firstname@@. We remind you to pay your outstanding bill", "SMSAudience":"Individual"}
+
+myjson={"MobNo":"+255742340759","MessageBody":"Asante. @@firstname@@. Majaribio yetu ya mfumo bado yanaendelea.", "SMSAudience":"Individual"}
 obj=ScheduleSMS(myjson)
 msg=obj.saveOneSMSInDB()
 print msg
