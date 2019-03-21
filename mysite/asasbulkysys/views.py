@@ -104,7 +104,7 @@ def dataupdate(request,command_id):#REST API used by the client side of web appl
           status=saveCampaigns(myjson)
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
 
-     elif command_id =="UAF":
+     elif command_id =="UAF": #Upload Address File
           myjson={"status": "file uploaded"}
 
           #addressfile = request.FILES['addressfile']
@@ -308,8 +308,8 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
           #myjson={"GroupID":"-1","Option":"-1"}
           #myjson={"GroupID":"-1"}  
           alldata=retrieveAddressBookContent(myjson)
-          return HttpResponse(alldata, content_type='application/json')
-          #return HttpResponse('%s(%s)' % (request.GET.get('callback'),alldata), content_type='application/json')
+          #return HttpResponse(alldata, content_type='application/json') #This is for debugging.
+          return HttpResponse('%s(%s)' % (request.GET.get('callback'),alldata), content_type='application/json')
 
      elif command_id =="RABT":#RABT stands for Retrieve Address Book Template
           context = RequestContext(request)
@@ -372,7 +372,12 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
           #return HttpResponse(status, content_type='application/json')
 
      elif command_id == "RDD":
-          #Reminder Download Data
+          #Reminder Download Data template
+          #With the template, we can specify reminders lets for expiry of driving licence or expiry of road insurance. For instance each car, a driver need to be notified 
+          #myjson=json.loads(request.body)
+          json_object = request.GET['jsonObj']
+          json_object_1=json.loads(json_object)
+          #json_object=json.loads(json_object)
           response = HttpResponse(content_type='application/ms-excel')
           response['Content-Disposition'] = 'attachment; filename="reminders.xls"'
 
@@ -401,10 +406,11 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
           
           #ws.write(0, 0, "Mambo Yote SMS Address Book", font_style)
           #ws.write_merge(0, 1, 0, 8, "Mambo Yote SMS Address Book", font_style)
-          ws.write_merge(0, 1, 0, 15, "Mambo Yote SMS Reminders Template",xlwt.easyxf("pattern: pattern solid, fore_color light_blue ; font: color white, height 320, bold True; align: horiz center; borders: top_color red, bottom_color red, right_color red, left_color red, left thin, right thin, top thin, bottom thin;"))
+          #json_object_1[0]["value"]  len(json_object_1)
+          ws.write_merge(0, 1, 0, 15, "Individual Reminders" ,xlwt.easyxf("pattern: pattern solid, fore_color light_blue ; font: color white, height 320, bold True; align: horiz center; borders: top_color red, bottom_color red, right_color red, left_color red, left thin, right thin, top thin, bottom thin;"))
           
-          columns = ['contact_id','First Name', 'Last Name', 'Deadline','Number of Days Running Before Deadline','Number of Days Running After Deadline',"Reason For Reminder"]
-
+          columns = ['contact_id','First Name', 'Last Name', 'Reminder Expiry Date','Days of Running','Deadline for Action',"Reason For Reminder"]
+          #If expiry date not specified then the deadline for action takes precedence as the expiry date. 
           #font style for columns' headings
           font_style = xlwt.XFStyle()
           font_style.font.bold = True
@@ -423,7 +429,7 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
                ws.write_merge(row_num, row_num+1, col_num, col_num, columns[col_num], xlwt.easyxf("pattern: pattern solid, fore_color light_orange; font: color black, height 240, bold True; align: horiz center; borders: top_color red, bottom_color red, right_color red, left_color red, left thin, right thin, top thin, bottom thin;"))
 
                #xlwt.easyxf("pattern: pattern solid, fore_color yellow; font: color white; align: horiz right")
-
+          '''
           row_num = row_num+1
 
               # Sheet body, remaining rows
@@ -478,7 +484,7 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
                     last_column+=1
                     no_email_addresses+=1
 
-
+          '''
 
 
           wb.save(response)

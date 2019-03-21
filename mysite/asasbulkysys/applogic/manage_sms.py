@@ -529,10 +529,7 @@ class ScheduleSMS:
               print result
               return (json.JSONEncoder().encode(result))  
 
-     
-     
-
-myjson={"MobNo":"+255742340759","MessageBody":"Asante. @@firstname@@. Majaribio yetu ya mfumo bado yanaendelea.", "SMSAudience":"Individual"}
-obj=ScheduleSMS(myjson)
-msg=obj.saveOneSMSInDB()
-print msg
+#myjson={"MobNo":"+255742340759","MessageBody":"Asante. @@firstname@@. Majaribio yetu ya mfumo bado yanaendelea.", "SMSAudience":"Individual"}
+#obj=ScheduleSMS(myjson)
+#msg=obj.saveOneSMSInDB()
+#print msg

@@ -842,6 +842,7 @@ var retrieveAddressBookContent=function (group_id,option)
      
       var urlstr=site;
       urlstr=urlstr+"jsondata/RABC/";
+
       
       if (typeof option === 'undefined') {
        // the variable is not defined
@@ -983,12 +984,12 @@ var retrieveAddressBookContent=function (group_id,option)
                     });
  
       request.done(function( obj ) {
-      alert(obj.status);
+             alert(obj.status);
 
       });
 
         request.fail(function( obj) {
-     alert("Fail");
+         alert("Fail");
 
       });
 
@@ -1125,7 +1126,21 @@ var downloadUpdateTemplate=function(){
 var downloadReminderTemplate=function(){
      var urlstr=site;
     urlstr=urlstr+"jsondata/RDD/";
-     window.open(urlstr);
+    serializedJson=JSON.stringify($("#campaigntargetsms").serializeArray());
+    
+    if(jQuery.isEmptyObject(serializedJson)) //Check if we have at least one target group for the individualized reminders.
+    {
+      alert("Can't download template. No target group was selected");
+      return;
+
+
+    }
+    
+    alert(serializedJson);
+   
+    //window.open(urlstr);
+     //jsonObj={"GroupFilter":""}
+    window.open(urlstr + '?jsonObj=' + serializedJson);
       /*
       alert("Demo");
       var urlstr=site;
@@ -2686,7 +2701,7 @@ var saveCampaign=function(campaign_id,menu_id,save_type){
 
  var record_id=menu_id+"";
  record_id=record_id+campaign_id;
- var jsonObject = JSON.stringify($("#campaignForm").serializeArray());
+ var jsonObject = JSON.stringify($("#campaignForm :input").serializeArray());
 
 
 /*
