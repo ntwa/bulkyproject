@@ -1123,38 +1123,37 @@ var downloadUpdateTemplate=function(){
 
 
 
-var downloadReminderTemplate=function(){
-     var urlstr=site;
-    urlstr=urlstr+"jsondata/RDD/";
-    serializedJson=JSON.stringify($("#campaigntargetsms").serializeArray());
-    
-    if(jQuery.isEmptyObject(serializedJson)) //Check if we have at least one target group for the individualized reminders.
-    {
-      alert("Can't download template. No target group was selected");
-      return;
-
-
-    }
-    
-    alert(serializedJson);
-   
-    //window.open(urlstr);
-     //jsonObj={"GroupFilter":""}
-    window.open(urlstr + '?jsonObj=' + serializedJson);
-      /*
-      alert("Demo");
+var downloadReminderTemplate=function(opid){
       var urlstr=site;
-      urlstr=urlstr+"jsondata/ADD/";// Retrieve
-      $.ajax({
-             url: urlstr,
-             cache: false
-             })
-            .done(function( html ) {
-              
-             });
+     //choose whether a template should contain existing data or not.
+      var extra_json=""; //This is meant to be used to differentiate template that have existing reminders and templates that
+     
+      urlstr=urlstr+"jsondata/RDDN/";
+ 
+      if(opid==1){
+               var targeted_audience=null;
+         var hidden_campaign_id= $("#hiddencampaignid").val();
+       
+        extra_json={Existing:1,CampaignID:hidden_campaign_id}; //if Existing is 1; the it means this campaign may have existing indidualize
 
-            */
+      }
+      else{
+           extra_json={Existing:0,CampaignID:-1};
+         }
 
+      serializedJson=JSON.stringify($("#campaigntargetsms").serializeArray());
+      extra_json=JSON.stringify(extra_json);
+    
+      if(jQuery.isEmptyObject(serializedJson)) //Check if we have at least one target group for the individualized reminders.
+     {
+       alert("Can't download template. No target group was selected");
+       return;
+
+      }
+    
+ 
+     window.open(urlstr + '?jsonObj=' + serializedJson+'&extraJson='+extra_json);
+    
 };
 
 
@@ -1814,11 +1813,11 @@ var displayCampaignsContent=function(display_type,campaign_id){
  
   //alert("Got here");
   retrieveCampaignsContent();
-  if(display_type==EDITING_MODE)
+  /*if(display_type==EDITING_MODE)
     {
     retrieveEditingCampaignTemplate(campaign_id);
 
-    }
+    }*/
  
   setTimeout(function(){
    
@@ -1842,12 +1841,14 @@ var displayCampaignsContent=function(display_type,campaign_id){
 
 
                         //deciding on displaying mode whether the content should be viewing in editing mode or just normal viewing mode
+                        /*
                         if((display_type==EDITING_MODE)&&(campaign_id==retrieved_campaign_id)){
                          
                           // this is editing mode so it should be viewed in text box ready for editing
                            //retrieved_campaign_name="<input type=\"text\" value=\""+resjson[""+x+""]["campaign_name"]+"\" id=\"campaign_name\" maxlength=\"50\">" ;
                            
                           //retrieved_campaign_descr="<textarea id=\"campaign_descr\"  rows=\"5\" cols=\"20\" maxlength=\"200\">"+resjson[""+x+""]["campaign_description"]+"</textarea>" ;
+                          $("#hiddencampaignid").val(retrieved_campaign_id);
                           $("#campaign_name").val(retrieved_campaign_name);
                           $("#campaign_descr").val(retrieved_campaign_descr);
                           msgtxtobj=resjson[""+x+""]["messagestxt"];
@@ -1874,8 +1875,9 @@ var displayCampaignsContent=function(display_type,campaign_id){
                           $("#tbl_messages").html(html_str);
 
                           break;
-                        }
-                        else{
+                        } */
+                       // else
+                        {
                           //retrieved_campaign_name=resjson[""+x+""]["campaign_name"];  ;
                           //retrieved_campaign_descr=resjson[""+x+""]["campaign_description"]; 
 
@@ -2172,6 +2174,47 @@ var retrieveCampaignsTemplate=function ()
 
 
               bindEventsToCampaignDateFields();
+
+
+
+              setTimeout(function(){
+
+
+
+                  $('#reminderfile').on('change', function() {
+                      let fileName=$('#reminderfile').val();
+                      let ext = fileName.split('.').pop();
+                      let split_str=fileName.split('\\');
+                      let split_str_len=split_str.length;
+                      if(split_str_len>1){
+                       //Just get the name without path name 
+                        fileName=split_str[split_str_len-1];
+
+
+                      }
+
+                      if(ext!=="xls")
+                      {
+                        alert("Wrong file with extension '"+ext+"'. Only files with '.xls' extension are allowed.");
+                        $('#reminderfile').val('');
+                        $('#addreminderfilename').html('<b>File</b>: No File');
+                      }
+                      else
+                      {
+                      
+                        $('#addreminderfilename').html('<b>File</b>: '+fileName+'');
+
+
+                      }
+                     /*var file = this.files[0];
+                      if (file.size > 1024) {
+                          alert('max upload size is 1k')
+                     }*/
+
+
+                     });
+
+                    },20);
 
               //for sms
               /*
@@ -2703,6 +2746,10 @@ var saveCampaign=function(campaign_id,menu_id,save_type){
  record_id=record_id+campaign_id;
  var jsonObject = JSON.stringify($("#campaignForm :input").serializeArray());
 
+ var formData=new FormData($('#remindersuploadfileform')[0]);
+ formData.append('json', jsonObject); 
+ 
+
 
 /*
 
@@ -2758,21 +2805,24 @@ var saveCampaign=function(campaign_id,menu_id,save_type){
 
       var urlstr=site;
       urlstr=urlstr+"jsonupdate/SCD/";// Save Campaign Details
+  
+
       $.ajax({
              url: urlstr,
              dataType: "jsonp",
              method: "POST",
-             data:jsonObject,
-             cache: false
+             //data:jsonObject,
+             data:formData,
+             cache: false,
+             processData: false,
+             contentType: false
+                            
              })
             .done(function( result ) {
               alert(result.message);
              //clearInterval(display_interval);
              //$("#progresspopup").popup( "close"); // close the pop up for progress once the results are returned from the database
               //alert(result["message"]);
-
-            
-             
 
              });
 
@@ -2896,6 +2946,8 @@ var attachEventToGroupsCampaign=function(){
 
                 if($(this).val()=='IR'){
 
+
+
                 $(".remindertemplates").show();
 
 
@@ -3003,12 +3055,14 @@ createNewCampaign();
                   var retrieved_end_date=resjson[""+x+""]["CampaignEndDate"]; 
                   var retrieved_delivery_medium= resjson[""+x+""]["DeliveryMedium"]; 
                   var targeted_audience=resjson[""+x+""]["TargetedAudience"];
+                  var campaign_category=resjson[""+x+""]["CampaignCategory"];
 
 
+                  //alert(retrieved_campaign_name);
       
                   if(campaign_id==retrieved_campaign_id){
 
-      
+                        $('#hiddencampaignid').val(campaign_id);
                         $("#campaign_name").val(retrieved_campaign_name);
                         $("#campaign_descr").val(retrieved_campaign_descr);
 
@@ -3026,11 +3080,12 @@ createNewCampaign();
                          var selectedgroups=[];                       
                          var deliverymediums=Array('SMS','Whatsapp','Email');
                         
-                         
+                         var option_id;
+                         var idposn;  
                          for(var i=0;i<deliverymediums.length;i++){
                      
-                             var option_id="#deliverymedium";
-                             var idposn=i+1;
+                             option_id="#deliverymedium";
+                             idposn=i+1;
                              option_id=option_id+idposn;
                             if(deliverymediums[i]==retrieved_delivery_medium)
                             {
@@ -3048,6 +3103,89 @@ createNewCampaign();
 
 
                          }
+
+
+                         //Find campaign category.
+                         var categories=Array('GM','GR','HG','HO','IR','BW');
+
+                        for(var i=0;i<categories.length;i++){
+                     
+                             option_id="#category";
+                             idposn=i+1;
+                             option_id=option_id+idposn;
+                            if(categories[i]==campaign_category)
+                            {
+                            
+
+
+                             $(option_id).prop('selected', true);
+
+                             //now check if it is individual reminders
+
+                              if(campaign_category=="IR")
+                              {
+
+                                  //Then show the option for downloading file with reminders.
+                                     $(".remindertemplates").show();
+                                     $("#existingremindersoption").show();
+
+                                     $('#includeexistingreminders').prop('checked', true);
+
+                                     //bind click event to the above checkbox
+
+                                     //$("#downlodremindertempbtn").unbind( "click" );
+
+                                    $("#downlodremindertempbtn").removeAttr('onclick');
+
+
+                                    $("#downlodremindertempbtn").bind('click',function(){
+                                        downloadReminderTemplate(1); //now download a template that include existing reminders
+          
+                                      });
+
+                              }
+                             else
+                             {
+
+                              $(".remindertemplates").hide();
+                              $("#existingremindersoption").hide();
+
+                              $('#includeexistingreminders').prop('checked', false);
+
+                              $("#downlodremindertempbtn").unbind( "click" );
+
+                              $("#downlodremindertempbtn").removeAttr('onclick');
+
+
+                              $("#downlodremindertempbtn").bind('click',function(){
+                                 downloadReminderTemplate(0); //now download a template that include existing reminders
+          
+                              });
+
+                              
+                             }
+
+
+                             break;
+
+                            //change the content for downloading reminder button to also consider existing reminder since this is an update exercise
+                            //var downloader_content="<td colspan=\"2\" align=\"center\">Download a template for preparing individual reminders<br>";
+                            //downloader_content=downloader_content+"<button style=\"font-size:24px;cursor:pointer" onclick="downloadReminderTemplate(0);"> <i class="fa fa-download" style="font-size:48px;color:GREEN"></i></button><br><br></td>
+
+
+
+
+             
+
+                            }
+                         
+
+
+                         }
+
+
+
+
 
                          //Now iterate through all objects inside targeted_audience
 

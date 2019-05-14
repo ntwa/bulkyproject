@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+<link rel="stylesheet" href="//code.jquery.com/mobile/1.5.0-alpha.1/jquery.mobile-1.5.0-alpha.1.min.css">
+  <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.5.0-alpha.1/jquery.mobile-1.5.0-alpha.1.min.js"></script>
+
+<script>
+
+function submitForm()
+{
+ alert($("#mybox").val()); 
+}
+
+</script>
+</head>
+<body>
+
+
+
+<form  id="usrform">
+  Name: <input type="text" name="usrname">
+  <input type="button" onclick="submitForm();"value="Click Me"  >
+</form>
+<br>
+<textarea rows="4" cols="50" name="comment" form="usrform" id="mybox">
+Enter text here...</textarea>
+
+<p>The text area above is outside the form element, but should still be a part of the form.</p>
+
+<p><b>Note:</b> The form attribute is not supported in IE.</p>
+
+</body>
+</html>
+

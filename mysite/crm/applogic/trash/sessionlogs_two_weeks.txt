@@ -1,0 +1,15 @@
+User	Total Sessions	No_of_dates_phase_1	No_of_dates_phase_2	No_of_sessions_phase_1	No_of_sessions_phase_2	Average_minutes_for_sessions_phase_1	Average_minutes_for_sessions_phase_2
+caitlin	6	5	0	6	0	9.80833333333	0
+nevalio	2	2	0	2	0	4.20833333333	0
+lusapho	19	11	3	16	3	8.26770833333	26.6444444444
+lukhanyo	18	9	1	17	1	19.0254901961	18.2
+shaun	7	5	1	6	1	4.72777777778	5.0
+kcee	40	14	2	38	2	17.1899122807	1.5
+lee-roy	11	7	2	7	4	15.8404761905	0.0
+anam	21	4	7	9	12	17.3111111111	9.49305555556
+tumie	3	3	0	3	0	6.42222222222	0
+michaela	11	5	3	8	3	7.4	5.12222222222
+jodi	4	2	1	3	1	16.0666666667	22.0
+chelsea	3	2	0	3	0	22.6444444444	0
+kaylim	22	7	5	7	15	13.9047619048	8.66
+selemela	32	10	9	16	16	14.834375	15.7958333333

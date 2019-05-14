@@ -1,0 +1,312 @@
+{% load url from future %}
+
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">-->
+<link rel="stylesheet" href="{% static "bulkysms/css/jquery.mobile-1.4.2.min.css" %}">
+
+
+<link href="{% static "bulkysms/css/jquery-ui.css" %}" rel="stylesheet" type="text/css" />
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery-1.10.1.min.js" %}"></script>
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery-3.2.1.min.js" %}"></script>
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.js" %}"></script>
+
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/appsupportfuncs1_5.js" %}">
+</script>
+
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/flot-0.8.3/flot/jquery.flot.min.js" %}"></script>
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/flot-0.8.3/flot/jquery.flot.categories.min.js" %}"></script>
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/flot-0.8.3/flot/jquery.flot.pie.min.js" %}"></script>
+
+
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/jquery-ui.js" %}"></script>
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/modernizr.custom.87504.js" %}"></script>
+
+
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/js/idangerous.swiper-2.1.min.js" %}"></script>
+<script language="javascript" type="text/javascript">
+
+var static_url_val="static";
+</script>
+<body>
+
+<!--Activitiy Page-->
+
+<div data-role="page"  id="activityinterface">
+
+  <div data-role="header" style="background:#3b5998" >
+
+    <h1>Steps Walked Info</h1>
+
+  </div>
+
+
+
+  <div data-role="main" class="ui-content" >
+
+      <table class="main_interface_wrapper" align="center" border="0" width="100%"> 
+          
+
+	  
+           <tr><td>
+           <fieldset data-role="controlgroup" id="activityintervalsradiobuttons">
+
+           <label class="intervallabel" data-tiletype="dailyinterval" for="dailyinterval">Daily</label><input type="radio" name="activityinterval" value="Daily" class="activity_interval_class" id="dailyinterval" checked>
+
+           <label class="intervallabel" data-tiletype="weeklyinterval" for="weeklyinterval">Weekly</label><input type="radio" name="activityinterval" value="Weekly" class="activity_interval_class" id="weeklyinterval">
+
+           <label class="intervallabel" data-tiletype="monthlyinterval" for="monthlyinterval">Monthly</label><input type="radio"  name="activityinterval" value="Monthly" class="activity_interval_class" id="monthlyinterval">
+
+
+
+
+
+           </fieldset>
+
+
+           </td></tr>
+           
+	    <tr><td class="activity_goal">&nbsp;</td></tr> 
+	   <tr>
+
+		       <td class="selectgraph" colspan=2>
+
+                                        
+                                                
+			                <table border="0" width="100%">
+
+					     <tr>
+
+                                                <td class="groupactivity" style="width: 5%;"><a href="javascript:navigateActivity('Left')"><img src="{% static 'django_facebook/images/left.jpeg' %}" /></a></td>
+						    <td id="activityday" class="groupactivity"><div id="activity_day_label">Today</div><input id="currentdate" type=hidden value="{{todaysdate}}"/></td>
+
+                                                    <td id="navigation_right" style="width: 5%;"></td>
+			                   </tr>
+
+				 </table>
+
+
+
+                            
+			 
+
+		   </td>
+
+	   
+
+	   </tr>
+
+   	   <tr>
+
+	      <td>
+
+		  
+
+		     <table class="graph">
+
+			    <tr>
+
+				  <td align="center" valign="middle" class="graph">
+
+					   <img src="{% static "django_facebook/images/stepswalkedlabel.jpg" %}">
+
+				  </td>
+
+			   
+
+				   <td width="100%" class="graph">
+
+					   
+
+						   
+
+					   <!--<img src="images/mealinterface.jpg" width="100%" height="100%" alt="Meals" class="foodgraph" style="cursor:pointer">-->
+
+					   <div id="activityplaceholder" style="width:100%;height:100%">
+
+					   
+
+					   </div>
+
+				
+
+				  </td>
+
+				</tr>
+
+				<tr>
+
+				  <td class="graph">&nbsp;
+
+				    
+
+				  </td>
+
+				
+
+				  <td class="graph">
+
+				      <img src="{% static "django_facebook/images/daytimelabel.jpg" %}">
+
+				  </td>
+
+				</tr>
+
+			 </table>
+
+		   </td>
+
+		  
+
+       </tr>
+
+	   <tr>
+
+	       <td id="activitysummary">
+
+		   
+
+	       </td>
+
+	   
+
+	   </tr>
+
+	   <!--
+
+	    <tr>
+
+	       <td class="activitycomments">
+
+		     <b><i>Send an encouraging message to</i></b>: {{fname}} {{lname}}<br>
+
+		     </br>
+
+		     <textarea name="activitycommentbox" id="activitycommentbox" rows="20" cols="22"></textarea>
+
+		     <img src="{% static "django_facebook/images/sendmessage.jpg" %}" alt="SendMessageActivity" style="cursor:pointer" onClick="changeMenu('SendMessageActivity');">
+
+		   </td>
+
+	   </tr>-->
+
+	   <tr>
+
+	   <td>
+
+	   
+
+	   <div align="right">
+
+			<table class="ActivityMessagePopUp">
+
+				<tr>
+
+					  <td>
+
+						  <a href="#myActivityPopUp" data-rel="popup"><img src="{% static "django_facebook/images/smsicon.jpg" %}"></a>
+
+					  
+
+					  </td>
+
+				
+
+				</tr>
+
+
+
+		
+
+			 </table>
+
+	   </div>
+
+
+
+    <div data-role="popup" data-history="false" id="myActivityPopUp" class="ui-content">
+
+      <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+
+		
+
+	     <table>
+
+		
+
+			      <tr>
+
+				    <td> 
+
+		          <b><i>Send an encouraging message to</i></b>: {{fname}} {{lname}}<br>
+
+		         </br>
+
+		         <textarea name="activitycommentbox" id="activitycommentbox" rows="20" cols="22"></textarea>
+
+		         <img src="{% static "django_facebook/images/sendmessage.jpg" %}"  style="cursor:pointer" onclick="sendActivityMessage();">
+
+		         </td>
+
+						
+
+				  </tr>
+
+				 
+
+					
+
+	    </table>
+
+    
+
+	</div>  
+
+	</td>
+
+	</tr>
+
+  
+
+	   	  
+
+  </table>
+
+  
+
+       
+
+  
+
+  
+
+    <!--<a href="#pageone" data-transition="slide" data-direction="reverse">Go to Main Page</a>-->
+
+	<!-- <a href="#pageone" class="ui-btn ui-icon-back ui-btn-icon-left menuimage" data-transition="slide" data-direction="reverse">Main Page</a>-->
+
+       <a  class="ui-btn ui-icon-back ui-btn-icon-left menuimage" data-transition="slide" data-direction="reverse" alt="MainPage">Main Page</a>
+  </div>
+
+
+
+  <div data-role="footer" style="background:#3b5998" >
+
+    <h1>Track Close One's Wellness</h1>
+
+  </div>
+
+</div> 
+
+
+
+<!-- End of activity page-->
+
+
+</body>
+
+</html>

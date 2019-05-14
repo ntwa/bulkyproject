@@ -1,0 +1,207 @@
+from abc import ABCMeta, abstractmethod
+#from sqlalchemy import *
+#from sqlalchemy import create_engine, ForeignKey
+from sqlalchemy import ForeignKey
+from sqlalchemy import Column, Date, Integer, String,Float,Boolean,Enum,Time
+#from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, backref,relation
+#from dbconn import connstr
+#from sqlalchemy.pool import NullPool
+#from dbinit import db,dbconn
+from base import Base
+#from address_book_module import AddressBook, MobileDetails
+#from address_book_module import AddressBook
+#import enum
+import datetime
+#db = create_engine(connstr,pool_size=20, max_overflow=0)
+
+'''
+try:
+     db 
+except NameError as e:
+     db = create_engine(connstr,poolclass=NullPool)
+
+try:
+     dbconn
+except NameError as e:
+
+     dbconn=db.connect()
+
+try:
+     Base
+except NameError as e:
+     Base = declarative_base()
+'''
+
+#This class stores all outgoint messages (status:sent 0 and waiting to be sent: 1 )
+class Feedback(Base):
+     __tablename__="feedback"
+     id=Column(Integer, primary_key=True)
+     recipient_mobile=Column(String(20))
+     message=Column(String(1000))
+     #date_modified=Column(Date)
+     #time_modified=Column(Time)
+     status=Column(Boolean)
+    #is_group_sms=Column(Boolean)
+    #group_id=Column(Integer)
+    
+    
+     def __init__(self,recipient_mobile,message):
+          self.recipient_mobile=recipient_mobile
+          self.message=message
+          self.status=0
+     @abstractmethod    
+     def storeFeddback(self):
+          pass
+     @abstractmethod
+     def viewFeedback(self):
+          pass
+     def __repr__(self):
+          return str(self.id)
+     def getID(self):
+          return self.id
+
+
+
+#campaign definition
+class Campaign(Base):
+     __tablename__="campaigns"
+     id=Column("campaign_id",Integer,primary_key=True)
+     campaign_name=Column(String(200),nullable=False)
+     campaign_descr=Column(String(500))
+     delivery_mechanism=Column(Enum('SMS','Whatsapp','Email'),nullable=False)
+     campaign_category=Column(Enum('IR','GR','BW','HG','HO','GM'),nullable=False)
+     target_level=Column(Enum('Specific Groups','All'),nullable=False)
+     date_created=Column(Date,nullable=False)
+     is_campaign_active=Column(Boolean) #is the campaign currently running.A campaign will be active if it has not been stopped manually or its deadline has not yet passed
+
+     campaign_messages = relationship("CampaignDefinedMessages", backref=backref("campaign_messages", order_by=id))
+     starting_day = relationship("CampaignStartDay", backref=backref("campaign_end_day", order_by=id))
+     stopping_day = relationship("CampaignEndDay", backref=backref("campaign_end_day", order_by=id))
+     #individualized_reminder = relationship("IndividualizedReminder", backref=backref("campaign_individualized_reminder", order_by=id))
+     selected_delivery_days= relationship("SelectedDeliveryDayofWeek", backref=backref("delivery_day", order_by=id))
+     selected_delivery_time= relationship("SelectedDeliveryTime", backref=backref("delivery_time", order_by=id))
+
+     sms_campaign_audience = relationship("CampaignAudienceSMS", backref=backref("campaignaudience", order_by=id))
+     individualized_reminders=relationship("IndividualizedReminders", backref=backref("individualized_reminders", order_by=id))
+     
+     def __init__(self,campaign_name,campaign_descr,delivery_mechanism,campaign_category,target_level):
+          self.campaign_name=campaign_name
+          self.campaign_descr=campaign_descr
+          self.delivery_mechanism=delivery_mechanism
+          self.campaign_category=campaign_category
+          self.target_level=target_level
+          self.is_campaign_active=True
+          self.date_created=datetime.date.today() 
+     #if a campaign is not in this table it means it has been set to run indefinately
+ 
+
+#Individualized Reminders and BirthDays are triggered by special dates, these don't have start day 
+class CampaignStartDay(Base):
+     __tablename__="campaign_start_day"
+     campaign_id=Column(Integer, ForeignKey("campaigns.campaign_id"),primary_key=True) # A campaign must have atmost one start date
+     campaign_start_date=Column(Date,nullable=False) #The Date when the campaign becomes active
+     
+     def __init__(self,campaign_start_date):
+          self.campaign_start_date=campaign_start_date
+
+        
+         
+#indefinately Campaign Don't have end day, Individualized Reminders and BirthDay also don't have end day as they are triggered by special dates. For instance 
+class CampaignEndDay(Base):
+     __tablename__="campaign_end_day"
+     campaign_id=Column(Integer, ForeignKey("campaigns.campaign_id"),primary_key=True) # A campaign must have atmost one end date
+     campaign_end_date=Column(Date,nullable=False)
+
+     def __init__(self,campaign_end_date):
+          self.campaign_end_date=campaign_end_date
+         
+     
+
+#Define a message bank that will be picked randomly
+class CampaignDefinedMessages(Base):
+     __tablename__="campaigns_defined_messages"
+     id=Column("campaign_message_id",Integer,primary_key=True)
+     campaign_id=Column(Integer, ForeignKey("campaigns.campaign_id"))
+     message_txt=Column(String(500),nullable=False)
+
+    
+     def __init__(self,message_txt):
+          self.message_txt=message_txt
+
+
+class SelectedDeliveryDayofWeek(Base):
+     __tablename__="selected_days_of_delivery"
+     id=Column("selected_day_id",Integer, primary_key=True)
+     campaign_id=Column(Integer, ForeignKey("campaigns.campaign_id"))
+     selected_day=Column(Integer,nullable=False) #Selected Days of a week
+
+     def __init__(self,selected_day):
+          self.selected_day=selected_day
+
+class SelectedDeliveryTime(Base):
+     __tablename__="selected_time_of_delivery"
+     #id=Column("selected_day_id",Integer, primary_key=True)
+     #PRimary key to ensure a campaign can't pick the same time twice
+     campaign_id=Column(Integer, ForeignKey("campaigns.campaign_id"),primary_key=True)
+     selected_time=Column(Time,primary_key=True) #Selected Days of a week
+
+     def __init__(self,selected_time):
+          self.selected_time=selected_time
+
+
+'''
+
+#The records are generated after looking at active campaigns that have messages that qualify to be sent the next day. We look at what day will it be         
+class MessageSendingSchedule:
+     __tablename__="messages_sending_time_schedules"
+     id=Column("snd_schedule_id",Integer, primary_key=True)
+     campaign_id=Column(Integer, ForeignKey("campaigns.campaign_id"))
+
+     sending_time=Column(Time) # Based on selected Delivery time
+     not_queued_for_send=Column(Boolean) #Is the message already scheduled for sending to all recipients. Messages are scheduled at midnight ready to be sent in the next business day. Any scheduled message is put under feedback when it the time for sending it. Once put on feedback then not_queued_for_send is set to 0. In this way we can track which messages are awaiting to be put into feedback before sending are which ones have already been scheduled for sending
+
+     def __init__(self,sending_time,not_ready_for_send):
+          self.sending_time=sending_time
+          self.not_queued_for_send=not_queued_for_send
+     
+
+'''
+#Audience
+class CampaignAudienceSMS(Base):
+     __tablename__="sms_campaign_targeted_groups"
+     group_id=Column(Integer, ForeignKey("groups.group_id"),primary_key=True)
+     campaign_id= Column(Integer, ForeignKey("campaigns.campaign_id"),primary_key=True)
+     def __init__(self,group_id):
+          self.group_id=group_id
+'''
+class CampaignAudienceWhatsapp(Base):
+     __tablename__="campaign_targeted_groups"
+     id=Column("campaign_audience_id",Integer)
+     group_id=Column(Integer, ForeignKey("groups.group_id"),primary_key=True)
+     campaign_id= Column(Integer, ForeignKey("campaigns.campaign_id"),primary_key=True)
+     def __init__(self):
+          pass
+
+#Tracking individualiezeReminder as dates may vary. For instance there may be customers that owe the company with different deadlines for payments. So each reminder need to be individualized. Or it may be about company drivers renew of driver licence/ car insurance or service due
+class IndividualizedReminder(Base):
+     __tablename__="individualized_reminders"
+     id=Column("individualized_reminders_id",Integer,primary_key=True)
+     campaign_id=Column(Integer, ForeignKey("campaigns.campaign_id"))
+     contact_id=Column(String(50),ForeignKey("address_book.contact_id"))
+     reminder_end_date=Column(Date)
+     trigger_days_from_deadline=Column(Integer)
+     reason_for_reminder=Column(String(200))
+     #contact_id_targeted = relation("AddressBook",primaryjoin=contact_id=="AddressBook.contact_id",uselist=False)
+
+
+#Keeping track of all messages sent out 
+class CampaignDeliveryHistory(Base):
+     __tablename__="campaign_delivery_history"
+     campaign_id=Column(Integer, ForeignKey("campaigns.campaign_id"),primary_key=True)
+     contact_id= Column(Integer, ForeignKey("address_book.contact_id"))
+     feedback_id=Column(Integer, ForeignKey("feedback.id")) #It easier to know from which campaign messages belong to
+
+'''
+
+#Base.metadata.create_all(db)

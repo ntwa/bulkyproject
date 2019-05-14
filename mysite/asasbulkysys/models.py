@@ -1,12 +1,3 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
-#
-# Also note: You'll have to insert the output of 'django-admin.py sqlcustom [app_label]'
-# into your database.
 from __future__ import unicode_literals
 
 from django.db import models
@@ -17,7 +8,7 @@ class AddressBook(models.Model):
     first_name = models.CharField(max_length=50, blank=True)
     middle_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
-    gender = models.CharField(max_length=4, blank=True)
+    gender = models.CharField(max_length=6, blank=True)
     birth_date = models.DateField(blank=True, null=True)
     country = models.CharField(max_length=50, blank=True)
     region = models.CharField(max_length=50, blank=True)
@@ -29,15 +20,33 @@ class AddressBook(models.Model):
         db_table = 'address_book'
 
 
+class CampaignEndDay(models.Model):
+    campaign = models.ForeignKey('Campaigns', primary_key=True)
+    campaign_end_date = models.DateField()
+
+    class Meta:
+        managed = False
+        db_table = 'campaign_end_day'
+
+
+class CampaignStartDay(models.Model):
+    campaign = models.ForeignKey('Campaigns', primary_key=True)
+    campaign_start_date = models.DateField()
+
+    class Meta:
+        managed = False
+        db_table = 'campaign_start_day'
+
+
 class Campaigns(models.Model):
     campaign_id = models.IntegerField(primary_key=True)
     campaign_name = models.CharField(max_length=200, blank=True)
     campaign_descr = models.CharField(max_length=500, blank=True)
-    campaign_category = models.CharField(max_length=22, blank=True)
-    target_level = models.CharField(max_length=10, blank=True)
-    frequency_in_days = models.CharField(max_length=14, blank=True)
-    is_it_life_time = models.IntegerField(blank=True, null=True)
-    is_annual_delivery_date_constant = models.IntegerField(blank=True, null=True)
+    date_created = models.DateField()
+    delivery_mechanism = models.CharField(max_length=8)
+    campaign_category = models.CharField(max_length=2, blank=True)
+    target_level = models.CharField(max_length=15, blank=True)
+    is_campaign_active = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -106,6 +115,20 @@ class Groups(models.Model):
         db_table = 'groups'
 
 
+class IndividualizedReminders(models.Model):
+    individualized_reminders_id = models.IntegerField(primary_key=True)
+    campaign = models.ForeignKey(Campaigns, blank=True, null=True)
+    contact = models.ForeignKey(AddressBook, blank=True, null=True)
+    reminder_end_date = models.DateField(blank=True, null=True)
+    event_deadline_date = models.DateField(blank=True, null=True)
+    no_running_days = models.IntegerField(blank=True, null=True)
+    reason_for_reminder = models.CharField(max_length=200, blank=True)
+
+    class Meta:
+        managed = False
+        db_table = 'individualized_reminders'
+
+
 class MobileDetails(models.Model):
     mobile_id = models.IntegerField(primary_key=True)
     mobile_number = models.CharField(max_length=15, blank=True)
@@ -115,6 +138,34 @@ class MobileDetails(models.Model):
     class Meta:
         managed = False
         db_table = 'mobile_details'
+
+
+class SelectedDaysOfDelivery(models.Model):
+    selected_day_id = models.IntegerField(primary_key=True)
+    campaign = models.ForeignKey(Campaigns, blank=True, null=True)
+    selected_day = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'selected_days_of_delivery'
+
+
+class SelectedTimeOfDelivery(models.Model):
+    campaign = models.ForeignKey(Campaigns)
+    selected_time = models.TimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'selected_time_of_delivery'
+
+
+class SmsCampaignTargetedGroups(models.Model):
+    group = models.ForeignKey(Groups)
+    campaign = models.ForeignKey(Campaigns)
+
+    class Meta:
+        managed = False
+        db_table = 'sms_campaign_targeted_groups'
 
 
 class SmsSignatures(models.Model):

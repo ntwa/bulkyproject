@@ -1,0 +1,320 @@
+<div id="address_book_page">
+<section id="page">
+				<!-- SIDEBAR -->
+				<!-- /SIDEBAR -->
+				<div class="container">
+<div class="row">
+<h3 align="center"><div id="addressbookstatus">Viewing Address Book</div>   
+</h3>
+
+          <div align="center">
+                  <button type="button" class="btn btn-info" onclick="showAddressBook();" id="viewaddressbtn"  disabled="">View</button>
+                  <button type="button" class="btn btn-info" onclick="updateAddressBook();" id="updateaddressbtn">Update</button>
+
+          </div>
+
+
+
+          <div align="center" id="view_search_contact">Search: <input type="text" id="filterContacts" onkeyup="filterAddressBookContent();" autofocus></div>
+							<div class="col-md-12" id="view_address_book" style="height:500px;border:solid 2px orange;overflow:scroll;overflow-x:hidden;overflow-y:scroll;"><!--View Address Book-->
+								<!-- BOX -->
+								<div class="box border green" >
+									<div class="box-title" style="background-color:#8b9dc3;color:white;">
+										<h4><i class="fa fa-book"></i>Address Book</h4>
+										
+									</div>
+									<div class="box-body">
+										<div class="row">
+											<div class="col-md-4">
+
+												<div id="address-book" class="slidernav"><div class="slide-up end"><span class="arrow up"></span></div>
+													<div class="slider-content" style="height: 514px;">
+														<ul id="addressbook_names">
+															<li id="a" class=""><a name="a" class="title">a</a>
+																<ul id="aa">
+																	<li><a>&nbsp;</a></li>
+																	
+																	
+																</ul>
+															</li>
+															<li id="b" class=""><a name="b" class="title">b</a>
+																<ul id="bb">
+																	<li><a>&nbsp;</a></li>
+
+																</ul>
+															</li>
+															<li id="c" class=""><a name="c" class="title">c</a>
+																<ul id="cc">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="d" class=""><a name="d" class="title">d</a>
+																<ul id="dd">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="e" class=""><a name="e" class="title">e</a>
+																<ul id="ee">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="f" class=""><a name="f" class="title">f</a>
+																<ul id="ff">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="g" class=""><a name="g" class="title">g</a>
+																<ul id="gg">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="h" class="selected"><a name="h" class="title">h</a>
+																<ul id="hh">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="i" class=""><a name="i" class="title">i</a>
+																<ul id="ii">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="j" class=""><a name="j" class="title">j</a>
+																<ul id="jj">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="k" class=""><a name="k" class="title">k</a>
+																<ul id="kk">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="l" class=""><a name="l" class="title">l</a>
+																<ul id="ll">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="m" class=""><a name="m" class="title">m</a>
+																<ul id="mm">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="n" class=""><a name="n" class="title">n</a>
+																<ul id="nn">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="o" class=""><a name="o" class="title">o</a>
+																<ul id="oo">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="p" class=""><a name="p" class="title">p</a>
+																<ul id="pp">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="q" class=""><a name="q" class="title">q</a>
+																<ul id="qq">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="r" class=""><a name="r" class="title">r</a>
+																<ul id="rr">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="s" class=""><a name="s" class="title">s</a>
+																<ul id="ss">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="t"><a name="t" class="title">t</a>
+																<ul id="tt">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="u" class=""><a name="u" class="title">u</a>
+																<ul id="uu">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="v" class=""><a name="v" class="title">v</a>
+																<ul id="vv">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="w" class=""><a name="w" class="title">w</a>
+																<ul id="ww">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="x" class=""><!--<a name="x" class="title">x</a>-->
+																<ul id="xx">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="y" class=""><a name="y" class="title">y</a>
+																<ul id="yy">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+															<li id="z" class=""><a name="z" class="title">z</a>
+																<ul id="zz">
+<li><a>&nbsp;</a></li>
+																</ul>
+															</li>
+														</ul>
+													</div>
+												<div class="slider-nav" style="height: 514px; top: 20px;"><ul><li><a alt="#a">a</a></li><li><a alt="#b">b</a></li><li><a alt="#c">c</a></li><li><a alt="#d">d</a></li><li><a alt="#e">e</a></li><li><a alt="#f">f</a></li><li><a alt="#g">g</a></li><li><a alt="#h">h</a></li><li><a alt="#i">i</a></li><li><a alt="#j">j</a></li><li><a alt="#k">k</a></li><li><a alt="#l">l</a></li><li><a alt="#m">m</a></li><li><a alt="#n">n</a></li><li><a alt="#o">o</a></li><li><a alt="#p">p</a></li><li><a alt="#q">q</a></li><li><a alt="#r">r</a></li><li><a alt="#s">s</a></li><li><a alt="#t">t</a></li><li><a alt="#u">u</a></li><li><a alt="#v">v</a></li><li><a alt="#w">w</a></li><li><a alt="#x">x</a></li><li><a alt="#y">y</a></li><li><a alt="#z">z</a></li></ul></div><div class="slide-down"><span class="arrow down"></span></div></div>
+											</div>
+											<div class="col-md-8">
+												<div id="contact-card" class="panel panel-default" hidden>
+												  <div class="panel-heading">
+													<h2 class="panel-title" id="nameofcontact_1">Ntwa Katule</h2>
+												  </div>
+												  <div class="panel-body">
+													<div id="card" class="row">
+														<div class="col-md-6 headshot">
+				<img src="http://localhost:8000/static/bulkysms/images/1.jpg" alt="" width="200" height="200">
+														</div>
+														<div class="col-md-6">
+															<table class="table table-hover">
+																<tbody>
+																  <tr>					
+																	<td><i class="fa fa-font"></i> Name</td>
+																	<td id="card-name">Ntwa Katule</td>
+																  </tr>
+																  <tr>
+																	<td ><i class="fa fa-home"></i> Address</td>
+																	<td id="physical-address">Tegeta Namanga,
+																		Kinondoni,
+																		Dar es salaam </td>
+																  </tr>
+																  <tr>
+																	<td><i class="fa fa-phone"></i> Phone</td>
+																	<td id="phone-numbers">+001 8753-3648-002</td>
+																  </tr>
+																  <tr>
+																	<td><i class="fa fa-envelope"></i> Email</td>
+																	<td>sampleemail@gmail.com</td>
+																  </tr>
+																</tbody>
+														  </table>
+
+														</div>
+													</div>
+												  </div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /BOX -->
+							</div><!--end of viewing address book-->
+							<div class="col-md-12" id="update_address" align="center" hidden>
+                            <br>
+                            <br>
+                            <table border=1>
+                                  <tr>
+                                  	  <td  style="background:lightblue;">&nbsp;</td>
+                                  </tr>
+                                  <tr>
+
+                                      <td align="center">Download template to update address book<br><button style="font-size:24px;cursor:pointer" onclick="downloadUpdateTemplate();"> <i class="fa fa-download" style="font-size:48px;color:GREEN"></i></button><br><br></td></tr>
+                                      <tr>
+                                       
+		                                      <td align="center">
+                                                   Once template updated, upload it.
+		                                           <br>
+                                                    <table>
+                                                       <tr>
+
+                                                       <td align="center">
+                                                       
+                                                        <form enctype="multipart/form-data" id="addressuploadfileform">
+                                                   
+                                                        <span class="btn btn-primary fileinput-button">
+
+
+										                 
+										                    <i class="fa fa-fw fa-folder-o"></i>
+										                    <span>Select file...</span>
+										                   <input name="addressfile" type="file" id="addressfile" />
+										                </span>
+										                <div id="addfilename">
+										                	<b>File</b>: No File
+										                </div>
+										                </form>
+				                                             
+				                                             <!--<div role="button" class="btn btn-primary mr-2">-->
+ 
+
+				                                             <!--
+							                                  <form enctype="multipart/form-data" id="addressuploadfileform">
+				    												<input name="addressfile" type="file" id="addressfile" />
+				    											
+															  </form>-->
+							                                      
+				                                       </td>
+				                                       </tr>
+				                                       <tr>
+				                                       <td align="center">
+
+				                                      <button style="font-size:24px; cursor:pointer" id="uploadaddressbtn"><i class="fa fa-upload" style="font-size:48px;color:orange"></i></button></td>
+				                                      </tr>
+
+				                                      </table>
+				                                      <br>
+
+				                              </td>
+                                  </tr>
+                               
+                            </table>
+
+							</div>
+
+						</div><!--end div class row-->
+						</div>
+</section>
+
+</div><!--end outmot div>
+
+
+	<!--/PAGE -->
+	<!-- JAVASCRIPTS -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<!-- JQUERY moved to index.html -->
+        
+
+
+	<script >
+		jQuery(document).ready(function() {	
+		//handleSliderNav();	
+		
+		});
+                   /*
+			var handleSliderNav = function () {
+		$('#address-book').sliderNav();
+		
+		$('#address-book .slider-content ul li ul li a').click(function(e){
+			e.preventDefault();
+			var contact_card = $('#contact-card');
+			//Get the name clicked on
+			var name = $(this).text();
+			//Set the name
+			$('#contact-card .panel-title').html(name);
+			$('#contact-card #card-name').html(name);
+			//Randomize the image
+			var img_id = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+			//Set the image
+			$('#contact-card .headshot img').attr('src', 'img/addressbook/'+img_id+'.jpg');
+			contact_card.removeClass('animated fadeInUp').addClass('animated fadeInUp');
+			var wait = window.setTimeout( function(){
+				contact_card.removeClass('animated fadeInUp')},
+				1300
+			);
+		});
+	}*/
+	</script>
+	<!-- /JAVASCRIPTS -->
+

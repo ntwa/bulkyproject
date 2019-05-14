@@ -1,0 +1,21 @@
+             //alert("Group Content Loaded"+resjson["AD00"]["group_description"]);
+               /*for(var x in resjson)
+               {//start for loop
+                  var retrieved_campaign_id=resjson[""+x+""]["CampaignID"];
+
+                  if(hidden_campaign_id==retrieved_campaign_id){
+
+
+                    var targeted_audience=resjson[""+x+""]["TargetedAudience"]; //get all groups that were targeted
+                    
+                    break;//break if we have found the campaign we are looking for
+
+                  }
+                  
+              }*/
+
+          /*if(targeted_audience==null){
+
+            alert("Error: The ID for this campaign doesn't exist.")
+            return;
+          }*/

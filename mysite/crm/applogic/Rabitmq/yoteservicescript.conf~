@@ -1,0 +1,11 @@
+description "Yote Interface For Sending to Clickatell SMS Gateway"
+author  "Ntwa Katule <katulentwa@@gmail.com>"
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+exec /home/ntwa/Documents/Development/Projects/Rabitmq/yotesmsdaemon.py
+
+respawn
+
+
