@@ -14,6 +14,7 @@ from django.core.files.storage import FileSystemStorage
 import os
 import re
 
+
 from bulkysms.database.base import Base
 from bulkysms.database.dbinit import db,dbconn
 
@@ -163,12 +164,53 @@ class ManageCampaign:
                               campaign_end_date=campaign_end_date_raw.strftime("%d-%m-%Y")
 
 
+                         time_tuple={"Time00":"No time"}
+                         res_campaign_time=session.query(SelectedDeliveryTime).filter(SelectedDeliveryTime.campaign_id==campaign_id).order_by(SelectedDeliveryTime.selected_time).all()
+                         if len(res_campaign_time)==0:
+                              pass
+                         else:
+                             counted_times=0
+                             
+                             for one_time_rec in res_campaign_time:
+                         
+                                   if counted_times<10:
+                                        time_key="Time0"# append a zero. This is important in ordering keys alphabetically
+                                   else:
+                                        time_key="Time" 
+                                      
+                                   time_tuple[time_key+"%d"%counted_times]="%s"%one_time_rec.selected_time
+                                   counted_times=counted_times+1 
 
-                              
+
+
+                         time_tuple=OrderedDict(sorted(time_tuple.items(), key=lambda t: t[0]))  #Making sure that records are ordered properly
+
+
+
+                         days_tuple={"Day00":"No Days"}
+                         res_campaign_days=session.query(SelectedDeliveryDayofWeek).filter(SelectedDeliveryDayofWeek.campaign_id==campaign_id).order_by(SelectedDeliveryDayofWeek.selected_day).all()
+                         if len(res_campaign_days)==0:
+                              pass
+                         else:
+                             counted_days=0
+                             
+                             for one_day_rec in res_campaign_days:
+                         
+                                   if counted_days<10:
+                                        day_key="Day0"# append a zero. This is important in ordering keys alphabetically
+                                   else:
+                                        day_key="Day" 
+                                      
+                                   days_tuple[day_key+"%d"%counted_days]="%s"%one_day_rec.selected_day
+                                   counted_days=counted_days+1 
+
+
+
+                         days_tuple=OrderedDict(sorted(days_tuple.items(), key=lambda t: t[0])) 
 
 
                          
-                         campaign_tuple[key1+"%d"%level_one_json_counter]={"CampaignID":campaign_id, "campaign_name":campaign_rec.campaign_name, "campaign_description":campaign_rec.campaign_descr,"DateCreated":date_str, "DeliveryMedium":delivery_medium, "TargetedAudience":group_tuple,"CampaignCategory":campaign_category,"TotalMessages":count_msgs,"messagestxt": message_tuple,"CampaignStartDate":campaign_start_date,"CampaignEndDate":campaign_end_date,"CampaignActive":campaign_rec.is_campaign_active}
+                         campaign_tuple[key1+"%d"%level_one_json_counter]={"CampaignID":campaign_id, "campaign_name":campaign_rec.campaign_name, "campaign_description":campaign_rec.campaign_descr,"DateCreated":date_str, "DeliveryMedium":delivery_medium, "TargetedAudience":group_tuple,"CampaignCategory":campaign_category,"TotalMessages":count_msgs,"messagestxt": message_tuple,"CampaignStartDate":campaign_start_date,"CampaignEndDate":campaign_end_date,"CampaignDays":days_tuple,"CampaingDeliveryHours":time_tuple,"CampaignActive":campaign_rec.is_campaign_active}
                          level_one_json_counter=level_one_json_counter+1 # After getting the first record add 1 to the counter	
                          
 
@@ -237,6 +279,16 @@ class ManageCampaign:
                #myjson=json.JSONEncoder().encode(self.myjson)
           
                arr_items=self.myjson
+
+               #Get id
+               ret=self.searchArray("hiddencampaignid",arr_items)
+               
+               if ret>=0:
+                    json_obj=arr_items[ret]
+                    campaign_id=int(json_obj["value"])
+               else:
+                    raise ValueError("Campaign ID was not set")
+
                
 
                #Get campaign name
@@ -245,6 +297,8 @@ class ManageCampaign:
                if ret>=0:
                     json_obj=arr_items[ret]
                     campaign_name=json_obj["value"]
+                    #now deal with any leading white spaces
+                    campaign_name=campaign_name.strip()
                else:
                     raise ValueError("The submitted form didn't have 'Campaign Name' field")
 
@@ -254,6 +308,7 @@ class ManageCampaign:
                if ret>=0:
                     json_obj=arr_items[ret]
                     campaign_descr=json_obj["value"]
+                    campaign_descr=campaign_descr.strip()
                else:
                     raise ValueError("The submitted form didn't have 'Campaign Description' field")
 
@@ -286,7 +341,7 @@ class ManageCampaign:
                               if request.method == 'POST' and request.FILES['reminderfile']:
                                    reminderfile = request.FILES['reminderfile']
                                    fs = FileSystemStorage()
-                                   filename = fs.save("remminders.xls", reminderfile)
+                                   filename = fs.save("reminders.xls", reminderfile)
                                    uploaded_file_url = fs.url(filename)
                                    path="%s/media/%s"%(os.getcwd(),filename)
                                    myjson["status"]="%s. Path=%s"%(myjson["status"],path)
@@ -303,88 +358,106 @@ class ManageCampaign:
                                    #sentinal=1
                                    strrow=""
                                    records=[]
-                                   col_headers=['contact_id','First Name','Last Name','Reminder Expiry Date','Days of Running','Deadline for Action','Reason For Reminder']
+                                   col_headers=['contact_id','First Name','Last Name','Reminder Expiry Date','Days of Running','Deadline for Action','Reason For Reminder','Existing Reminder']
                                    col_headers_order=[]
                                    header_counter_on=0
                                    col_header_counter=0
+                                   data_extraction_on=0
 
                                    str_reg_expr="^(?![\s\S])" #A regualar expression for matching empty strings
                                    #str_reg_expr2="^(?[\s\S])" #A regualar expression for matching strings with only white spaces
                                    
                                    #
-                                   for row_posn in range(num_rows):
+                    #
+                                   col_posn_with_data=[] #Incase there are empty columns in between data, this can be able to figure that out
+                                   for row_posn in range(num_rows): 
 
                                         row=[]
                                         col_counter=0
                                         row_content=""
-                                        
-                                        #print row_posn
-                                        #print ""
-                                        #print ""
+                                       
 
+                                        if header_counter_on==1 and data_extraction_on==0:
+                                             data_extraction_on=1 
 
+                                             #we are in a row with data after passing through headers
+
+                                         
                                         for col_posn in range(num_columns):
+
+                       
                                              cell= xl_sheet.cell(row_posn,col_posn)
                                              strcontent="%s"%cell.value
-                                        
-                                             row_content="%s%s"%(row_content,strcontent)
+                                             find=strcontent.find("+")
+                                             if find>=0:
+                                                  row_content="%s%s"%(row_content,strcontent[1:])
+                                                  strcontent="%s"%strcontent[1:] # get rid of + sign
+                                             else:
+                                                  row_content="%s%s"%(row_content,strcontent)
 
                                              #row_content="%s%s"%(row_content,strcontent)
                                              
-                                             test_result=re.match(strcontent, str_reg_expr, re.IGNORECASE) # Now check if one cell is empty
-                                             test_result2=re.match(row_content, str_reg_expr, re.IGNORECASE) # Now check if the entire row is empty
+                                             test_result=re.match(str_reg_expr,strcontent,re.IGNORECASE) # Now check if one cell is empty
+                                             test_result2=re.match( str_reg_expr,row_content, re.IGNORECASE) # Now check if the entire row is empty
                                              
                                              if test_result and test_result2:
-                                                  #print test_result2.groups(0) 
                                                   pass
+                                                  #print test_result2.groups(0) 
+                                                  #ignore empty columns
+                                                 
+                                                  
                                                   #if col_posn==0:
-                                                  #print "Empty encountered at cell (%s,%s) and str=%s"%(row_posn,col_posn,strcontent)
+                                                       #print "Empty encountered at cell (%s,%s) and str=%s"%(row_posn,col_posn,strcontent)
                                              else:
+                                                  #Now check if data extraction is on
+                                                  if data_extraction_on==1:
+                                                       #Now checks if a column is not empty. Meaning it possible for data items to be separated
+                                                       cellvalue= cell.value  
+                                                       if test_result:
+                                                           
+                                                           if searchArray(col_posn,col_posn_with_data)>0:
+                                                               # it means the blank is on non empty column
+                                                               cellvalue=None
+                                                               row.append(cellvalue)
+                                                               col_counter=col_counter+1
 
-                                                  if searchArray(cell.value,col_headers)>0: #First check if the column is header, if it is header don't append
-                                                       
-                                                       if col_posn==0:
+                                                           else:
+                                                               pass
+                                                       else:                 
+
+                                                           row.append(cellvalue)
+                                                           col_counter=col_counter+1
+
+
+                                                  elif searchArray(cell.value,col_headers)>0: #First check if the column is header, if it is header don't append
+                                                       #We have found a match .Lets now check if it is the begining 
+                                                       #if col_posn==0:
+                                                       col_posn_with_data.append(col_posn)
+                                                     
+                                                       if header_counter_on==1:
+                                                            pass
+                                                       else:
                                                             #print "Change head counter"
                                                             header_counter_on=1 #This means we have started conting headers
                                                        col_headers_order.append("%s"%cell.value) 
                                                        col_header_counter=col_header_counter+1
                                                   elif header_counter_on==0 and test_result2==None: #These are for headers that are not column heading
                                                        pass
+
                                          
                                                        #print "Row empty but some cells encountered at cell (%s,%s) and str=%s"%(row_posn,col_posn,strcontent)
-                                                  else:  
-                                                       #print "There is some content at row cell (%s,%s) and str=%s"%(row_posn,col_posn,strcontent)
-                                                      #First we have to confirm that we found all necessary headers
-                                                       if col_header_counter==num_columns:  
-                                                           pass
-                                                       else:
-                                                            #print "%s=%s"%(col_header_counter,num_columns)
-                                                            #just return error to the user as the naming of column headers don't conform to the ones expected.
-                                                            myjson["status"]="Error. Process terminated. Not the naming of all column headers conform to the allowed ones ."
-                                                            os.remove(path) #remove the file once done with it
-                                                            status=json.JSONEncoder().encode(myjson)
-                                                            return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
-
-
-
-                                                       cellvalue= cell.value  
-
-                                                        #check if a cell is empty.
-
-                                                       if test_result:
-                                                           #It means the cell was left blank therefore assine "None" to cellvalue
-                                                           cellvalue=None
-
-                                                       row.append(cellvalue)
-                                                       col_counter=col_counter+1
-                                                  
-                                                 
-                                                  #row.append(cell.value)
-                                                  #col_counter=col_counter+1
+                                                  else: 
+                                                       pass 
+                   
 
                                         #check if the entire row is empty 
-                                        if col_counter==num_columns: #It means there were no empty columns in this row or the columns don't represent headers.
-                                             records.append(row)
+                                        #if col_counter==num_columns: #It means there were no empty columns in this row or the columns don't represent headers.
+                                        if data_extraction_on==1: #Append this row as it doesn't represent headers
+                                             #however skip any empty row after headers
+                                             if test_result2:
+                                                 pass
+                                             else:
+                                                 records.append(row)
 
                          
                                    error_detected=-1  
@@ -400,7 +473,7 @@ class ManageCampaign:
                                         columncounter=0 
                                         jsondata={}
                                         current_record="None" #This variable is important in cases of errors as it helps in knowing which record was being updated when the error occured
-                                   
+                                        ignore_record=0
                    
                                         
                                         #for dataval in rec:
@@ -409,6 +482,16 @@ class ManageCampaign:
                                         
                                              if col_headers_order[columncounter]=="Reminder Expiry Date" or col_headers_order[columncounter]=="Deadline for Action":
                                                  try:
+                                                       date_str="%s"%dataval
+                                                       date_reg_expression=r"^\d\d [a-z]{3,3} \d\d\d\d$"
+                                                       comp_result=re.match(date_reg_expression,date_str, re.IGNORECASE) # Now check if date is written in the accepted format
+                        
+                                                       if comp_result:
+                                                            pass
+
+                                                       else:
+                                                            ignore_record=1
+                                                            break
                                                        base = datetime.datetime(1899,12,30)
                                                        datetime_object = datetime.datetime.strptime(dataval, '%d %b %Y')
                                                        date_obj_str=datetime_object.strftime("%Y-%m-%d")
@@ -435,14 +518,9 @@ class ManageCampaign:
                                              columncounter=columncounter+1
                                              
                                
-                                        if error_detected>0:
+                                        if ignore_record==1:
                                              pass
-                                             if error_detected==1:
-                                                 error_message="The system has encountered error(s)!: '%s'. Make sure your excel file follows the downloaded template format. "%error_value
-                                                 #skip this record only and go to the next one
-                                                 #raise ValueError(error_message)
-                                             else:
-                                                 raise ValueError("The system has encountered errors!.")
+                                 
                                         else:
                                              #Now insert this reminder for a campaign. Remove the old code.
                                              contact_id=jsondata["contact_id"]
@@ -671,22 +749,27 @@ class ManageCampaign:
                     if ret>=0:
                          json_obj=arr_items[ret]
                          hour=json_obj["value"]
+                         
                     else:
+
                          raise ValueError("Hour not set")
 
                     ret=self.searchArray(key_minutes,arr_items)
                     if ret>=0:
                          json_obj=arr_items[ret]
                          minutes=json_obj["value"]
+
                     else:
                          raise ValueError("Minutes not set")
                     
                     scheduled_time="%s:%s:00"%(hour,minutes)
-                    scheduled_times.append(scheduled_time)
+                    scheduled_times.append(SelectedDeliveryTime(scheduled_time))
                     counter+=1
+
+     
                
 
-
+               
 
                #Get Number of appended messages
                ret=self.searchArray("numOfAppendedMessages",arr_items)
@@ -784,14 +867,40 @@ class ManageCampaign:
                Session = sessionmaker(bind=engine)
                session = Session()
                                    
-               # querying for a record if it exists already.
+               # querying if a campaign with the same name exists incase we are trying to add a new campaign.
                res= session.query(Campaign).filter(Campaign.campaign_name==campaign_name).first()
+
+
+
                
                if res is None:
-                    session.close()
-                    engine.dispose()
-                    dbconn.close()
+                    pass
+                    #session.close()
+                    #engine.dispose()
+                    #dbconn.close()
                else:
+
+                    if campaign_id==-1:
+
+                         result["message"]="Error: Campaign name '%s' already taken. Use a different name or edit an existing campaign with the same name"%campaign_name
+                         return (json.JSONEncoder().encode(result)) 
+
+                    else:
+                         #Check if the submitted ID matches with the one from a database
+                         
+                         if campaign_id==res.id:
+                              pass
+                         
+                         else:
+                              result["message"]="Error: Campaign name '%s' already taken. Use a different name if you are editing your campaign"%campaign_name
+                              return (json.JSONEncoder().encode(result)) 
+               #now query the ID and update incase a match is found   
+               res= session.query(Campaign).filter(Campaign.id==campaign_id).first()  
+
+               if res is None:
+                    pass #Probably it is new campaign. Hence we will insert it to the database
+               else:          
+
                     #if it exists, then update the record in the database.
                     campaign_part1_record=res
                     campaign_part1_record.campaign_name=campaign_name
@@ -801,9 +910,8 @@ class ManageCampaign:
                     campaign_part1_record.target_level=target_level
                     
                     
-                  
-                    
-                    campaign_id=res.id
+               
+                    #campaign_id=res.id
 
                     #Now delete all messages associated with this campaign and then update with new ones
                     
@@ -835,7 +943,8 @@ class ManageCampaign:
                     resaud=session.query(CampaignAudienceSMS).filter(CampaignAudienceSMS.campaign_id==campaign_id).all()
                     
                     if len(resaud)==0:
-                         print "No records on campaign=%s"%campaign_id
+                         pass
+                         #print "No records on campaign=%s"%campaign_id
                     else:
                          for record in resaud:
                               session.delete(record)
@@ -940,10 +1049,11 @@ class ManageCampaign:
                               session.delete(record)
 
 
-                    for schedule_time in scheduled_times:
-                         res.selected_delivery_time.append(SelectedDeliveryTime(schedule_time))
+                    #for schedule_time in scheduled_times:
+                    #     res.selected_delivery_time.append(SelectedDeliveryTime(schedule_time))
 
-                    
+                    res.selected_delivery_time=[]
+                    res.selected_delivery_time.extend(scheduled_times)
 
                     #Now append updated messages.
                     #search all messages to to be updated
@@ -964,19 +1074,19 @@ class ManageCampaign:
                       #        resmsg.message_txt=msg_txt
 
 
-                    #Now check individualized reminders from an existing campaign and edit them too  
+                    #Now check individualized reminders from an existing campaign and edit them too.  But this is to be done to only Campaign that are targeting individual campaign categories
+                    if campaign_category=="IR":
+                         res_individual_reminders=session.query(IndividualizedReminder).filter(IndividualizedReminder.campaign_id==campaign_id).all()
+                         if len(res_individual_reminders)==0:
+                              pass
+                         else:
+                              for record in res_individual_reminders:
+                                   session.delete(record)
 
-                    res_individual_reminders=session.query(IndividualizedReminder).filter(IndividualizedReminder.campaign_id==campaign_id).all()
-                    if len(res_individual_reminders)==0:
-                         pass
-                    else:
-                         for record in res_individual_reminders:
-                              session.delete(record)
+                         #update reminders that are attached to a campaign.          
 
-                    #update reminders that are attached to a campaign.          
-
-                    res.individual_campaign=[]
-                    res.individual_campaign.extend(individual_reminders)
+                         res.individual_campaign=[]
+                         res.individual_campaign.extend(individual_reminders)
 
 
 
@@ -1012,9 +1122,9 @@ class ManageCampaign:
                message_table="selected_time_of_delivery"
                error="%s"%e
                if integrity_error in error and schedule_table in error:
-                    result["message"] ="Error :Failed to update. You have entered same value for 'time' in more than one time box."
+                    result["message"] ="Error: Failed to be updated. You have entered the same value for 'time' in more than one time box."
                else:
-                    result["message"]="Error: Failed to update"
+                    result["message"]="Error: Failed to be updated.%s"%e
 
                #print      
                return (json.JSONEncoder().encode(result))
@@ -1104,6 +1214,12 @@ class ManageCampaign:
 
                     #Now check if it is an individualized reminder so that accompanying records from an excel file can be appended
 
+                    #for schedule_time in scheduled_times:
+                    #     res.selected_delivery_time.append(SelectedDeliveryTime(schedule_time))
+
+                    new_campaign.selected_delivery_time=[]
+                    new_campaign.selected_delivery_time.extend(scheduled_times)
+
 
 
                     session.add(new_campaign)
@@ -1117,7 +1233,7 @@ class ManageCampaign:
                     engine.dispose()
                     dbconn.close()
                      
-                    #result["message"]="The campaign was added sucessfully"
+                    result["message"]="The campaign was added sucessfully"
                     return (json.JSONEncoder().encode(result))                 
                      
                     

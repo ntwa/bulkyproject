@@ -130,7 +130,40 @@ if((msgstr.length>0)&&(status))
 
 
 };
+var clearDivForm=function(divElement){
+         alert("ClearCalled");
 
+          var ele = document.getElementById(divElement);
+
+        // IT WILL READ ALL THE ELEMENTS. <p>, <div>, <input> ETC.
+        for (i = 0; i < ele.childNodes.length; i++) {
+
+            // SINCE THE <input> FIELDS ARE INSIDE A <p> TAG, 
+            // I'LL USE THE "firstChild" PROPERTY TO GET THE <input> TAG.
+            var child = ele.childNodes[i].firstChild;
+            //console.log(child);
+
+            // CHECK IF CHILD NOT NULL.
+            // THIS IS IMPORTANT AS IT WILL RETURN A TEXT FOR EVERY "Whitespace".
+            // 'Whitespace' IS A TEXT OR NODE BETWEEN <div> AND <p> AND AFTER <p>.
+            if (child) {
+                switch (child.type) {
+                    case 'button':
+                    case 'text':
+                    case 'submit':
+                    case 'password':
+                    case 'file':
+                    case 'email':
+                    case 'date':
+                    case 'number':
+                        child.value = '';
+                    case 'checkbox':
+                    case 'radio':
+                        child.checked = false;
+                }
+            }
+        }
+};
 
 //This function is important when we want to check if a group has members before trying to send messages
 var existGroupMembers=function (group_id)
@@ -1134,7 +1167,7 @@ var downloadReminderTemplate=function(opid){
                var targeted_audience=null;
          var hidden_campaign_id= $("#hiddencampaignid").val();
        
-        extra_json={Existing:1,CampaignID:hidden_campaign_id}; //if Existing is 1; the it means this campaign may have existing indidualize
+        extra_json={Existing:1,CampaignID:hidden_campaign_id}; //if Existing is 1; the it means this campaign may have existing indidualized reminders
 
       }
       else{
@@ -2055,14 +2088,42 @@ $("#viewcampaignsbtn" ).prop( "disabled", true);
 };
 
 
-var createNewCampaign=function(resetform){
+var createNewCampaign=function(mode){
 
-if(resetform==undefined);// just ignore reset
+if(mode=='NEW')// Then clear the form
+{
+
+ 
+ //$('#campaignForm').trigger("reset");
+ //$("#campaignForm")[0].reset()
+
+ $("#savingcampaignheader").html('Create New Campaign');
+ 
+ $('#campaignForm').find('input:text').val('');   
+ $('#campaignForm').find('textarea').val('');
+
+ //Next hide any boxes that are meant to be hidden
+
+ $("#numOfGroups").hide();
+ $("#campaigntargetwhatsapp").hide();
+
+
+ $(".remindertemplates").hide().hide();
+ $("#campaignenddate").hide();
+ 
+ $("input[name=lifeofcampaign][value=1]").prop("checked",true);
+
+ $("#category1").prop('selected', true);
+       
+
+ $("#hiddencampaignid").val(-1); //Put this to -1 so that the server side script can be able to distinguish between new campaign and an old campaign.
+   removeMsgBoxes();
+
+}
 else{
 
-  $('#campaignForm').trigger("reset");
-  removeMsgBoxes();
-}
+  $("#savingcampaignheader").html('Update Existing Campaign');
+} 
 
 
 
@@ -2081,17 +2142,25 @@ $("#viewcampaignsbtn" ).prop( "disabled", false);
      //Now populate existing groups into the campaign editing form
 
       populateGroupsForCampaign();
-      displayTimeOfRunningBoxes(1);//By Default only one option should be displayed
+      //displayTimeOfRunningBoxes(1);//By Default only one option should be displayed
       attachEventToGroupsCampaign();
 
 
 
 
 
+  }
+  else{
+
+
+    $('#campaigntargetsms')
+         .append($("<option id='campaigntargetallsms' name='campaigntargetallsms'></option>")
+         .attr("value",'0')
+         .text("All")); //just provide only one option 
   } 
   
 
-
+displayTimeOfRunningBoxes(1);//By Default only one option should be displayed. What time of the day a campaign will be running
 
 
 
@@ -3036,7 +3105,7 @@ var editCampaign=function(campaign_id,menu_id){
 //now call a function to save records
 
 
-createNewCampaign();
+createNewCampaign('EXIST'); // bring the box.
 
 
 
@@ -3056,6 +3125,9 @@ createNewCampaign();
                   var retrieved_delivery_medium= resjson[""+x+""]["DeliveryMedium"]; 
                   var targeted_audience=resjson[""+x+""]["TargetedAudience"];
                   var campaign_category=resjson[""+x+""]["CampaignCategory"];
+
+                  var campaign_hours=resjson[""+x+""]["CampaingDeliveryHours"];
+                  var campaign_days_of_week=resjson[""+x+""]["CampaingDays"];
 
 
                   //alert(retrieved_campaign_name);
@@ -3173,8 +3245,6 @@ createNewCampaign();
                             //downloader_content=downloader_content+"<button style=\"font-size:24px;cursor:pointer" onclick="downloadReminderTemplate(0);"> <i class="fa fa-download" style="font-size:48px;color:GREEN"></i></button><br><br></td>
 
 
-
-
              
 
                             }
@@ -3182,6 +3252,245 @@ createNewCampaign();
 
 
                          }
+                         var delivery_days=[]
+                         var delivery_days_counter=0
+
+                         for(var delivery_day in campaign_days_of_week)
+                         {
+                          
+                          delivery_days[delivery_days_counter]=campaign_days_of_week[""+delivery_day+""];
+                          if(delivery_days[delivery_days_counter]=="No days"){
+
+                              break;
+                            }
+                          delivery_days_counter++;
+
+                         }
+                         //outside of for loop
+
+                         if(delivery_days_counter==0)
+                            {
+
+                             $("#daysintervals").val('4');
+
+                            }
+                         else
+                           {
+
+                              if(delivery_days_counter==6)
+                              {
+
+                              $("#daysintervals").val('1');
+
+                              }
+                              else
+                                 {
+                                  if(delivery_days_counter==5)
+                                  {
+                                    //check if if it Monday to Friday, Monday is 1 and Friday is five
+
+                                    var weekdays_counter=0;
+
+                                    for(var i=0;i<delivery_days.length;i++){
+                                       if(delivery_days[i]==(i+1))
+                                           weekdays_counter++;
+
+
+                                    }
+
+                                    if(weekdays_counter==delivery_days_counter)
+                                       {
+
+                                        $("#daysintervals").val('2'); 
+                                       }
+                                       else
+                                          { //The these days must have been picked from Specific Days in a random fashion
+                                             $("#daysintervals").val('4'); 
+
+                                             //Now show boxes for days and pick them one by one
+                                             $("#campaignselectivedays").show();
+                                              //next put tick  to appropriate days
+                                              for(var i=0;i<6;i++){
+                                                  if(int(delivery_days[i])==i)
+                                                    {
+                                                      var box_posn=i+1;
+                                                      var box_name="input[type='checkbox'][name='campaigndayofweek_";
+                                                      box_name=box_name+box_posn;
+                                                      box_name=box_name+"']";
+                                                      $(box_name).prop('checked', true);
+                                            
+                                                    
+
+                                                    }
+
+
+                                                  }
+
+
+
+
+                                          }
+
+
+                                  
+
+                                   }
+                                   else{
+
+                                          if((delivery_days_counter==4) || (delivery_days_counter==3) || (delivery_days_counter==1)){
+                                          //Then it must come from specific days, because the pattern doesn't specifically fall on weekends (2 days), weekdays (5 days) or the entire week (7 days)
+                                           
+                                                   $("#daysintervals").val('4'); 
+
+                                                   //Now show boxes for days and pick them one by one
+                                                   $("#campaignselectivedays").show();
+                                                    //next put tick  to appropriate days
+                                                    for(var i=0;i<6;i++){
+                                                        if(int(delivery_days[i])==i)
+                                                          {
+                                                            var box_posn=i+1;
+                                                            var box_name="input[type='checkbox'][name='campaigndayofweek_";
+                                                            box_name=box_name+box_posn;
+                                                            box_name=box_name+"']";
+                                                            $(box_name).prop('checked', true);
+                                                  
+                                                          
+
+                                                          }
+
+
+                                                        }
+
+
+
+                                        
+
+                                          }
+                                          else{//if the pattern two days, check if it falls under weekend
+
+
+                                                    var weekends_counter=0;
+
+                                                    for(var i=0;i<delivery_days.length;i++){
+                                                       if((delivery_days[i]==0)||(delivery_days[i]==6))
+                                                           weekends_counter++;
+
+
+                                                    }
+
+                                                    if(weekends_counter==delivery_days.length){//then the two days are on weekend
+                                                        $("#daysintervals").val('3'); 
+
+                                                      } 
+                                                      else{
+                                                     
+                                                   //The two days could be anywhere as there is no specific pattern to describe them
+
+                                                              $("#daysintervals").val('4'); 
+
+                                                             //Now show boxes for days and pick them one by one
+                                                             $("#campaignselectivedays").show();
+                                                              //next put tick  to appropriate days
+                                                              for(var i=0;i<6;i++){
+                                                                  if(int(delivery_days[i])==i)
+                                                                    {
+                                                                      var box_posn=i+1;
+                                                                      var box_name="input[type='checkbox'][name='campaigndayofweek_";
+                                                                      box_name=box_name+box_posn;
+                                                                      box_name=box_name+"']";
+                                                                      $(box_name).prop('checked', true);
+                                                            
+                                                                    
+
+                                                                    }
+
+
+                                                                  }
+
+                                                       }
+
+                                                    
+
+
+
+
+
+
+
+
+                                          }
+
+
+
+
+                                   }
+
+
+
+                                 }
+
+
+
+
+
+                           }
+
+
+
+                         // iterate through all objects inside campaign_hours
+                         var delivery_hours=[];
+                         var delivery_hours_counter=0;
+
+                         for(var delivery_hour in campaign_hours ){
+
+                            delivery_hours[delivery_hours_counter]=campaign_hours[""+delivery_hour+""];
+
+                            if(delivery_hours[delivery_hours_counter]=="No time"){
+
+                              break;
+                            }
+                            delivery_hours_counter++;
+
+
+                         }
+
+                         //Now display time boxes according to the number delivery times
+                         if(delivery_hours_counter==0){
+                            displayTimeOfRunningBoxes(1);
+                           $("#hour00").value('00');
+                           $("#minutes00").value('00');
+                           $("#frequencyofrunningselected").val(1); 
+
+
+                         }
+
+                         else
+                           displayTimeOfRunningBoxes(delivery_hours_counter);
+
+                           $.each(delivery_hours, function(i,val) { 
+                            var hour_key="#hour";
+                            var minutes_key="#minutes";
+                            var hour=delivery_hours[i].substring(0,2);
+                            var minutes=delivery_hours[i].substring(3,5);
+                          
+                            hour_key=hour_key+i;
+                            minutes_key=minutes_key+i;   
+
+                            $(hour_key).val(hour);  
+                            $(minutes_key).val(minutes); 
+
+                            $("#frequencyofrunningselected").val(delivery_hours_counter); 
+
+                            if(delivery_hours_counter<=5);
+                            else{
+
+                               $("#userdefinedfrequency_box").val(delivery_hours_counter);
+
+                            }          
+
+                       
+                         
+                           });
 
 
 
@@ -3217,11 +3526,7 @@ createNewCampaign();
 
 
                             }
-                            //selected_items=selected_items+item_counter;
-                            //selected_items=selected_items+". ";
-                            //selected_items=selected_items+val.GN;
-                            //selected_items=selected_items+"&#013;";
-                            //item_counter++;
+                        
                            });
 
                          // alert(selected_items);

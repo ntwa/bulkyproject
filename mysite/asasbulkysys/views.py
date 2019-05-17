@@ -173,11 +173,13 @@ def dataupdate(request,command_id):#REST API used by the client side of web appl
                     #str_reg_expr2="^(?[\s\S])" #A regualar expression for matching strings with only white spaces
                     
                     #
+                    col_posn_with_data=[] #Incase there are empty columns in between data, this can be able to figure that out
                     for row_posn in range(num_rows): 
 
                          row=[]
                          col_counter=0
                          row_content=""
+                        
 
                          if header_counter_on==1 and data_extraction_on==0:
                               data_extraction_on=1 
@@ -219,25 +221,29 @@ def dataupdate(request,command_id):#REST API used by the client side of web appl
                               else:
                                    #Now check if data extraction is on
                                    if data_extraction_on==1:
-                                        pass
-
-
+                                        #Now checks if a column is not empty. Meaning it possible for data items to be separated
                                         cellvalue= cell.value  
-
-                                         #check if a cell is empty.
-
                                         if test_result:
-                                            #It means the cell was left blank therefore assign "None" to cellvalue
-                                            cellvalue=None
+                                            
+                                            if searchArray(col_posn,col_posn_with_data)>0:
+                                                # it means the blank is on non empty column
+                                                cellvalue=None
+                                                row.append(cellvalue)
+                                                col_counter=col_counter+1
 
-                                        row.append(cellvalue)
-                                        col_counter=col_counter+1
+                                            else:
+                                                pass
+                                        else:                 
 
-                                   
+                                            row.append(cellvalue)
+                                            col_counter=col_counter+1
+
+
                                    elif searchArray(cell.value,col_headers)>0: #First check if the column is header, if it is header don't append
                                         #We have found a match .Lets now check if it is the begining 
                                         #if col_posn==0:
-                                
+                                        col_posn_with_data.append(col_posn)
+                                      
                                         if header_counter_on==1:
                                              pass
                                         else:
@@ -261,6 +267,7 @@ def dataupdate(request,command_id):#REST API used by the client side of web appl
                               if test_result2:
                                   pass
                               else:
+                                  print row
                                   records.append(row)
 
           
@@ -288,14 +295,14 @@ def dataupdate(request,command_id):#REST API used by the client side of web appl
 
                                         date_str="%s"%dataval
                                         date_reg_expression=r"^\d\d [a-z]{3,3} \d\d\d\d$"
-                                        comp_result=re.match(date_reg_expression,date_str, re.IGNORECASE) # Now check if one cell is empty
+                                        comp_result=re.match(date_reg_expression,date_str, re.IGNORECASE) # Now check if date is written in the accepted format
                         
                                         if comp_result:
                                             pass
 
                                         else:
                                             ignore_record=1
-                                            break;
+                                            break
                                             #myjson["status"]="Date not in the right format. Correct format dd mm(First three letters) yyyy. Example: 12 Sep 2019"
                                             #status=json.JSONEncoder().encode(myjson)
           
@@ -608,7 +615,9 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
                       ws.write(row_num, col_num+1, '01 Jan 2010', date_format)
                       ws.write(row_num, col_num+2, 7, number_format)
                       ws.write(row_num, col_num+3, '01 Jan 2010', date_format)
-                      ws.write(row_num, col_num+4, "No", font_style)
+
+                      ws.write(row_num, col_num+4, "", font_style)
+                      ws.write(row_num, col_num+5, "No", font_style)
               #number_groups is not zero
           elif number_of_groups==0:
               #rows=IndividualizedReminders.objects.all().filter(campaign=campaign_id).values_list('contact_id','reminder_end_date','event_deadline_date','no_running_days','reason_for_reminder') #get contact_id of all people subscirbed to this cambaign
@@ -688,7 +697,7 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
                   
         
                   #rows=group_members.AddressBook.objects.all()
-                  
+                      row_num=row_num-2
                   for row in rows:
                       row_num += 1
                       last_column=0
@@ -717,7 +726,8 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
                       ws.write(row_num, col_num+1, '01 Jan 2010', date_format)
                       ws.write(row_num, col_num+2, 7, number_format)
                       ws.write(row_num, col_num+3, '01 Jan 2010', date_format)
-                      ws.write(row_num, col_num+4, "No", font_style)
+                      ws.write(row_num, col_num+4, "", font_style)
+                      ws.write(row_num, col_num+5, "No", font_style)
 
 
                   
