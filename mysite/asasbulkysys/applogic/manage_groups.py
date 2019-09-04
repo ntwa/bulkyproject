@@ -40,8 +40,8 @@ class GroupsManager:
           result={}
         
           try:
-               contact_id=myjson["ContactID"]
-               group_id=myjson["GroupID"]
+               contact_id=self.myjson["ContactID"]
+               group_id=self.myjson["GroupID"]
 
           except Exception as e:
                #print "Content-type: text/html\n" 
@@ -100,6 +100,73 @@ class GroupsManager:
                     
           dbconn.close()
 	  return (json.JSONEncoder().encode(result))
+
+
+
+
+     def removeGroupMember(self):
+          result={}
+        
+          try:
+               contact_id=self.myjson["ContactID"]
+               group_id=self.myjson["GroupID"]
+
+          except Exception as e:
+               #print "Content-type: text/html\n" 
+               result["message"]="Error: '%s'. If the error persists contact the developer"%e
+               return (json.JSONEncoder().encode(result)) 
+               #sys.exit() 
+          try:
+               
+               engine=db
+               # create a Session
+               Session = sessionmaker(bind=engine)
+               session = Session()
+               #Get person's name
+               res2ab=session.query(AddressBook).filter(AddressBook.id==contact_id).first()
+               person_name="%s %s"%(res2ab.first_name,res2ab.last_name)
+               if res2ab is None:
+                    result["message"]="Error: The Person you are trying to rempove from a group doesn't exist"
+                    return (json.JSONEncoder().encode(result)) 
+                  
+
+
+
+               #get group was trying to be assigned to
+               res2g=session.query(Group).filter(Group.id==group_id).first()
+               group_name="%s"%(res2g.group_name)
+
+               if res2g is None:
+                    result["message"]="Error: You are trying to assign '%s' to a group that doesn't exist"%person_name
+                    return (json.JSONEncoder().encode(result))
+               
+                                  
+               # querying for if a person has been assigned to this group before.
+               res= session.query(GroupMember).filter(GroupMember.contact_id==contact_id).filter(GroupMember.group_id==group_id).first()
+               if res is None:
+                    #
+                    result["message"]="Error:'%s' is not a member to '%s' group"%(person_name,group_name) 
+                    
+               else:
+                    session.delete(res) 
+                    session.commit()
+                    result["message"]="'%s' has been removed from '%s' group successfully."%(person_name,group_name)
+                     
+          except Exception as e:
+               #print "Content-type: text/html\n" 
+               session.close()
+               engine.dispose()
+                    
+               dbconn.close()
+               result["message"]="Error: '%s'. If the error persists contact the developer"%e
+               return (json.JSONEncoder().encode(result)) 
+               #sys.exit(
+       
+          session.close()
+          engine.dispose()
+                    
+          dbconn.close()
+          return (json.JSONEncoder().encode(result))
 
 
 
@@ -307,7 +374,7 @@ class GroupsManager:
      
 #myjson={"GroupID":12,"GroupName":"Customers in Kinondoni B","GroupDescr":"This group is for customers in Kinondoni areas."}
  
-
+#myjson={"GroupID":11,"Option":-1}
 #obj=GroupsManager(myjson)
 #msg=obj.retrieveGroupDetailsFromDB()
 #msg=obj.addGroupMember()

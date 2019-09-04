@@ -73,10 +73,30 @@ def saveGroups(myjson):
     msg=obj.saveGroupInDB()
     return msg
 
+def addGroupMember(myjson):
+    obj=GroupsManager(myjson)
+    msg=obj.addGroupMember()
+    return msg
+
+def removeGroupMember(myjson):
+    obj=GroupsManager(myjson)
+    msg=obj.removeGroupMember()
+    return msg
+
+
+
+
 def saveCampaigns(myjson,request):
     obj=ManageCampaign(myjson)
     msg=obj.saveOneCampaignInDB(request)#we pass request as it may be needed when uploading reminder file
-    print json.loads(msg)
+    #print json.loads(msg)
+    return msg
+
+
+def changeCampaignStatus(myjson):
+    obj=ManageCampaign(myjson)
+    msg=obj.triggerCampaignStatus()#we pass request as it may be needed when uploading reminder file
+    #print json.loads(msg)
     return msg
 
 def retrieveCampaigns(myjson):
@@ -122,6 +142,19 @@ def dataupdate(request,command_id):#REST API used by the client side of web appl
           status=saveGroups(myjson)
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
 
+     elif command_id =="AGM":#Command for Adding Group Member
+          myjson=json.loads(request.body)
+          #myjson={}
+          status=addGroupMember(myjson)
+          return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
+
+
+     elif command_id =="RGM":#Command for removing Group MEmber
+          myjson=json.loads(request.body)
+          #myjson={}
+          status=removeGroupMember(myjson)
+          return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
+
      elif command_id =="SCD":#Command for saving campaigns' details
           #myjson=json.loads(request.body)
           myjson=json.loads(request.POST.get('json'))
@@ -132,6 +165,14 @@ def dataupdate(request,command_id):#REST API used by the client side of web appl
           #status=json.JSONEncoder().encode(result)
           #myjson={}
           status=saveCampaigns(myjson,request)
+          return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
+          #return HttpResponse(status, content_type='application/json') #This is for debugging.
+
+     elif command_id =="CCS":#change campaign status
+          myjson=json.loads(request.body)
+        
+          #myjson={"CampaignID":"21","Action":"Activate"}
+          status=changeCampaignStatus(myjson)
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
           #return HttpResponse(status, content_type='application/json') #This is for debugging.
 
@@ -438,9 +479,10 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
 
 
      elif command_id =="RCC":#Command for retrieving content for campaigns 
-          myjson=json.loads(request.body)
+          #myjson=json.loads(request.body)
           #myjson={}
           status=retrieveCampaigns(myjson)
+          #return HttpResponse(status, content_type='application/json')
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
                 
                 

@@ -114,6 +114,23 @@ var addLoadingCircle=function (){
 
 };
 
+
+var removeLoadingCircleCampaign=function (){
+ //$("#progressbar").html("");
+  $("#myprogressbar_campaign").removeClass("loader");
+// alert($("#progressbar").html());
+
+};
+
+var addLoadingCircleCampaign=function (){
+ //$("#progressbar").html("");
+  $("#myprogressbar_campaign").addClass("loader");
+// alert($("#progressbar").html());
+
+};
+
+
+
 var typingFeedback=function(){
 
 $("#myprogressbar").html('<b><i style=\"color:green;\">Typing...</i></b>');
@@ -1248,17 +1265,81 @@ $('#groupandmembers').DataTable();
 },500);
 
 };
+
+
+var addGroupMember=function(contact_id,group_id){
+
+      jsonObject={ContactID:contact_id,GroupID:group_id};
+
+   
+      var urlstr=site;
+      urlstr=urlstr+"jsonupdate/AGM/";// Add Group Member
+      $.ajax({
+             url: urlstr,
+             dataType: "jsonp",
+             method: "POST",
+             data:JSON.stringify(jsonObject),
+             cache: false
+             })
+            .done(function( result ) {
+            
+             //alert(result.message); 
+
+             $("#allcontacts").html('');
+              
+             retrieveGroupAllocatioTemplate();
+             setupGroupAllocationInterface(2); 
+
+
+             });
+
+
+
+};
+
+
+var removeGroupMember=function(contact_id,group_id){
+
+        jsonObject={ContactID:contact_id,GroupID:group_id};
+
+   
+      var urlstr=site;
+      urlstr=urlstr+"jsonupdate/RGM/";// Remove Group Member
+      $.ajax({
+             url: urlstr,
+             dataType: "jsonp",
+             method: "POST",
+             data:JSON.stringify(jsonObject),
+             cache: false
+             })
+            .done(function( result ) {
+            
+              //alert(result.message);
+
+              $("#allcontacts").html('');
+             retrieveGroupAllocatioTemplate();
+             setupGroupAllocationInterface(1);
+    
+              
+
+             });
+
+
+
+};
+
 var retrieveAllContacts=function(group_id,option){
 
       var urlstr=site;
       urlstr=urlstr+"jsondata/RABC/";
+
       
       var html_str="";
       if (typeof option === 'undefined') {
     // the variable is not defined
        option=-1;
        }
-      
+      //alert("GID="+group_id+" and Option="+option);
       var jsonObjects={GroupID:group_id,Option:option};
       var request = $.ajax({
                             url:urlstr,
@@ -1270,11 +1351,12 @@ var retrieveAllContacts=function(group_id,option){
       request.done(function(contactsobj ) {
                     
                   
-                             
+                    $("#allcontacts").html('');     
                   
                     var contacts_counter=0;
                     if (Modernizr.localstorage) {
                         //store into a local storage
+
                         localStorage.setItem("AllContacts",JSON.stringify(contactsobj));
                        
 
@@ -1283,14 +1365,17 @@ var retrieveAllContacts=function(group_id,option){
 
                        if(contactsobj["AD00"]["ContactID"]==-1){
                            contact_ids_found=0;
-                            
+                          
                              
                         }
                         else
                         {
                           contact_ids_found=1;
+                          
 
                         }
+
+
                     
                        for(var x in contactsobj)
                        {
@@ -1327,11 +1412,40 @@ var retrieveAllContacts=function(group_id,option){
 
                          //get country
                          contact_country=contact_country+contactsobj[""+x+""]["country"];
+
+                     
                          
            
                          html_str=html_str+"\n<tr>\n";
+                         if(group_id==-1){
+                         html_str=html_str+"    <td style=\"text-align:center;\">";
+                         html_str=html_str+"         <i class=\"fa fa-plus\" style=\"font-size:20px;color:blue;cursor:pointer\" onclick=addGroupMember('";
+                         html_str=html_str+contactsobj[""+x+""]["ContactID"];
+                         html_str=html_str+"','";
+                         html_str=html_str+global_group_id;
+                         html_str=html_str+"')></i>";
+
+                        html_str=html_str+"    </td>\n";
+                         //
+
+                         }
+                         else{
+
+                         html_str=html_str+"    <td style=\"text-align:center;\">";
+                         html_str=html_str+"         <i class=\"fa fa-minus\" style=\"font-size:20px;color:blue;cursor:pointer\" onclick=removeGroupMember('";
+                         html_str=html_str+contactsobj[""+x+""]["ContactID"];
+                         html_str=html_str+"','";
+                         html_str=html_str+global_group_id;
+                         html_str=html_str+"')></i>";
+                         html_str=html_str+"    </td>\n";
+
+
+                         }
+
+
                          html_str=html_str+"    <td>";
                          html_str=html_str+contact_names;
+
                          html_str=html_str+"    </td>\n";
 
 
@@ -1352,6 +1466,18 @@ var retrieveAllContacts=function(group_id,option){
                          html_str=html_str+"    <td>\n";
                          html_str=html_str+contact_country;
                          html_str=html_str+"    </td>\n";
+                         
+                         if(group_id==-1){
+
+
+                         //html_str=html_str+"    <td>\n";
+                         //html_str=html_str+contact_country;
+                         //html_str=html_str+"    </td>\n";
+
+                           
+
+                         }
+                         
 
                          html_str=html_str+"\n</tr>\n";
                          
@@ -1434,21 +1560,17 @@ var editGroup=function(group_id,menu_id){
 
  var record_id=menu_id+"";
  record_id=record_id+group_id;
- //if(current_menu==record_id)
- //    return;  
-
-//alert("Edit Group.."+group_id);
-
+ 
 //now call a function to save records
 
-
 displayGroupsContent(EDITING_MODE,group_id);
+
 
 setTimeout(function(){
            searchGroupTable();
           },100);
 //Now retrieve group content for editing
-current_menu=record_id;
+
 
 };
 
@@ -1463,6 +1585,117 @@ current_menu=record_id;
 
 };
 
+var setupGroupAllocationInterface=function(interface_choice)
+{
+
+    if(interface_choice==1){
+
+      setTimeout(function(){
+
+        retrieveGroupMembers(global_group_id);
+        var members_str="<h3>Members of '<i>"+global_group_name+"</i>' group</h3>";
+        $("#group_members_header").html(members_str);
+
+        $('#groupandmembers').DataTable().destroy();//
+        setTimeout(function(){
+            $('#groupandmembers').DataTable();
+
+            },20);
+
+
+
+      },20);
+
+    }
+    else
+    { 
+      if(interface_choice==2){
+
+      setTimeout(function(){
+
+        retrieveNonGroupMembers(global_group_id);
+        var members_str="<h3>Contacts not in '<i>"+global_group_name+"</i>' group</h3>";
+        $("#group_members_header").html(members_str);
+
+        $('#groupandmembers').DataTable().destroy();//
+
+         setTimeout(function(){
+            $('#groupandmembers').DataTable();
+
+            },20);
+
+
+
+      },20);
+
+       
+        }
+        else
+            setTimeout(function(){retrieveGroupMembers(global_group_id);},20);
+
+
+
+    }
+       
+   
+    setTimeout(function(){
+
+   // $('#groupandmembers').DataTable();
+
+   /* var members_str="<h3>Members of '<i>"+global_group_name+"</i>' group</h3>";
+    $("#group_members_header").html(members_str);*/
+
+    },20);
+    
+
+    //add click event handler for viewing current members
+    setTimeout(function(){
+    $("#groupmembers").unbind("click");
+    $("#groupmembers").bind("click", function(event){
+
+    retrieveGroupMembers(global_group_id);
+    $('#groupandmembers').DataTable().destroy();//destroy the old data table
+
+    var members_str="<h3>Members of '<i>"+global_group_name+"</i>' group</h3>";
+    $("#group_members_header").html(members_str);
+    setTimeout(function(){
+    $('#groupandmembers').DataTable();
+
+    },20);
+    });
+
+
+    },20);
+
+
+    //add click event handler for viewing non members. This is important when adding new members to a group
+    setTimeout(function(){
+    $("#newmembership").unbind("click");
+    $("#newmembership").bind("click", function(event){
+
+    retrieveNonGroupMembers(global_group_id);
+    //alert("Gote gete");
+    $('#groupandmembers').DataTable().destroy(); //destroy the old data table
+    var members_str="<h3>Contacts not in '<i>"+global_group_name+"</i>' group</h3>";
+    $("#group_members_header").html(members_str);
+    setTimeout(function(){
+    $('#groupandmembers').DataTable();
+
+    },20);
+
+    });
+
+
+
+
+    },20);
+    
+
+
+
+
+};
+
 
 var expandGroup=function(group_id,menu_id,group_name){
 
@@ -1470,67 +1703,14 @@ var expandGroup=function(group_id,menu_id,group_name){
  record_id=record_id+group_id;
  if(current_menu==record_id)
      return;
-global_group_id=group_id;
-global_group_name=group_name;
+ global_group_id=group_id;
+ global_group_name=group_name;
 
 retrieveGroupAllocatioTemplate();
+
+setupGroupAllocationInterface(1);
 //$.noConflict();
-
-
-setTimeout(function(){retrieveGroupMembers(global_group_id);},20);
-
-setTimeout(function(){
-
-$('#groupandmembers').DataTable();
-
-var members_str="<h3>Members of '<i>"+global_group_name+"</i>' group</h3>";
-$("#group_members_header").html(members_str);
-
-},500);
 current_menu=record_id;
-
-//add click event handler for viewing current members
-setTimeout(function(){
-$("#groupmembers").on("click", function(event){
-
-retrieveGroupMembers(global_group_id);
-$('#groupandmembers').DataTable().destroy();//destroy the old data table
-
-var members_str="<h3>Members of '<i>"+global_group_name+"</i>' group</h3>";
-$("#group_members_header").html(members_str);
-setTimeout(function(){
-$('#groupandmembers').DataTable();
-
-},100)
-});
-
-
-},200);
-
-
-//add click event handler for viewing non members. This is important when adding new members to a group
-setTimeout(function(){
-
-$("#newmembership").on("click", function(event){
-
-retrieveNonGroupMembers(global_group_id);
-
-$('#groupandmembers').DataTable().destroy(); //destroy the old data table
-var members_str="<h3>Contacts not in '<i>"+global_group_name+"</i>' group</h3>";
-$("#group_members_header").html(members_str);
-setTimeout(function(){
-$('#groupandmembers').DataTable();
-
-},100);
-
-});
-
-
-
-
-},200);
-
-
 
 
 };
@@ -1840,82 +2020,103 @@ var retrieveCampaignsContent=function ()
   };
 
 
+
+//Activate or deactivate campaign
+
+var changeCampaignStatus=function(campaign_id,status){
+
+   if(status.checked){
+     action="Activate";
+
+
+   }
+   else
+    {
+     action="Deactivate";
+
+    }
+
+    /*
+    if("#togBtn").is(":checked"){
+      alert("Checked");
+
+
+    }
+    else
+    {
+      alert("Not Checked");
+
+    }*/
+
+    
+
+     jsonObject={CampaignID:campaign_id,Action:action};
+     
+      var urlstr=site;
+      urlstr=urlstr+"jsonupdate/CCS/";// Change Campaign Status. i.e Active to Inactive or Inactive to Active
+      $.ajax({
+             url: urlstr,
+             dataType: "jsonp",
+             method: "POST",
+             data:JSON.stringify(jsonObject),
+             cache: false
+             })
+            .done(function(resjson) {
+            alert(resjson["message"]);
+ 
+
+             });
+
+
+
+
+};
+
+
 var displayCampaignsContent=function(display_type,campaign_id){
   //display type, 1 -- Viewing Mode,  2 -- Editing Mode
   //campaign_id is NULL in Viewing Mode, while in Editing Mode it will contain an id of a campaign to be edited
  
   //alert("Got here");
   retrieveCampaignsContent();
+  
   /*if(display_type==EDITING_MODE)
     {
     retrieveEditingCampaignTemplate(campaign_id);
 
     }*/
- 
+   //alert("Got here");
   setTimeout(function(){
+
+                       $(".progressboxcampaign").hide();
+                       removeLoadingCircleCampaign();
    
-                    
+                    var counter=-1;
 
                     var campaign_objects=[];
                     var campaign_counter=0;
                     var html_str="\n"
               
                     var resjson=JSON.parse(localStorage.getItem("Campaigns"));
+                    
                     //alert("Group Content Loaded"+resjson["AD00"]["group_description"]);
                     for(var x in resjson)
                     {//start for loop
+                      //counter++;
+                        //if(counter==100)
+                        //{
+                         //  alert("got here");
+                         // break;
+                        //}
                         var retrieved_campaign_id=resjson[""+x+""]["CampaignID"];
                         var retrieved_campaign_name="";
                         var retrieved_campaign_descr="";
                         retrieved_campaign_name=resjson[""+x+""]["campaign_name"];  ;
                         retrieved_campaign_descr=resjson[""+x+""]["campaign_description"];  
 
-
-
-
-                        //deciding on displaying mode whether the content should be viewing in editing mode or just normal viewing mode
-                        /*
-                        if((display_type==EDITING_MODE)&&(campaign_id==retrieved_campaign_id)){
-                         
-                          // this is editing mode so it should be viewed in text box ready for editing
-                           //retrieved_campaign_name="<input type=\"text\" value=\""+resjson[""+x+""]["campaign_name"]+"\" id=\"campaign_name\" maxlength=\"50\">" ;
-                           
-                          //retrieved_campaign_descr="<textarea id=\"campaign_descr\"  rows=\"5\" cols=\"20\" maxlength=\"200\">"+resjson[""+x+""]["campaign_description"]+"</textarea>" ;
-                          $("#hiddencampaignid").val(retrieved_campaign_id);
-                          $("#campaign_name").val(retrieved_campaign_name);
-                          $("#campaign_descr").val(retrieved_campaign_descr);
-                          msgtxtobj=resjson[""+x+""]["messagestxt"];
-                         
                        
-                          for(var y in msgtxtobj)
-                          {
-                          //alert(msgtxtobj[""+y+""]);
-                          campaign_msg_box="<textarea id=\"campaign_descr\"  rows=\"5\" cols=\"20\" id=\"";
-                          campaign_msg_box=campaign_msg_box+y;
-                          campaign_msg_box=campaign_msg_box+"\" maxlength=\"200\">" ;
-                          campaign_msg_box=campaign_msg_box+msgtxtobj[""+y+""];
-                          campaign_msg_box=campaign_msg_box+"</textarea>" ;
-                            
-                           html_str=html_str+"<tr>\n";
-                           html_str=html_str+"\n  <td>";
-                           //html_str=html_str+msgtxtobj[""+y+""];
-                           html_str=html_str+campaign_msg_box;
-                           html_str=html_str+"\n  </td>";
-                           html_str=html_str+"<tr>\n";
-
-                          }
-                          
-                          $("#tbl_messages").html(html_str);
-
-                          break;
-                        } */
-                       // else
                         {
-                          //retrieved_campaign_name=resjson[""+x+""]["campaign_name"];  ;
-                          //retrieved_campaign_descr=resjson[""+x+""]["campaign_description"]; 
-
-
-
+                     
                         html_str=html_str+"<tr>\n";
 
                         html_str=html_str+"\n  <td align='center'>";
@@ -1925,9 +2126,14 @@ var displayCampaignsContent=function(display_type,campaign_id){
 
 
                         
-                        html_str=html_str+ "<label class='switch'> \
-                            <input type='checkbox' id='togBtn' checked> \
-                            <div class='sliderswitch round'>\
+                            html_str=html_str+ "<label class='switch'> \
+                            <input type='checkbox' class='togBtn' checked onchange='";
+                            html_str=html_str+"changeCampaignStatus(";
+                            html_str=html_str+retrieved_campaign_id;
+                            html_str=html_str+ ",this)";
+                            html_str=html_str+"'>";
+
+                            html_str=html_str+"<div class='sliderswitch round'>\
                             <span class='on'>Active</span><span class='off'>Inactive</span>\
                             </div>\
                             </label>";
@@ -1936,8 +2142,13 @@ var displayCampaignsContent=function(display_type,campaign_id){
                         {
 
                             html_str=html_str+ "<label class='switch'> \
-                            <input type='checkbox' id='togBtn'> \
-                            <div class='sliderswitch round'>\
+                            <input type='checkbox' id='togBtn' onchange='";
+                            html_str=html_str+"changeCampaignStatus(";
+                            html_str=html_str+retrieved_campaign_id;
+                            html_str=html_str+ ",this)";
+                            html_str=html_str+"'>";
+
+                            html_str=html_str+"<div class='sliderswitch round'>\
                             <span class='on'>Active</span><span class='off'>Inactive</span>\
                             </div>\
                             </label>";
@@ -1958,18 +2169,7 @@ var displayCampaignsContent=function(display_type,campaign_id){
                    
                         html_str=html_str+"\n  </td>"
 
-                        
-
-
-
-
-
-
-
-
-
-
-                        
+                           
                         
                         html_str=html_str+"\n  <td align='center' style=\"overflow:hidden; width:200px;\">"
                         html_str=html_str+retrieved_campaign_descr;
@@ -2011,10 +2211,7 @@ var displayCampaignsContent=function(display_type,campaign_id){
 
                       
 
-
-
-
-  },100);
+  },2000);
 
   
 
@@ -2352,7 +2549,9 @@ var retrieveEditingCampaignTemplate=function (campaign_id)
               $("#main-content").html(html);
               $("#savecampaignbtn").unbind( "click" ); // Remove the previous click handlers.
               $("#savecampaignbtn").bind('click',function(){
-                saveCampaign(campaign_id,'SAVECAMPAIGN','2');
+                //saveCampaign(campaign_id,'SAVECAMPAIGN','2');
+                saveCampaign();
+
               
                 });
            
@@ -2436,7 +2635,25 @@ if(current_menu==menu_id)
 total_no_msg_box=0;
 
 retrieveCampaignsTemplate();
-displayCampaignsContent(VIEWING_MODE);
+//Now display progress bar.
+
+
+
+
+
+
+setTimeout(function(){
+
+//$('#campaignstable').DataTable();
+   $("#myprogressbar_campaign").html('');
+   $(".progressboxcampaign").show();
+   addLoadingCircleCampaign();
+   displayCampaignsContent(VIEWING_MODE);
+
+
+
+},100);
+
 current_menu=menu_id;
 };
 
@@ -2809,72 +3026,19 @@ if(selectedvalue==6)
 };
 
 
-var saveCampaign=function(campaign_id,menu_id,save_type){
+var saveCampaign=function(){
 
- var record_id=menu_id+"";
- record_id=record_id+campaign_id;
- var jsonObject = JSON.stringify($("#campaignForm :input").serializeArray());
+     //var record_id=menu_id+"";
+     //record_id=record_id+campaign_id;
+     var jsonObject = JSON.stringify($("#campaignForm :input").serializeArray());
 
- var formData=new FormData($('#remindersuploadfileform')[0]);
- formData.append('json', jsonObject); 
+     var formData=new FormData($('#remindersuploadfileform')[0]);
+     formData.append('json', jsonObject); 
  
-
-
-/*
-
- //append all messages into one JSON object called messages
- var msgJSONstring="";
- var non_empty_boxes=0;
- var msg_box_id="";
- var msg_content="";
- for(var num=0;num<total_no_msg_box;num++){
-    if(num==0)
-    {
-      msgJSONstring=msgJSONstring+"{";
-
-    }
-    msg_box_id="#campaignmsgbx_"+num;
-    msg_content=$(msg_box_id).val();
-    
-    msgJSONstring=msgJSONstring+'"Message'+num+'":"';
-    msgJSONstring=msgJSONstring+msg_content+'"';
-
-    if(num==(total_no_msg_box-1)) //You are at the last message
-    {
-      msgJSONstring=msgJSONstring+'}'; //We have iterated through all message items
-
-    }
-    else
-    {
-      msgJSONstring=msgJSONstring+','; //Still more items to append
-
-
-    }
-
-
- }
- if(total_no_msg_box==0){ //It implies there were no messages and the loop never opened
-   
-   msgobj=msgJSONstring; //This will be empty
- }
- else
-    {
-      msgobj=JSON.parse(msgJSONstring);
-
-    }
-    */
-//alert(myjson["Message0"]);
-//return;
-
-//smyjson={CampaignCategory:"Individual Best Wishes",TargetLevel:"Individual",Frequency_in_Days:"Selective Days",is_it_life_time:"1",is_annual_delivery_date_constant:"1"}
-
-//jsonObject={CampaignID:campaign_id,CampaignName:$("#campaign_name").val(),CampaignDescr:$("#campaign_descr").val(),Messages:msgobj,NumMessages:total_no_msg_box};
-
-//alert(jsonObject.NumMessages);
 
       var urlstr=site;
       urlstr=urlstr+"jsonupdate/SCD/";// Save Campaign Details
-  
+    
 
       $.ajax({
              url: urlstr,
@@ -2887,11 +3051,18 @@ var saveCampaign=function(campaign_id,menu_id,save_type){
              contentType: false
                             
              })
-            .done(function( result ) {
-              alert(result.message);
-             //clearInterval(display_interval);
-             //$("#progresspopup").popup( "close"); // close the pop up for progress once the results are returned from the database
-              //alert(result["message"]);
+            .done(function( resjson ) {
+                alert(resjson.message);
+
+                //Cache new content since there has been an update on Campaigns hence existing cache is no longer uptodate
+               if (Modernizr.localstorage) {
+
+                  localStorage.removeItem("Campaigns"); //remove campaign first before setting it again
+                    
+                  localStorage.setItem("Campaigns",JSON.stringify(resjson["data"]));
+                        
+                  }
+
 
              });
 
@@ -2905,10 +3076,13 @@ var saveCampaign=function(campaign_id,menu_id,save_type){
 
 setTimeout(function(){
 
+$(".progressboxcampaign").show();
+addLoadingCircleCampaign();
+
 displayCampaignsContent(VIEWING_MODE);
 
 
-},10);
+},1000);
 
 if(save_type=="0"){
     //alert("I am here");
@@ -3127,8 +3301,8 @@ createNewCampaign('EXIST'); // bring the box.
                   var campaign_category=resjson[""+x+""]["CampaignCategory"];
 
                   var campaign_hours=resjson[""+x+""]["CampaingDeliveryHours"];
-                  var campaign_days_of_week=resjson[""+x+""]["CampaingDays"];
-
+                  var campaign_days_of_week=resjson[""+x+""]["CampaignDays"];
+                  
 
                   //alert(retrieved_campaign_name);
       
@@ -3137,7 +3311,7 @@ createNewCampaign('EXIST'); // bring the box.
                         $('#hiddencampaignid').val(campaign_id);
                         $("#campaign_name").val(retrieved_campaign_name);
                         $("#campaign_descr").val(retrieved_campaign_descr);
-
+                      
                         
                          // Put dates in a format that human readerable/friendly
                         $("#campaignstartdate").val(formatToReadableCampaignDate(retrieved_start_date));
@@ -3255,9 +3429,11 @@ createNewCampaign('EXIST'); // bring the box.
                          var delivery_days=[]
                          var delivery_days_counter=0
 
+                         //Now check all campaign days of a week
+                        
                          for(var delivery_day in campaign_days_of_week)
                          {
-                          
+                         
                           delivery_days[delivery_days_counter]=campaign_days_of_week[""+delivery_day+""];
                           if(delivery_days[delivery_days_counter]=="No days"){
 
@@ -3266,7 +3442,10 @@ createNewCampaign('EXIST'); // bring the box.
                           delivery_days_counter++;
 
                          }
+
                          //outside of for loop
+
+
 
                          if(delivery_days_counter==0)
                             {
@@ -3285,6 +3464,8 @@ createNewCampaign('EXIST'); // bring the box.
                               }
                               else
                                  {
+
+
                                   if(delivery_days_counter==5)
                                   {
                                     //check if if it Monday to Friday, Monday is 1 and Friday is five
@@ -3310,21 +3491,51 @@ createNewCampaign('EXIST'); // bring the box.
                                              //Now show boxes for days and pick them one by one
                                              $("#campaignselectivedays").show();
                                               //next put tick  to appropriate days
-                                              for(var i=0;i<6;i++){
-                                                  if(int(delivery_days[i])==i)
-                                                    {
-                                                      var box_posn=i+1;
-                                                      var box_name="input[type='checkbox'][name='campaigndayofweek_";
-                                                      box_name=box_name+box_posn;
-                                                      box_name=box_name+"']";
-                                                      $(box_name).prop('checked', true);
-                                            
-                                                    
+                                                    //next put tick  to appropriate days
+                                                    for(var i=0;i<7;i++){
+                                                            day=i+1;
+                                                            if(i==6)
+                                                              day=0;
 
-                                                    }
+                                                            var box_posn=day;
+                                                            var box_name="input[type='checkbox'][name='campaigndayofweek_";
+                                                            box_name=box_name+box_posn;
+                                                            box_name=box_name+"']";
+                                                            var found=false;
+                                                          
+                                                   
+                                                          //check if this day of the week is among delivery days 
+
+                                                          for(var j=0;j<delivery_days_counter;j++){
+
+                                                            
+                                                            if(parseInt(delivery_days[j])==day)
+                                                              {
+
+                                                                /*
+                                                                var box_posn=i+1;
+                                                                var box_name="input[type='checkbox'][name='campaigndayofweek_";
+                                                                box_name=box_name+box_posn;
+                                                                box_name=box_name+"']";*/
+                                                                found=true; 
+                                                                break;// Once found just break out of the loop
 
 
-                                                  }
+                                                              }
+                                                            }
+                                                          //now check if this particular day should be checked or unchecked
+                                                          if(found){
+
+                                                             $(box_name).prop('checked', true);
+                                                          }
+                                                          else{
+                                                               $(box_name).prop('checked', false);
+
+
+                                                          }
+
+
+                                                        }
 
 
 
@@ -3334,27 +3545,61 @@ createNewCampaign('EXIST'); // bring the box.
 
                                   
 
-                                   }
-                                   else{
+                                   }//end of if(delivery_days_counter==5)
+                                   else{ 
+                                          
 
                                           if((delivery_days_counter==4) || (delivery_days_counter==3) || (delivery_days_counter==1)){
                                           //Then it must come from specific days, because the pattern doesn't specifically fall on weekends (2 days), weekdays (5 days) or the entire week (7 days)
                                            
                                                    $("#daysintervals").val('4'); 
 
+
                                                    //Now show boxes for days and pick them one by one
                                                    $("#campaignselectivedays").show();
+
+                                                  
+                                                     
                                                     //next put tick  to appropriate days
-                                                    for(var i=0;i<6;i++){
-                                                        if(int(delivery_days[i])==i)
-                                                          {
-                                                            var box_posn=i+1;
+                                                    for(var i=0;i<7;i++){
+                                                            day=i+1;
+                                                            if(i==6)
+                                                              day=0;
+
+                                                            var box_posn=day;
                                                             var box_name="input[type='checkbox'][name='campaigndayofweek_";
                                                             box_name=box_name+box_posn;
                                                             box_name=box_name+"']";
-                                                            $(box_name).prop('checked', true);
-                                                  
+                                                            var found=false;
                                                           
+                                                   
+                                                          //check if this day of the week is among delivery days 
+
+                                                          for(var j=0;j<delivery_days_counter;j++){
+
+                                                            
+                                                            if(parseInt(delivery_days[j])==day)
+                                                              {
+
+                                                                /*
+                                                                var box_posn=i+1;
+                                                                var box_name="input[type='checkbox'][name='campaigndayofweek_";
+                                                                box_name=box_name+box_posn;
+                                                                box_name=box_name+"']";*/
+                                                                found=true; 
+                                                                break;// Once found just break out of the loop
+
+
+                                                              }
+                                                            }
+                                                          //now check if this particular day should be checked or unchecked
+                                                          if(found){
+
+                                                             $(box_name).prop('checked', true);
+                                                          }
+                                                          else{
+                                                               $(box_name).prop('checked', false);
+
 
                                                           }
 
@@ -3365,8 +3610,10 @@ createNewCampaign('EXIST'); // bring the box.
 
                                         
 
-                                          }
-                                          else{//if the pattern two days, check if it falls under weekend
+                                          }//end of -- if((delivery_days_counter==4) || (delivery_days_counter==3) || (delivery_days_counter==1))
+                                          else{
+
+                                            //if the pattern two days, check if it falls under weekend
 
 
                                                     var weekends_counter=0;

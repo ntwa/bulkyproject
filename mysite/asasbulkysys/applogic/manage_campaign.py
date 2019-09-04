@@ -90,7 +90,8 @@ class ManageCampaign:
 
                          campaign_id=campaign_rec.id 
                          date_raw=campaign_rec.date_created
-                         date_str=date_raw.strftime("%d-%m-%Y")
+                         #date_str=date_raw.strftime("%d-%m-%Y")
+                         date_str=date_raw.strftime('%d %h %Y')
                          delivery_medium=campaign_rec.delivery_mechanism
 
                          #Now get all messages that are part of each campaign
@@ -263,6 +264,47 @@ class ManageCampaign:
                     return i
   
           return -1
+
+     def triggerCampaignStatus(self):
+          result={}
+         
+          try:
+               campaign_id=self.myjson["CampaignID"]
+               campaign_action=self.myjson["Action"]
+
+               if campaign_action=="Activate":
+                    status=1
+               else:
+                    status=0
+
+               engine=db
+               # create a Session
+               Session = sessionmaker(bind=engine)
+               session = Session()
+
+               res= session.query(Campaign).filter(Campaign.id==campaign_id).first()  
+
+               if res is None:
+                    pass #We can't do anything
+               else:          
+
+                    #if it exists, then update the record in the database.
+                    campaign_part1_record=res
+                    campaign_part1_record.is_campaign_active=status
+                    session.commit()
+                    if status==1:
+                         result["message"]="Campaign Activated Successfuly"
+                    else:
+                         result["message"]="Campaign Deactivated Successfuly"
+                    return (json.JSONEncoder().encode(result)) 
+
+               session.close()  
+               engine.dispose()   
+               dbconn.close()
+          except Exception as e:
+               #print "Content-type: text/html\n" 
+               result["message"]="Error:%s"%e
+               return (json.JSONEncoder().encode(result)) 
 
 
      def saveOneCampaignInDB(self,request):
@@ -1102,8 +1144,10 @@ class ManageCampaign:
                     session.commit() #Now commit this session                         
                     allow_insert=0 #Reset allow to zero so that the code doesn't attempt to insert a new record
                     #size=size-1 #ignore the last value because it has arleady been updated
-                    
-                    result["message"]="The record for '%s' campaign already existed hence has been updated"%campaign_name
+
+
+                    result["data"]=self.retrieveCampaignDetailsFromDB() #piggyback updated content to update cached results on the client side
+                    result["message"]="The record for this campaign '%s' already existed hence has been updated"%campaign_name
                     session.close()  
                     engine.dispose()   
                     dbconn.close()
@@ -1232,6 +1276,8 @@ class ManageCampaign:
                     session.close()
                     engine.dispose()
                     dbconn.close()
+
+                    result["data"]=self.retrieveCampaignDetailsFromDB() #piggyback updated content to update cached results on the client side
                      
                     result["message"]="The campaign was added sucessfully"
                     return (json.JSONEncoder().encode(result))                 
@@ -1248,9 +1294,9 @@ class ManageCampaign:
      
 #myjson={"campaign_name":"Birthday Greetings","campaign_descr":"This campaign has been dedicated for birthday greetings to customers","campaign_category":"Individual Best Wishes","target_level":"Individual","frequency_in_days":"Selective Days","is_it_life_time":"1","is_annual_delivery_date_constant":"1","messages":[[3,"We wish you happy birthday. Thank you for being our loyal customer"],[2,"Happy birthday. We value you as our esteemed customer"],[1,"As you celebrate your birthday, we wish you more success in business. Thank for being with us all this time."]]}
 #myjson={"CampaignName":"Birthday Greetings","CampaignDescr":"This campaign has been dedicated for birthday greetings to customers","CampaignCategory":"Individual Best Wishes","TargetLevel":"Individual","Frequency_in_Days":"Selective Days","is_it_life_time":"1","is_annual_delivery_date_constant":"1","NumMessages":3,"Messages":{"Message0":"Hello there. We wish you happy birthday. Thank you for being our loyal customer","Message1":"Happy birthday. We value you as our esteemed customer","Message2":"As you celebrate your birthday, we wish you more success in business. Thank for being with us all this time."}}
-#myjson={}
+#myjson={"CampaignID":"21","Action":"Deactivate"}
 #obj=ManageCampaign(myjson)
+#msg=obj.triggerCampaignStatus()
 #msg=obj.retrieveCampaignDetailsFromDB()
 #msg=obj.saveOneCampaignInDB()
-
 #print msg
