@@ -2127,7 +2127,7 @@ var displayCampaignsContent=function(display_type,campaign_id){
 
                         
                             html_str=html_str+ "<label class='switch'> \
-                            <input type='checkbox' class='togBtn' checked onchange='";
+                            A<input type='checkbox' class='togBtn' checked onchange='";
                             html_str=html_str+"changeCampaignStatus(";
                             html_str=html_str+retrieved_campaign_id;
                             html_str=html_str+ ",this)";
@@ -2142,7 +2142,7 @@ var displayCampaignsContent=function(display_type,campaign_id){
                         {
 
                             html_str=html_str+ "<label class='switch'> \
-                            <input type='checkbox' id='togBtn' onchange='";
+                            I<input type='checkbox' id='togBtn' onchange='";
                             html_str=html_str+"changeCampaignStatus(";
                             html_str=html_str+retrieved_campaign_id;
                             html_str=html_str+ ",this)";
@@ -2208,6 +2208,13 @@ var displayCampaignsContent=function(display_type,campaign_id){
                    
 
                      }
+
+                     //$("#campaignstable").DataTable();
+                     setTimeout(function(){
+          
+                   $("#campaignstable").DataTable();
+
+            },20);
 
                       
 
@@ -2733,6 +2740,8 @@ $("#groups tr").filter(function() {
 
 };
 
+
+//no longer used. 
 var searchCampaignTable=function(){
 
 var value=$("#searchablecampaigntable").val();

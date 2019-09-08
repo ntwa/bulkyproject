@@ -238,6 +238,8 @@ class QueueFeedback:
           
                message=self.myjson["message"] 
                recipient=self.myjson["recipient"]
+               contact_id=self.myjson["contact_id"]
+               recipient_name=self.myjson["fullname"]
                #url=self.myjson["url"]
                #pic=self.myjson["pic"]
                #name=self.myjson["name"]
@@ -283,7 +285,7 @@ class QueueFeedback:
                Session = sessionmaker(bind=engine)
                session = Session()
           
-               new_feedback=Feedback(recipient,message)
+               new_feedback=Feedback(recipient,contact_id,fullname,message,,,,)
                     
                session.add(new_feedback)
           

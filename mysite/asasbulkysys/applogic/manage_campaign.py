@@ -13,7 +13,7 @@ from xlrd.sheet import ctype_text
 from django.core.files.storage import FileSystemStorage
 import os
 import re
-
+import random
 
 from bulkysms.database.base import Base
 from bulkysms.database.dbinit import db,dbconn
@@ -25,8 +25,8 @@ Base.metadata.create_all(db)
 
 
 
-from bulkysms.database.sms_feedback_module import Campaign,CampaignStartDay,CampaignEndDay,CampaignDefinedMessages,SelectedDeliveryDayofWeek,SelectedDeliveryTime,CampaignAudienceSMS, IndividualizedReminder 
-from bulkysms.database.address_book_module import Group
+from bulkysms.database.sms_feedback_module import Campaign,CampaignStartDay,CampaignEndDay,CampaignDefinedMessages,SelectedDeliveryDayofWeek,SelectedDeliveryTime,CampaignAudienceSMS, IndividualizedReminder,Feedback 
+from bulkysms.database.address_book_module import Group,AddressBook,GroupMember,MobileDetails
 
 
 def searchArray(item,array):
@@ -71,7 +71,7 @@ class ManageCampaign:
                session = Session()
                result={}                    
                # querying for a record if it exists already.
-               res= session.query(Campaign).order_by(Campaign.is_campaign_active.desc()).order_by(Campaign.campaign_name).all()
+               res= session.query(Campaign).order_by(Campaign.date_created.desc()).order_by(Campaign.campaign_name).all()
                
                if len(res) ==0:
                     session.close()
@@ -91,7 +91,8 @@ class ManageCampaign:
                          campaign_id=campaign_rec.id 
                          date_raw=campaign_rec.date_created
                          #date_str=date_raw.strftime("%d-%m-%Y")
-                         date_str=date_raw.strftime('%d %h %Y')
+                         #date_str=date_raw.strftime('%Y-%h-%d')
+                         date_str=date_raw.strftime('%Y-%m-%d')
                          delivery_medium=campaign_rec.delivery_mechanism
 
                          #Now get all messages that are part of each campaign
@@ -264,6 +265,325 @@ class ManageCampaign:
                     return i
   
           return -1
+
+
+    
+     def scheduleMessages(self):
+
+     	  #Schedule Message that need to be delivered in a particular day
+          result={}
+          
+
+          #First look at the current active campaigns. Then check if that campaign has messages to be delivered in that particular day.
+          try:
+
+
+               engine=db
+               # create a Session
+               Session = sessionmaker(bind=engine)
+               session = Session()
+
+               res= session.query(Campaign).filter(Campaign.is_campaign_active==1).all()  
+
+               if len(res)==0 is None:
+                    pass #It means at the moment there are no active campaigns.
+               else: 
+ 		   
+                    for campaign_record in res:
+                    	campaign_id=int(campaign_record.id)
+                        target=campaign_record.target_level
+                        campaign_days_in_week=[] #0- Sunday, 1 - Monday, 2 - Tuesday etc.
+                        campaign_times_in_day=[] #How many times the campaign should run and at what hour
+                       
+                        #Now check if this campaign is set to run today
+                        if campaign_record.campaign_category=="IR" or campaign_record.campaign_category=="BW": #Then it implies dates are not global but individually specific                    
+                            pass
+
+			    #print "Campaign %s is for individuals"%campaign_id
+                           
+
+                            
+                            #Example birthday greetings or reminder for expiry of insurance
+                        else:
+                           
+                            
+                            #Now check if the time frame for this campaign has passed.
+                            res_start_day=session.query(CampaignStartDay).filter(CampaignStartDay.campaign_id==campaign_id).first()
+                            if res_start_day is None:
+                                #print "Campaign %s skipped because its start day has not been defined"%campaign_id
+                                continue #Move to the next campaign as we can't process a campaign without defined running days boundary
+                            
+                            else:
+                                startdate=res_start_day.campaign_start_date
+
+                            res_end_day=session.query(CampaignEndDay).filter(CampaignEndDay.campaign_id==campaign_id).first()
+                            if res_end_day is None:
+                                #Possibly this campaign is set to run indefinately with no end date
+                                #now set end date to some random date that is ahead of today. It can even be tommorow
+                                enddate=datetime.date.today()+datetime.timedelta(days=1)
+
+                            else:
+                                enddate=res_end_day.campaign_end_date
+                                #Once we have start date and end date we can now check if our campaign is still within allowed dates
+
+                            if startdate<=datetime.date.today(): 
+				if enddate>=datetime.date.today():
+                                #now find days of the week on which this campaign is set to run
+                                	res_days_of_week=session.query(SelectedDeliveryDayofWeek).filter(SelectedDeliveryDayofWeek.campaign_id==campaign_id).all()
+                                	for day_of_week in res_days_of_week:
+ 
+                                		campaign_days_in_week.append(day_of_week.selected_day)
+                                else:
+                                        continue
+					#print "Campaign %s skipped because it has expired: %s to %s"%(campaign_id,startdate,enddate)
+
+                                
+
+                            else:
+                                #print "Campaign %s skipped because its start date is yet to arrive: %s to %s"%(campaign_id,startdate,enddate)
+                                continue # Move to the next campaign as this campaign is either expired or its start date is yet to arrive
+
+                        
+                        #Now find the time in which the campaign need to run during the day.
+                        res_campaign_times=session.query(SelectedDeliveryTime).filter(SelectedDeliveryTime.campaign_id==campaign_id).all()
+                        if len(res_campaign_times)==0:
+                                #print "Campaign %s skipped because has 'no time of running defined'"%campaign_id
+                        	continue #Skip this campaign as it has not time set. 
+                                
+                        for campaign_time in res_campaign_times:
+                        	campaign_times_in_day.append(campaign_time.selected_time)
+
+
+                        #Get a list of defined messages for this campaign
+                        messages=[]
+                        res_campaign_messages=session.query(CampaignDefinedMessages).filter(CampaignDefinedMessages.campaign_id==campaign_id).all()
+                                  
+                        for campaign_message in res_campaign_messages:
+                        	messages.append(campaign_message.message_txt)
+
+                        if len(messages)==0:
+                                       
+                                #print "Campaign %s skipped because there are no messages defined"%campaign_id
+                                continue #Skip a campaign with no defined messages
+                                #print "Messages for Camp=%s are %s"%(campaign_id,messages)
+                                #print "Category for this campaign is %s"%campaign_record.campaign_category
+
+                        
+
+                        if campaign_record.target_level=="All":
+                               
+			         #Now find all the contacts
+                        	res_contacts=session.query(AddressBook).all() 
+                                if len(res_contacts)==0:
+					break #No need to continue with this exercise as there are no contacts in address book
+                                for contact in res_contacts:
+					contact_id=contact.id
+                        	        contact_name="%s %s"%(contact.first_name,contact.last_name)
+                        	    	#get a mobile contact for this number
+                        	    	res_primary_mobile=session.query(MobileDetails).filter(MobileDetails.contact_id==contact_id).filter(MobileDetails.is_it_primary_number==1).first()
+                                    	if res_primary_mobile is None:
+                                    	#Then skip this contact      
+                                        	continue
+                                    	else:
+                                                
+                                    		recipient_mobile=res_primary_mobile.mobile_number # This is a phone number of where the message will get delivered to.
+                                    #randomly pick one message from a list of defined messages.
+                                    		#msg_index=random.randrange (0,len(messages),1)
+                                                #msg_index=0
+                                                #recipient_message=messages[msg_index]
+#Now pick dates for indidualized reminders.
+                                    		if campaign_record.campaign_category=="IR":
+                                    			res_individual_dates=session.query(IndividualizedReminder).filter(IndividualizedReminder.campaign_id==campaign_id).filter(IndividualizedReminder.contact_id==contact_id).first()
+                                    			if res_individual_dates is None:
+                                                                #print "No individual date defined for contact=%s for campaign_id=%s"%(contact_id,campaign_id)
+                                    	    			continue #This contact has no dates set for individual reminders
+                                       			else:
+                                        			date_of_event=res_individual_dates.reminder_end_date #May the date a driving licence is going to expiry, or date when all payments dues must be sorted
+                                        			enddate=res_individual_dates.event_deadline_date #when a reminder should stop 
+                                        			days_prior_event=res_individual_dates.no_running_days # How many days prior to event, reminders should run
+                                        			startdate=date_of_event-datetime.timedelta(days=days_prior_event)
+                                        		if startdate<=datetime.date.today() and datetime.date.today()<=enddate:
+                                        			
+                                                                #Now write code for IR 
+                                                                    			#engine=create_engine('mysql://root:ugnkat@localhost/wellness', echo=False) 
+						        	engine=db
+						               # create a Session
+						       		Session = sessionmaker(bind=engine)
+						        	session = Session()
+                                                                
+                                                                for campaign_time in campaign_times_in_day:
+                                                                        #randomly pick one message from a list of defined messages.
+                                                                        msg_index=random.randrange (0,len(messages),1)
+                                                                        #msg_index=0
+                                                
+                                    		                        recipient_message=messages[msg_index]
+									new_feedback=Feedback(recipient_mobile,contact_id,contact_name,recipient_message,None,campaign_id,campaign_time,datetime.date.today())     
+
+						        		session.add(new_feedback)
+						          
+						               # commit the record the database
+						          
+						          
+						        	session.commit()
+
+
+
+                                                                #end of the code IR
+                                        		else:
+                                        		#skip this contact
+                                        			continue
+                                    		elif campaign_record.campaign_category=="BW":
+                                    			# Check if it  is a birthday wish.
+                                    			dob=contact.birth_date
+                                    			if dob==datetime.date.today():
+                                    				pass
+                                    			else:
+                                    				continue #ignore this contact
+                                    		        #Then run the birthday message
+                                                        #engine=create_engine('mysql://root:ugnkat@localhost/wellness', echo=False) 
+						        engine=db
+						               # create a Session
+						        Session = sessionmaker(bind=engine)
+						        session = Session()
+                                    			for campaign_time in campaign_times_in_day: 
+                                                                #randomly pick one message from a list of defined messages.
+                                                                msg_index=random.randrange (0,len(messages),1)
+                                                                #msg_index=0
+                                    		                recipient_message=messages[msg_index]                                                        
+							        new_feedback=Feedback(recipient_mobile,contact_id,contact_name,recipient_message,None,campaign_id,campaign_time,datetime.date.today())     
+
+						        	session.add(new_feedback)
+						          
+						                #commit the record the database
+						        	session.commit()
+                                                #Then write an else statement to cater for general campaigns that are not individualistic 
+						else:
+							pass
+
+
+
+
+                         #end of campaign that targets all people in the address book
+
+                               
+                        else: 
+	
+                       	
+                        	#Now find the groups targeted by this campaign
+                        	res_campaign_groups=session.query(CampaignAudienceSMS).filter(CampaignAudienceSMS.campaign_id==campaign_id).all() 
+                        	  
+                        	for group in res_campaign_groups :
+                        		group_id=group.group_id
+                                        
+
+                        		#Now find contacts for this group
+                        		res_group_contacts=session.query(AddressBook,GroupMember).filter(AddressBook.id==GroupMember.contact_id).filter(GroupMember.group_id==group_id).all() 
+                                        
+                        	  
+                        	    #Now iterate through contacts
+                        	    	for record_comb in res_group_contacts: 
+                                               
+                                                contact,group=record_comb
+                        	    	
+                        	    		contact_id=contact.id
+                        	    		contact_name="%s %s"%(contact.first_name,contact.last_name)
+                        	    	#get a mobile contact for this number
+                        	    		res_primary_mobile=session.query(MobileDetails).filter(MobileDetails.contact_id==contact_id).filter(MobileDetails.is_it_primary_number==1).first()
+                                    		if res_primary_mobile is None:
+                                    		#The skip this contact
+                                                      
+                                    			continue
+                                    		else:
+                                    			recipient_mobile=res_primary_mobile.mobile_number # This is a phone number of where the message will get delivered to.
+                                    #randomly pick one message from a list of defined messages.
+                                    		#msg_index=random.randrange (0,len(messages),1)
+                                                #msg_index=0
+                                                
+                                       
+                                              
+                                    		#recipient_message=messages[msg_index]
+                                    #Now pick dates for indidualized reminders.
+                                    		if campaign_record.campaign_category=="IR":
+                                    			res_individual_dates=session.query(IndividualizedReminder).filter(IndividualizedReminder.campaign_id==campaign_id).filter(IndividualizedReminder.contact_id==contact_id).first()
+                                    			if res_individual_dates is None:
+                                                                #print "No individual date defined for contact=%s for campaign_id=%s"%(contact_id,campaign_id)
+                                    	    			continue #This contact has no dates set for individual reminders
+                                       			else:
+                                        			date_of_event=res_individual_dates.reminder_end_date #May the date a driving licence is going to expiry, or date when all payments dues must be sorted
+                                        			enddate=res_individual_dates.event_deadline_date #when a reminder should stop 
+                                        			days_prior_event=res_individual_dates.no_running_days # How many days prior to event, reminders should run
+                                        			startdate=date_of_event-datetime.timedelta(days=days_prior_event)
+                                        		if startdate<=datetime.date.today() and datetime.date.today()<=enddate:
+                                        			
+                                                                #Now write code for IR 
+                                                                    			#engine=create_engine('mysql://root:ugnkat@localhost/wellness', echo=False) 
+						        	engine=db
+						               # create a Session
+						       		Session = sessionmaker(bind=engine)
+						        	session = Session()
+                                                                
+                                                                for campaign_time in campaign_times_in_day:
+                                                                         #randomly pick one message from a list of defined messages.
+                                                                        msg_index=random.randrange (0,len(messages),1)
+                                                                        #msg_index=0
+                                    		                        recipient_message=messages[msg_index]
+									new_feedback=Feedback(recipient_mobile,contact_id,contact_name,recipient_message,group_id,campaign_id,campaign_time,datetime.date.today())     
+
+						        		session.add(new_feedback)
+						          
+						               # commit the record the database
+						          
+						          
+						        	session.commit()
+
+
+
+                                                                #end of the code IR
+                                        		else:
+                                        		#skip this contact
+                                        			continue
+                                    		elif campaign_record.campaign_category=="BW":
+                                    			# Check if it  is a birthday wish.
+                                    			dob=contact.birth_date
+                                    			if dob==datetime.date.today():
+                                    				pass
+                                    			else:
+                                    				continue #ignore this contact
+                                    		#Then run the birthday message
+                                                                       #engine=create_engine('mysql://root:ugnkat@localhost/wellness', echo=False) 
+						        engine=db
+						               # create a Session
+						        Session = sessionmaker(bind=engine)
+						        session = Session()
+                                    			for campaign_time in campaign_times_in_day:
+                                                                #randomly pick one message from a list of defined messages.
+                                               
+                                                                msg_index=random.randrange (0,len(messages),1)
+                                                                #msg_index=0
+                                              
+                                    		                recipient_message=messages[msg_index]
+						          
+						        	new_feedback=Feedback(recipient_mobile,contact_id,contact_name,recipient_message,group_id,campaign_id,campaign_time,datetime.date.today())     
+
+						        	session.add(new_feedback)
+						          
+						               # commit the record the database
+						          
+						          
+						        	session.commit()
+                                                #Then write an else statement to cater for general campaigns that are not individualistic 
+                                                   
+                                                else:
+							pass
+
+               session.close()  
+               engine.dispose()   
+               dbconn.close()
+      
+
+          except Exception as e: 
+               result["message"]="Error:%s"%e
+               return (json.JSONEncoder().encode(result)) 
 
      def triggerCampaignStatus(self):
           result={}
@@ -657,7 +977,7 @@ class ManageCampaign:
                     raise ValueError("The submitted form didn't have 'Campaign Start Date' field")
 
 
-               #Get campaign life of  campaingn status
+               #Get campaign life of  campaign status
                ret=self.searchArray("lifeofcampaign",arr_items)
                
                if ret>=0:
@@ -1290,13 +1610,18 @@ class ManageCampaign:
                     dbconn.close()
                     return (json.JSONEncoder().encode(result)) 
 
+
+
+
     
      
 #myjson={"campaign_name":"Birthday Greetings","campaign_descr":"This campaign has been dedicated for birthday greetings to customers","campaign_category":"Individual Best Wishes","target_level":"Individual","frequency_in_days":"Selective Days","is_it_life_time":"1","is_annual_delivery_date_constant":"1","messages":[[3,"We wish you happy birthday. Thank you for being our loyal customer"],[2,"Happy birthday. We value you as our esteemed customer"],[1,"As you celebrate your birthday, we wish you more success in business. Thank for being with us all this time."]]}
 #myjson={"CampaignName":"Birthday Greetings","CampaignDescr":"This campaign has been dedicated for birthday greetings to customers","CampaignCategory":"Individual Best Wishes","TargetLevel":"Individual","Frequency_in_Days":"Selective Days","is_it_life_time":"1","is_annual_delivery_date_constant":"1","NumMessages":3,"Messages":{"Message0":"Hello there. We wish you happy birthday. Thank you for being our loyal customer","Message1":"Happy birthday. We value you as our esteemed customer","Message2":"As you celebrate your birthday, we wish you more success in business. Thank for being with us all this time."}}
 #myjson={"CampaignID":"21","Action":"Deactivate"}
-#obj=ManageCampaign(myjson)
+myjson={}
+obj=ManageCampaign(myjson)
+msg=obj.scheduleMessages()
 #msg=obj.triggerCampaignStatus()
 #msg=obj.retrieveCampaignDetailsFromDB()
 #msg=obj.saveOneCampaignInDB()
-#print msg
+print msg

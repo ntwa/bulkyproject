@@ -24,19 +24,33 @@ class Feedback(Base):
      id=Column(Integer, primary_key=True)
      recipient_mobile=Column(String(20))
      message=Column(String(1000))
+     recipient_contact_id=Column(String(20))
+     recipient_name=Column(String(200))
+     recipient_group_id=Column(Integer,nullable=True)#This is for messages that were targeted to a group
+     recipient_campaign_id=Column(Integer,nullable=True)#This is for specifying if a message was for a particular campaign
+     scheduled_time=Column(Time,nullable=True) #The time in which the message was supposed to be sent out.
+     scheduled_date=Column(Date,nullable=True) #The date in which the message was supposed to be sent out
+     delivery_note=Column(String(100),nullable=True) #Delivery note returned by SMS gateway
      #date_modified=Column(Date)
      #time_modified=Column(Time)
-     status=Column(Boolean)
+     status=Column(Boolean) #if the value is 1 then a message has been tried to  be sent out. 
     #is_group_sms=Column(Boolean)
     #group_id=Column(Integer)
     
     
-     def __init__(self,recipient_mobile,message):
+     def __init__(self,recipient_mobile,recipient_contact_id,recipient_name,message,recipient_group_id,recipient_campaign_id,scheduled_time,scheduled_date):
           self.recipient_mobile=recipient_mobile
+          self.recipient_contact_id=recipient_contact_id
+          self.recipient_name=recipient_name
           self.message=message
+          self.recipient_group_id=recipient_group_id
+          self.recipient_campaign_id=recipient_campaign_id
+          self.scheduled_time=scheduled_time
+          self.scheduled_date=scheduled_date
+          self.delivery_note=""
           self.status=0
      @abstractmethod    
-     def storeFeddback(self):
+     def storeFeedback(self):
           pass
      @abstractmethod
      def viewFeedback(self):

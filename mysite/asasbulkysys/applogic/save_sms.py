@@ -89,6 +89,8 @@ class SaveSMS:
                           resmobile=session.query(MobileDetails).filter(MobileDetails.contact_id==addrbk_rec.id).filter(MobileDetails.is_it_primary_number==True).first()
                           first_name=addrbk_rec.first_name
                           last_name=addrbk_rec.last_name
+                          contact_id=addrbk_rec.id
+                          fullname="%s %s"%(first_name,last_name)
 
                           if sms_details.find("@@firstname@@",0):
                                 sms=sms_details.replace("@@firstname@@",first_name)
@@ -101,7 +103,7 @@ class SaveSMS:
                                 mobile_number=resmobile.mobile_number #get the mobile number
                                 mobile_numbers.append(mobile_number)# We will use this incase a message is not personalized we will send one message to many numbers
                           #Now prepare a message for this user incase a message is personalized
-                          myjson2={"recipient":mobile_number,"message":sms}
+                          myjson2={"recipient":mobile_no,"message":sms_details,"fullname":fullname,"contact_id":contact_id}
                           obj=QueueFeedback(myjson2)
                           res=obj.saveFeedbackInDB()
 
@@ -128,8 +130,11 @@ class SaveSMS:
                         
                     else:
                           addrbk_rec, mobile_rec=resdetails
+                          contact_id=addrbk_rec.id
                           first_name=addrbk_rec.first_name
                           last_name=addrbk_rec.last_name
+
+                    fullname="%s %s"%(first_name,last_name)      
 
 
                     if sms_details.find("@@firstname@@",0):
@@ -137,7 +142,7 @@ class SaveSMS:
                     if sms_details.find("@@lastname@@",0):
                          sms_details=sms_details.replace("@@lastname@@",last_name)
                    
-                    myjson2={"recipient":mobile_no,"message":sms_details}
+                    myjson2={"recipient":mobile_no,"message":sms_details,"fullname":fullname,"contact_id":contact_id}
                   
                     obj=QueueFeedback(myjson2)
                     res=obj.saveFeedbackInDB()
