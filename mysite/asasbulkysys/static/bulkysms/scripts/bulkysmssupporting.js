@@ -496,6 +496,57 @@ $("#smstemplatesdialog").dialog( "open" );
 
 //bind to either group or individual SMS
 
+
+var openProfile=function(owner){
+var position =  $(owner).position();
+
+//$("#profiledialog").dialog("option", "position", [position.right, position.top]);
+//$("#profiledialog").dialog("option", "position", [200, position.top]);
+
+//$("#profiledialog").dialog('option', 'position', [x,y]);
+$('#profiledialog').dialog("option", "position", {my: "right top", of: $(owner)});
+
+$("#profiledialog" ).dialog( "open" );
+
+
+
+};
+
+
+var closeProfile=function(owner){
+
+
+//$("#profiledialog" ).dialog("close");
+      jsonObject={};
+
+
+      var urlstr=site;
+      urlstr=urlstr+"jsondata/LGT/";// 
+      $.ajax({
+             url: urlstr,
+             dataType: "jsonp",
+             method: "POST",
+             data:JSON.stringify(jsonObject),
+             cache: false
+             })
+            .done(function(obj) {
+
+              
+              window.location=site;
+            
+     
+         
+             });
+
+
+
+
+};
+
+
+
+
+
 var bindSMSBroadCaster=function(recipient_type,option1,option2){
 
 
@@ -551,7 +602,7 @@ var selected_address_item="";
 //For retrieving individual address item from local storage
 var retrieveAddressItem=function (item)
 {
- //alert(item);
+ 
  selected_address_item=item;//We need this incase we refresh the address book to get back to where we were last time. Fo istance when searching the user may decide to clear te search box and that can triggger the address book to be refreshed. What if the was an item displayed on the contact card, the we have to retain it
  json_obj=JSON.parse(localStorage.getItem("Contacts"));
  
@@ -2693,11 +2744,11 @@ if(!initialized)//check if the menu has note been prviously initialized
 
 			  {
               case "Home":resetToHome(item);break;
-			        case "AddressBook":manageAddressBook(item);break;
-				      case "Scheduler":scheduleBulkyMessages(item);break;
+			  case "AddressBook":contact_card_hidden=true;manageAddressBook(item);break;
+		      case "Scheduler":scheduleBulkyMessages(item);break;
               case "Settings":manageSettings(item);break;
               case "Grouping":manageGroups(item);break;
-				      case "Campaign":manageCampaigns(item);break;
+			  case "Campaign":manageCampaigns(item);break;
 
 			         //case "MainPage":$.mobile.changePage( "#pageone", { transition: "slide", changeHash: false });break;
                
@@ -3892,6 +3943,22 @@ $(document).ready(function(){
   } ); */
 
     $( function() {
+
+    //for profile dialog
+
+      $( "#profiledialog" ).dialog({
+      autoOpen: false,
+      dialogClass:'profiledialogclass',
+      show: {
+        effect: "blind",
+        duration: 500
+      },
+      hide: {
+        effect: "explode",
+        duration: 500
+      }
+    });
+
     $( "#smsdialog" ).dialog({
       autoOpen: false,
       dialogClass:'smsdialogclass',

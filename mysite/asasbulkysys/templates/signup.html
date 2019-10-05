@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+ {% block content %}
+
+<h2>Sign up</h2>
+        {{ form.non_field_errors }}
+        
+       <form method="post">
+       {% csrf_token %}
+       <table class="table-forms" border=0>
+        <tr>
+        
+    
+   <!-- <div class="fieldWrapper">-->
+     <td>
+        {{ form.username.errors }}
+        <label for="{{ form.username.id_for_label }}">Username:</label></td>
+
+       <td> {{ form.username }}</td>
+    </tr>
+    <tr>    
+    <td>
+    
+        {{ form.password.errors }}
+        <label for="{{ form.password.id_for_label1 }}">Password:</label></td>
+    <td>
+        {{ form.password1 }}</td>
+
+    </tr>
+
+    <tr>    
+    <td>
+    
+        {{ form.password.errors }}
+        <label for="{{ form.password.id_for_label2 }}">Password confirmation:</label></td>
+    <td>
+        {{ form.password2 }}</td>
+
+    </tr>
+    <tr>
+    <td colspan="2" align="center">
+    <button type="submit" style="cursor:pointer">Sign Up</button>
+    </td>
+
+        
+    </tr>
+    </table>
+    </form>
+    <a href="http://localhost:8000/asasbulkysys/">Sign in</a>
+ {% endblock %}

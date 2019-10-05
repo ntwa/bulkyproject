@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 #from sqlalchemy import *
 #from sqlalchemy import create_engine, ForeignKey, ForeignKeyConstraint
 from sqlalchemy import ForeignKey, ForeignKeyConstraint
-from sqlalchemy import Column, Date, Integer, String, Boolean
+from sqlalchemy import Column, Date, DateTime, Integer, String, Boolean
 #from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 #from dbconnect import connstr
@@ -36,6 +36,73 @@ except NameError as e:
 #except NameError as e:
 #     Base = declarative_base()
 
+
+class AuthUser(Base):
+     __tablename__="auth_user"
+     id=Column("id",Integer,primary_key=True)
+     password=Column(String(128),nullable=False)
+     last_login=Column(DateTime,nullable=False)
+     is_super_user=Column(Boolean,nullable=False)
+     username=Column(String(30),nullable=False)
+     first_name=Column(String(30),nullable=False)
+     last_name=Column(String(30),nullable=False)
+     email=Column(String(75),nullable=False)
+     is_staff=Column(Boolean,nullable=False)
+     is_active=Column(Boolean,nullable=False)
+     date_joined=Column(DateTime,nullable=False)
+     auth_company_users = relationship("CompanyUsers", backref=backref("auth_company_users", order_by=id))
+
+
+
+class Company(Base):
+     __tablename__="companies"
+     id=Column("company_id",Integer,primary_key=True)
+     company_name=Column(String(100),nullable=False)
+     business_descr=Column(String(500),nullable=True)
+     postal_address=Column(String(100),nullable=True)
+     region=Column(String(50),nullable=True)
+     district=Column(String(50),nullable=True)
+     ward=Column(String(50),nullable=True)
+     street=Column(String(50),nullable=True)
+     mobile_number=Column(String(50),nullable=False)
+     email_address=Column(String(50),nullable=True)
+     mobile_verified=Column(Boolean,nullable=False)
+     #user_id= Column(Integer, ForeignKey("auth_user.id"),primary_key=True) # A user cannot exist in more than one company
+     company_address_book = relationship("AddressBook", backref=backref("company_address_book", order_by=id))
+     company_users = relationship("CompanyUsers", backref=backref("company_users", order_by=id))
+
+     def __init__(self,company_name,business_descr,postal_address,street,ward,district,region,mobile_number,email_address): 
+          self.company_name=company_name
+          self.business_descr=business_descr
+          self.postal_address=postal_address
+          self.street=street
+          self.ward=ward
+          self.district=district
+          self.region=region
+          self.mobile_number=mobile_number
+          self.email_address=email_address
+          self.mobile_verified=0
+
+
+    #company_message_groups = relationship("Group", backref=backref("company_message_groups", order_by=id))
+
+class CompanyUsers(Base):     
+     __tablename__="company_users"
+     company_id=Column(Integer, ForeignKey("companies.company_id")) # a company can have many users.
+     user_id= Column(Integer, ForeignKey("auth_user.id"),primary_key=True) # A user cannot exist in more that one company
+
+    
+     def __init__(self,company_id,user_id):
+          self.company_id=company_id
+          self.user_id=user_id
+'''
+class EntityPermissions(Base):
+	 __tablename__="user_permissions"
+     user_id= Column(Integer, ForeignKey("auth_user.id"),primary_key=True) # A user cannot exist in more that one company
+     permissible_entity=Column(Enum('Campaigns','Groups','AddressBook',"Users"),nullable=False)
+     permission_type=Column(Enum('RD','RDWRT','RDWRTDLT'),nullable=False) # Read Only, Read Write, Read Write Delete.
+
+ '''   
       
 class AddressBook(Base):
 
@@ -51,6 +118,7 @@ class AddressBook(Base):
      region=Column(String(50))
      district=Column(String(50))
      ward=Column(String(50))
+     company_id= Column(Integer, ForeignKey("companies.company_id"))
 
      mobile_number = relationship("MobileDetails", backref=backref("address_book_mobile", order_by=id))
      email_address = relationship("EmailDetails", backref=backref("address_book_emails", order_by=id))
@@ -148,6 +216,7 @@ class Group(Base):
   
      group_name=Column(String(50))
      group_description=Column(String(200))
+     #company_id= Column(Integer, ForeignKey("company.company_id")) #Links the groups created by a certain company
  
 
      group_member = relationship("GroupMember", backref=backref("group", order_by=id))

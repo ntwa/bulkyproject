@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+ {% block content %}
+
+     <p>Your username is <b><i>{{user}}</i> (<a href="#" onclick="closeProfile(this);">Logout</a>)</b>. You have to finish the last step of registration by verifying with a code sent to your registered mobile </p>
+     
+     <div id="campaigncontainer" align="center">
+          
+      <div style="height:600px;border:solid 2px red;overflow:scroll;overflow-x:hidden;overflow-y:scroll;">
+
+
+		<div id="createcompanyprofile" >
+ 
+              			<div><h3 id="savingcompanyheader">Verify mobile number</h3></div> 
+                    <div id="companyForm">
+              			<table id="verify-number-form" border=0 class="table-forms"> 
+              			<tr> 
+              			<td>Code:</td><td> <input type="text" name="verificationcode" id="verification_code" maxlength="50" /><input id="hidden_token" name="hiddentokenid" value='{{token}}' type="hidden" /></td> 
+              			</tr> 
+
+ 
+              			<tr> 
+              			      <td colspan=2 align="center"> 
+
+                                      <input type="button" value="Verify" onclick="verifyNumber();">
+                                 
+              		
+              			
+              			</td> 
+              			</tr> 
+
+              			</table> 
+
+                    </div><!--for campaign form-->
+                   </div>
+		</div>
+            <!--End of div for layer 1-->
+
+ <div>
+{% endblock %}

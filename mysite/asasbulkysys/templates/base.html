@@ -1,0 +1,162 @@
+<html>
+<head>
+<style>
+
+.company-theme {
+   
+    color: rgb(227,58,12);
+    
+}
+
+   .table-forms{
+   background-color: #FFFFFF;
+   border-spacing: 15px;
+  border-collapse: separate;
+  border: 15px solid #8b9dc3;
+  /*border: 15px solid rgb(227,58,12);*/
+
+
+   }
+
+
+  .table-forms > tbody > tr:nth-child(2n) > td {
+   color:   #4588cc;
+   font-size: 15px;
+   font-weight: bold;
+}
+
+  .table-forms > tbody > tr:nth-child(2n+1) > td {
+   color: #4588cc;
+  
+   font-size: 15px;
+   font-weight: bold;
+}
+
+</style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ <script>
+   
+ var site="http://localhost:8000/asasbulkysys/";
+
+var closeProfile=function(owner){
+
+
+      jsonObject={};
+
+
+      var urlstr=site;
+      urlstr=urlstr+"jsondata/LGT/";// 
+      $.ajax({
+             url: urlstr,
+             dataType: "jsonp",
+             method: "POST",
+             data:JSON.stringify(jsonObject),
+             cache: false
+             })
+            .done(function(obj) {
+
+             
+              window.location=site;
+            
+     
+         
+             });
+
+
+
+
+};
+
+
+
+var saveCompanyDetails=function(){
+
+
+  //$("#profiledialog" ).dialog("close");
+     jsonObject={CompanyName:$("#company_name").val(),BusinessDescr:$("#business_descr").val(),PostalAddress:$("#postal_address").val(),StreetName:$("#street_name").val(),WardName:$("#ward_name").val(),DistrictName:$("#district_name").val(),RegionName:$("#region_name").val(),EmailAddress:$("#email_address").val(),MobileNumber:$("#mobile_number").val()};
+
+    //jsonObject={};
+ 
+
+      var urlstr=site;
+      urlstr=urlstr+"jsonupdate/RCO/";// 
+      var request=$.ajax({
+             url: urlstr,
+             dataType: "jsonp",
+             method: "POST",
+             data:JSON.stringify(jsonObject),
+             cache: false
+             });
+
+            request.done(function(obj ) {
+            window.location=site;  
+             
+
+            });
+
+        request.fail(function( obj) {
+         alert("Fail");
+
+         });
+
+
+
+};
+
+
+//verify phone number
+var verifyNumber=function(){
+
+
+  
+     jsonObject={Code:$("#verification_code").val(),Token:$("#hidden_token").val()};
+
+    //jsonObject={};
+ 
+
+      var urlstr=site;
+      urlstr=urlstr+"jsonupdate/VRN/";// verify number
+      var request=$.ajax({
+             url: urlstr,
+             dataType: "jsonp",
+             method: "POST",
+             data:JSON.stringify(jsonObject),
+             cache: false
+             });
+
+            request.done(function(obj ) {
+            if(obj.code==1)
+               window.location=site;
+            else{
+               if(obj.code==-2) 
+                  alert("You entered an invalid code")
+               else{
+                    alert("There was an error. Try again. If the proble persists, contact system admin")
+
+                    }
+              }  
+             
+
+            });
+
+            request.fail(function( obj) {
+             alert("Fail to connect to server. Try again. If the problem persists, contact system admin");
+
+         });
+
+
+
+};
+ </script>
+
+</head>
+<body>
+<div align=center>
+  <h1 class="company-theme">{{company}}<i>Yote Messaging</i></h1>
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+</div>
+</body>
+</html>

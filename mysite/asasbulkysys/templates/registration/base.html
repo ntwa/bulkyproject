@@ -1,0 +1,47 @@
+<html>
+<head>
+
+<style>
+
+.company-theme {
+   
+    color: rgb(227,58,12);
+    
+}
+
+   .table-forms{
+   background-color: #FFFFFF;
+   border-spacing: 15px;
+  border-collapse: separate;
+  border: 15px solid #8b9dc3;
+  /*border: 15px solid rgb(227,58,12);*/
+
+
+   }
+
+
+  .table-forms > tbody > tr:nth-child(2n) > td {
+   color:   #4588cc;
+   font-size: 15px;
+   font-weight: bold;
+}
+
+  .table-forms > tbody > tr:nth-child(2n+1) > td {
+   color: #4588cc;
+  
+   font-size: 15px;
+   font-weight: bold;
+}
+
+</style>
+ 
+</head>
+<body>
+<div align=center>
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+</div>
+</body>
+</html>

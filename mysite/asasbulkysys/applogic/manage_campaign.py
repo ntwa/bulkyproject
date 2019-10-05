@@ -26,7 +26,7 @@ Base.metadata.create_all(db)
 
 
 from bulkysms.database.sms_feedback_module import Campaign,CampaignStartDay,CampaignEndDay,CampaignDefinedMessages,SelectedDeliveryDayofWeek,SelectedDeliveryTime,CampaignAudienceSMS, IndividualizedReminder,Feedback 
-from bulkysms.database.address_book_module import Group,AddressBook,GroupMember,MobileDetails
+from bulkysms.database.address_book_module import Group,AddressBook,GroupMember,MobileDetails,Company, CompanyUsers
 
 
 def searchArray(item,array):
@@ -458,7 +458,23 @@ class ManageCampaign:
 						        	session.commit()
                                                 #Then write an else statement to cater for general campaigns that are not individualistic 
 						else:
-							pass
+							#pass
+                                                        #engine=create_engine('mysql://root:ugnkat@localhost/wellness', echo=False) 
+						        engine=db
+						               # create a Session
+						        Session = sessionmaker(bind=engine)
+						        session = Session()
+                                    			for campaign_time in campaign_times_in_day: 
+                                                                #randomly pick one message from a list of defined messages.
+                                                                msg_index=random.randrange (0,len(messages),1)
+                                                                #msg_index=0
+                                    		                recipient_message=messages[msg_index]                                                        
+							        new_feedback=Feedback(recipient_mobile,contact_id,contact_name,recipient_message,None,campaign_id,campaign_time,datetime.date.today())     
+
+						        	session.add(new_feedback)
+						          
+						                #commit the record the database
+						        	session.commit()
 
 
 
@@ -574,7 +590,24 @@ class ManageCampaign:
                                                 #Then write an else statement to cater for general campaigns that are not individualistic 
                                                    
                                                 else:
-							pass
+							#pass
+
+                                                        #engine=create_engine('mysql://root:ugnkat@localhost/wellness', echo=False) 
+						        engine=db
+						               # create a Session
+						        Session = sessionmaker(bind=engine)
+						        session = Session()
+                                    			for campaign_time in campaign_times_in_day: 
+                                                                #randomly pick one message from a list of defined messages.
+                                                                msg_index=random.randrange (0,len(messages),1)
+                                                                #msg_index=0
+                                    		                recipient_message=messages[msg_index]                                                        
+							        new_feedback=Feedback(recipient_mobile,contact_id,contact_name,recipient_message,None,campaign_id,campaign_time,datetime.date.today())     
+
+						        	session.add(new_feedback)
+						          
+						                #commit the record the database
+						        	session.commit()
 
                session.close()  
                engine.dispose()   
@@ -1618,10 +1651,10 @@ class ManageCampaign:
 #myjson={"campaign_name":"Birthday Greetings","campaign_descr":"This campaign has been dedicated for birthday greetings to customers","campaign_category":"Individual Best Wishes","target_level":"Individual","frequency_in_days":"Selective Days","is_it_life_time":"1","is_annual_delivery_date_constant":"1","messages":[[3,"We wish you happy birthday. Thank you for being our loyal customer"],[2,"Happy birthday. We value you as our esteemed customer"],[1,"As you celebrate your birthday, we wish you more success in business. Thank for being with us all this time."]]}
 #myjson={"CampaignName":"Birthday Greetings","CampaignDescr":"This campaign has been dedicated for birthday greetings to customers","CampaignCategory":"Individual Best Wishes","TargetLevel":"Individual","Frequency_in_Days":"Selective Days","is_it_life_time":"1","is_annual_delivery_date_constant":"1","NumMessages":3,"Messages":{"Message0":"Hello there. We wish you happy birthday. Thank you for being our loyal customer","Message1":"Happy birthday. We value you as our esteemed customer","Message2":"As you celebrate your birthday, we wish you more success in business. Thank for being with us all this time."}}
 #myjson={"CampaignID":"21","Action":"Deactivate"}
-myjson={}
-obj=ManageCampaign(myjson)
-msg=obj.scheduleMessages()
+#myjson={}
+#obj=ManageCampaign(myjson)
+#msg=obj.scheduleMessages()
 #msg=obj.triggerCampaignStatus()
 #msg=obj.retrieveCampaignDetailsFromDB()
 #msg=obj.saveOneCampaignInDB()
-print msg
+#print msg

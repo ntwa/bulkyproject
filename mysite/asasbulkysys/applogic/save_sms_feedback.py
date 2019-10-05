@@ -285,7 +285,7 @@ class QueueFeedback:
                Session = sessionmaker(bind=engine)
                session = Session()
           
-               new_feedback=Feedback(recipient,contact_id,fullname,message,,,,)
+               new_feedback=Feedback(recipient,contact_id,fullname,message,None,None,None,None)
                     
                session.add(new_feedback)
           

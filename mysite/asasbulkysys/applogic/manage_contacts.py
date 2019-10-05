@@ -765,9 +765,9 @@ class AddressBookManager:
                #return (json.JSONEncoder().encode(result))
      
 #myjson={"contact_id":3,"First Name":"Lucas","Middle Name":"Ntwa", "Last Name":"Katule","Gender":"Male","DOB":"12 Jan 2000","Ward":"Kunduchi","District":"Kinondoni","Region":"Dar es salaam","Country":"Tanzania","Mobile Phone #1":"0718255585","Mobile Phone #2":"0742340759","Mobile Phone #3":None,"Email Address #1":"katulentwa@gmail.com","Email Address #2":"katulentwa@hotmail.com","Email Address #3":"nkatule@aru.ac.tz"}     
-myjson={"GroupID":"11","Option":"-1"}
+#myjson={"GroupID":"11","Option":"-1"}
 #myjson={}
-obj=AddressBookManager(myjson)
-msg=obj.retrieveContactDetailsFromDB()
+#obj=AddressBookManager(myjson)
+#msg=obj.retrieveContactDetailsFromDB()
 #msg=obj.saveContactInDB()
-print msg
+#print msg

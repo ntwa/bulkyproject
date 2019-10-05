@@ -10,6 +10,7 @@ import logging
 import json,sys,urllib2
 import datetime,calendar
 from django.template.loader import render_to_string
+from applogic.manage_companies import CompanyManager
 from applogic.manage_contacts import AddressBookManager
 from applogic.manage_sms import ScheduleSMS
 from applogic.manage_campaign import ManageCampaign 
@@ -25,14 +26,23 @@ import os
 from xlrd.sheet import ctype_text
 import re
 from bisect import bisect_left 
-  
+from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import logout
+
+from django.contrib.auth.forms import UserCreationForm
+from django.core.urlresolvers import reverse_lazy
+from django.views import generic
+
+@csrf_exempt  
 def binarySearch(a, x): 
     i = bisect_left(a, x) 
     if i != len(a) and a[i] == x: 
         return i 
     else: 
         return -1
-
+@csrf_exempt
 def insertionSort(arr): 
   
     # Traverse through 1 to len(arr) 
@@ -50,17 +60,79 @@ def insertionSort(arr):
         arr[j+1] = key 
 
 
+def registerCompanyDetails(myjson):
+    obj=CompanyManager(myjson)
+    status=obj.registerCompanyDetails()
+    return status
+
+def getCompanyDetails(user_id):
+    obj=CompanyManager(user_id)
+    company_details=obj.getCompanyDetails()
+    return company_details
+
+def sendVerificationCode():
+    myjson={}
+    obj=CompanyManager(myjson)
+    tokenObj=obj.sendVerificationCode()
+    return tokenObj
+
+def verifyCompanyMobile(myjson):
+    obj=CompanyManager(myjson)
+    ver_status=obj.verifyCompanyMobile()
+    return ver_status
+    
+
+
+class SignUp(generic.CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'signup.html'
+   
+
+
+@login_required
 def index(request):
     #return HttpResponse("Hello, world. You're at the polls index.")
     context = RequestContext(request)
-    return render_to_response('index.html', context)
+    user_id=request.user.id
+    myjson={}
+    myjson["user_id"]=user_id
+    company_details=getCompanyDetails(myjson)
+    company_id=json.loads(company_details)["company_id"]
+    mobile_verified=json.loads(company_details)["mobile_verified"]
+    
+
+    if company_id==-1:
+	return render_to_response('finish_reg.html', context)
+        #return a form for capturing company. Complete registration
+
+    elif mobile_verified==1:
+
+    	context["company"]=json.loads(company_details)["company_name"]
+    
+    
+    	return render_to_response('index.html', context)
+    else:
+        #Send verification code to a mobile
+        tokenObj=sendVerificationCode() # return a json that include a token to be used when verifying received code
+        code=json.loads(tokenObj)["code"]
+        if code=="-1":
+            context["token"]=None # We failed to generate the code
+        else: 
+            #We have the code
+            context["token"]=code      
+        
+        #return user interface for verifying number
+        return render_to_response('verify_number.html', context)
+
+
 
 # retrieve all contacts
 def retrieveAddressBookContent(myjson):
      #myjson={"GroupID":"4"}
-     obj=AddressBookManager(myjson)
-     contacts=obj.retrieveContactDetailsFromDB() #the returned contacts is an encoded json object    
-     return contacts
+    obj=AddressBookManager(myjson)
+    contacts=obj.retrieveContactDetailsFromDB() #the returned contacts is an encoded json object    
+    return contacts
 
 def retrieveGroups(myjson):
     obj=GroupsManager(myjson)
@@ -125,14 +197,16 @@ def searchArray(item,array):
 
 
 
-@csrf_exempt 
-def dataupdate(request,command_id):#REST API used by the client side of web application to load data for display
+@csrf_exempt
+def dataupdate(request,command_id):#REST API used by the client side of a web application to load data for display
      myjson={}
+
+
      if command_id =="SS":#Command for sending one SMS
           #myjson={"MessageBody":"Hello. We wish you happy new year...","MobNo":"+255742340759"}
           myjson=json.loads(request.body)
-          #myjson={}
-          status=smsScheduling(myjson)
+         
+          #status=smsScheduling(myjson)
           #myjson=json.JSONEncoder().encode(myjson)
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
 
@@ -175,6 +249,33 @@ def dataupdate(request,command_id):#REST API used by the client side of web appl
           status=changeCampaignStatus(myjson)
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
           #return HttpResponse(status, content_type='application/json') #This is for debugging.
+     
+     elif command_id =="RCO":#Register company
+          myjson=json.loads(request.body) 
+          
+          myjson["UserID"]=request.user.id
+               
+          status=registerCompanyDetails(myjson)
+          #return HttpResponse(status, content_type='application/json')
+          
+          return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
+
+     elif command_id =="VRN":#Verify Mobile Number
+          myjson=json.loads(request.body) 
+
+
+          user_id=request.user.id
+          myjson_user={}
+          myjson_user["user_id"]=user_id
+          company_details=getCompanyDetails(myjson_user)
+          company_id=json.loads(company_details)["company_id"]
+ 
+          myjson["CompanyID"]=company_id #This important in knowing which company needs to have its number verified
+          
+          status=verifyCompanyMobile(myjson)
+              
+          return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
+     
 
      elif command_id =="UAF": #Upload Address File
           myjson={"status": "file uploaded"}
@@ -452,7 +553,15 @@ def dataupdate(request,command_id):#REST API used by the client side of web appl
 @csrf_exempt 
 def dataloader(request,command_id):#REST API used by the client side of web application to load data for display
      myjson={}
-     if command_id == "RABC":#RAB stands for Retrieve Address Book Content
+
+     if command_id =="LGT":
+        
+          logout(request)
+          logout_status={"Status":"Completed"}
+          status_encoded=json.JSONEncoder().encode(logout_status)
+          return HttpResponse('%s(%s)' % (request.GET.get('callback'),status_encoded), content_type='application/json')
+
+     elif command_id == "RABC":#RAB stands for Retrieve Address Book Content
           myjson=json.loads(request.body)
           #myjson={"GroupID":"-1","Option":"-1"}
           #myjson={"GroupID":"-1"}  

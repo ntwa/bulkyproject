@@ -31,11 +31,25 @@
  <!--CSS For address book starts here-->
   
   <!--<link rel="stylesheet" href="{% static "bulkysms/css/addressbook/bootstrap.css" %}">-->
-
-
-
-
  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+ <!--For drop down menu-->
+
+
+ <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+
+
+
+ <!--End for drop down menu-->
+
+
+
 
 <!--script and css for datatables-->
 <!-- One usage of datatable is for assigning people in the address book to groups-->
@@ -149,6 +163,9 @@ text-align:center;
 .smsdialogclass .ui-dialog > .ui-widget-header {background: #8b9dc3;} */
 
 
+  .bs-drop_menu{
+      margin: 200px;
+    }
 
 
 .templatedialogclass > .ui-widget-header{background: #ffbf00;}
@@ -156,7 +173,6 @@ text-align:center;
 
 .smsdialogclass > .ui-widget-header {background: #8b9dc3;}
 
-.profiledialogclass > .ui-widget-header {background: #8b9dc3;}
 
 .charge {
 	position: relative;
@@ -367,46 +383,7 @@ input:checked + .sliderswitch .off
 
  .circular--square {
   border-radius: 50%;
-} /* For User profile menu*/   
-
-
-
-
-.navbar-default{background:#3285D1;border-color: #3285D1;}
-.navbar-default .navbar-nav > li > a{color:#FFF;}
-.nav > li > a{margin:15px; font-size: 17px; color:#FFF;}
-.nav .open > a, .nav .open > a:hover, 
-.nav .open > a:focus,
-.nav > li > a:hover, .nav > li > a:focus{background-color:transparent !important;}
-
-.navbar-brand{    
-    margin: 15px !important;
-    padding: 13px !important;
-    color: #fff !important;
-    font-size: 2em !important;
-    font-weight: bold !Important;
-    }
-    
-.navbar-toggle{margin-top:20px !important;}
-.dropdown-menu{background:#fff !important;}
-.navbar-login
-{
-    width: 350px;
-    padding: 10px;
-    padding-bottom: 0px;
-}
-
-.navbar-login-session
-{
-    padding: 10px;
-    padding-bottom: 0px;
-    padding-top: 0px;
-}
-
-.icon-size
-{
-    font-size: 87px;
-} 
+} /* For User profile menu*/    
 </style>
 <!-- general scripts for app-->
 <!--
@@ -461,121 +438,28 @@ input:checked + .sliderswitch .off
        -->
     </div> 
 
-     <div class="col-sm-9" align="center" ><h1 class="company-theme">{{company}}</h1></div>
-     <div class="col-sm-1">
-        <img class="circular--square" data-toggle="dropdown" src="{% static "bulkysms/images/profile.png" %}" style="cursor:pointer" onclick="openProfile(this);" />
+     <div class="col-sm-9" align="center" ><h1 class="company-theme"><i>Yote Messaging</i></h1></div>
 
-        <div id="profiledialog" class="profiledialogclass"  title="Profile">
-
-                               <table border=0 width="100%">
-
-                                    <tr>
-                                       <td><span class="glyphicon glyphicon-user icon-size"></span></td><td>Logged User: <strong>{{ user }}</strong></td>
-                                    </tr>
-                                    <tr>
-                                       <td colspan="2" align="center">
-                                          <!--<a href="{% url 'logout' %}" class="btn btn-primary btn-block btn-sm" onclick="closeProfile(this);">Logout</a>-->
-                                          <a href="#" class="btn btn-primary btn-block btn-sm" onclick="closeProfile(this);">Logout</a>
-                                       </td>
-
-                                    </tr>
-                                 
-
-
-
-                               </table>
-
-
-                               <!--
-                                <div class="navbar-login">
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <p class="text-center">
-                                            <span class="glyphicon glyphicon-user icon-size"></span>
-                                        </p>
-                                    
-                                    </div>
-                                    <div>
-                                        <p class="text-left">Logged User: <strong>{{ user }}</strong></p>
-                                        <p class="text-left">
-                                            <a href="#" class="btn btn-primary btn-block btn-sm">Logout</a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            -->
-         
-
+    <div class="col-sm-1" align="center">
+         <div class="btn-group dropleft">
+       <!-- <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Dropleft</button>-->
+        <img class="circular--square dropdown-toggle" data-toggle="dropdown" src="{% static "bulkysms/images/profile.png" %}" style="cursor:pointer" />
+        <div class="dropdown-menu">
+            <a href="#" class="dropdown-item">Action</a>
+            <a href="#" class="dropdown-item">Another action</a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">Separated link</a>
         </div>
-
-
-     </div>
-    <!--
-    <div class="col-sm-2" align="center">
-        
-   
-
-
-
-
-              <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <span class="glyphicon glyphicon-user"></span> 
-                             <img class="circular--square dropdown-toggle" data-toggle="dropdown" src="{% static "bulkysms/images/profile.png" %}" style="cursor:pointer" />
-                        <span class="glyphicon glyphicon-chevron-down"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <div class="navbar-login">
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <p class="text-center">
-                                            <span class="glyphicon glyphicon-user icon-size"></span>
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p class="text-left"><strong>Mahesh</strong></p>
-                                        <p class="text-left small">justdemo@gmail.com</p>
-                                        <p class="text-left">
-                                            <a href="#" class="btn btn-primary btn-block btn-sm">Logout</a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <div class="navbar-login navbar-login-session">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <p>
-                                          <a href="#" class="btn btn-primary btn-block">My Profile</a>
-                                            <a href="#" class="btn btn-danger btn-block">Change Password</a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-
-  
-  
+    </div>
     
 </div>
--->
 
-   
+<!--
+      </td>
+  </tr>
+   </table>-->      
 
 </div><!--end header-->
-
-
-
-
-
   <!--<div class="row">-->
     <div class="col-sm-3" align="center"><!--Div for menu-->
 

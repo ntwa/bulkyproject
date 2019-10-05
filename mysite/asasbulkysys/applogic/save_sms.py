@@ -1,16 +1,19 @@
 #!/usr/bin/env python
 import datetime,time,calendar
 import sys,json
-#from sqlalchemy import create_engine
-#from sqlalchemy.orm import sessionmaker
-#from save_sms_feedback import QueueFeedback
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
 from collections import OrderedDict
-#from bulkysms.database.address_book_module import AddressBook,MobileDetails,GroupMember,db,dbconn
 
 from bulkysms.database.base import Base
 from bulkysms.database.dbinit import db,dbconn
 import bulkysms.database.address_book_module
+
 Base.metadata.create_all(db)
+
+from save_sms_feedback import QueueFeedback
+from bulkysms.database.address_book_module import AddressBook,MobileDetails,GroupMember
 
 class SaveSMS:
      def __init__(self,myjson):
@@ -49,7 +52,7 @@ class SaveSMS:
                mobile_no=self.myjson["MobNo"] 
                sms_audience=self.myjson["SMSAudience"]
                #sms_generalization=self.myjson["SMSGeneralization"]
-               
+              
                insertion_point=0
                '''
                while insertion_point>=0:
@@ -78,7 +81,7 @@ class SaveSMS:
                return (json.JSONEncoder().encode(result)) 
 
 
-                   
+                 
           try:
               if sms_audience=="Bulky":
                     #Then iterate to find all mobile numbers of all members of the group so that the message can be broadcasted.
@@ -121,7 +124,8 @@ class SaveSMS:
                           else:
                                 result["message"]="Fail to send the message" 
                     return (json.JSONEncoder().encode(result)) 
-              else:
+              else: 
+                     
                    # get first name and last name incase they are needed
                     resdetails= session.query(AddressBook,MobileDetails).filter(AddressBook.id==MobileDetails.contact_id).filter(MobileDetails.mobile_number==mobile_no).order_by(AddressBook.first_name).order_by(AddressBook.last_name).first()
                     if resdetails is None:
@@ -143,9 +147,10 @@ class SaveSMS:
                          sms_details=sms_details.replace("@@lastname@@",last_name)
                    
                     myjson2={"recipient":mobile_no,"message":sms_details,"fullname":fullname,"contact_id":contact_id}
-                  
+                     
                     obj=QueueFeedback(myjson2)
                     res=obj.saveFeedbackInDB()
+                    
                     #res=obj.getQueuedSMS() # Queued messages and send them
                     #Get the ID of the inserted message
                     res=json.loads(res)
@@ -169,7 +174,7 @@ class SaveSMS:
 
      
      
-#myjson={"MobNo":"+255742340759","MessageBody":"Hello Mr. @@firstname@@. We remind you to pay your outstanding bill", "SMSAudience":"Individual"}
-#obj=SaveSMS(myjson)
-#msg=obj.saveOneSMSInDB()
-#print msg
+myjson={"MobNo":"+255742340759","MessageBody":"Hello Mr. @@firstname@@. We remind you to pay your outstanding bill", "SMSAudience":"Individual"}
+obj=SaveSMS(myjson)
+msg=obj.saveOneSMSInDB()
+print msg
