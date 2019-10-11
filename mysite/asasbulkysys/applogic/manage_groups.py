@@ -21,6 +21,7 @@ import bulkysms.database.address_book_module
 Base.metadata.create_all(db)
 
 from bulkysms.database.address_book_module import AddressBook, Group, GroupMember
+from bulkysms.database.sms_feedback_module import Campaign
 
 class switch(object):
           value = None
@@ -42,6 +43,7 @@ class GroupsManager:
           try:
                contact_id=self.myjson["ContactID"]
                group_id=self.myjson["GroupID"]
+               company_id=self.myjson["CompanyID"]
 
           except Exception as e:
                #print "Content-type: text/html\n" 
@@ -55,7 +57,7 @@ class GroupsManager:
                Session = sessionmaker(bind=engine)
                session = Session()
                #Get person's name
-               res2ab=session.query(AddressBook).filter(AddressBook.id==contact_id).first()
+               res2ab=session.query(AddressBook).filter(AddressBook.id==contact_id).filter(AddressBook.company_id==company_id).first()
                person_name="%s %s"%(res2ab.first_name,res2ab.last_name)
                if res2ab is None:
                     result["message"]="Error: The Person you are trying to assign to a group doesn't exist"
@@ -64,8 +66,8 @@ class GroupsManager:
 
 
 
-               #get group was trying to be assigned to
-               res2g=session.query(Group).filter(Group.id==group_id).first()
+               #get group was trying to be assigned to. This will also prevent users to edit groups that don't belong to their company
+               res2g=session.query(Group).filter(Group.id==group_id).filter(Group.company_id==company_id).first()
                group_name="%s"%(res2g.group_name)
 
                if res2g is None:
@@ -110,6 +112,7 @@ class GroupsManager:
           try:
                contact_id=self.myjson["ContactID"]
                group_id=self.myjson["GroupID"]
+               company_id=self.myjson["CompanyID"]
 
           except Exception as e:
                #print "Content-type: text/html\n" 
@@ -123,17 +126,17 @@ class GroupsManager:
                Session = sessionmaker(bind=engine)
                session = Session()
                #Get person's name
-               res2ab=session.query(AddressBook).filter(AddressBook.id==contact_id).first()
+               res2ab=session.query(AddressBook).filter(AddressBook.id==contact_id).filter(AddressBook.company_id==company_id).first()
                person_name="%s %s"%(res2ab.first_name,res2ab.last_name)
                if res2ab is None:
-                    result["message"]="Error: The Person you are trying to rempove from a group doesn't exist"
+                    result["message"]="Error: The Person you are trying to remove from a group doesn't exist"
                     return (json.JSONEncoder().encode(result)) 
                   
 
 
 
-               #get group was trying to be assigned to
-               res2g=session.query(Group).filter(Group.id==group_id).first()
+               #get group was trying to be assigned to. This will also prevent a user to remove someone from a group that doesn't belong to their company
+               res2g=session.query(Group).filter(Group.id==group_id).filter(Group.company_id==company_id).first()
                group_name="%s"%(res2g.group_name)
 
                if res2g is None:
@@ -170,11 +173,6 @@ class GroupsManager:
 
 
 
-
-
-
-          
-
      def retrieveGroupDetailsFromDB(self):
            
           #The tuples are used for definition of JSON objects
@@ -190,14 +188,15 @@ class GroupsManager:
 	 
 	  #get all groups and their respective details 
           try:
+               company_id=self.myjson["CompanyID"]
                
                engine=db
                # create a Session
                Session = sessionmaker(bind=engine)
                session = Session()
                result={}                    
-               # querying for a record if it exists already.
-               res= session.query(Group).order_by(Group.group_name).all()
+               # querying for existence of groups for this company. It is possible for the same name to be used by different companies. So have to filter only for one company
+               res= session.query(Group).order_by(Group.group_name).filter(Group.company_id==company_id).all()
                
                if len(res) ==0:
                     session.close()
@@ -267,6 +266,7 @@ class GroupsManager:
                group_id=self.myjson["GroupID"]            
                group_name=self.myjson["GroupName"] 
                group_descr=self.myjson["GroupDescr"] 
+               company_id=self.myjson["CompanyID"]
                
                
                #group_name="Farmers Kilolo"
@@ -296,8 +296,8 @@ class GroupsManager:
 
                #check if the name exists.
                                    
-               # querying for a record if it exists already.
-               res= session.query(Group).filter(Group.id==group_id).first()
+               # querying for a record if it exists already for this company.
+               res= session.query(Group).filter(Group.id==group_id).filter(Group.company_id==company_id).first()
                
                if res is None:
                     session.close()
@@ -343,7 +343,7 @@ class GroupsManager:
                try:
                     
                 
-                    new_group=Group(group_name,group_descr)           
+                    new_group=Group(group_name,group_descr,company_id)           
                                                             
                     session.add(new_group)
                     
@@ -373,7 +373,7 @@ class GroupsManager:
      
      
 #myjson={"GroupID":12,"GroupName":"Customers in Kinondoni B","GroupDescr":"This group is for customers in Kinondoni areas."}
- 
+#myjson={"CompanyID":1}
 #myjson={"GroupID":11,"Option":-1}
 #obj=GroupsManager(myjson)
 #msg=obj.retrieveGroupDetailsFromDB()

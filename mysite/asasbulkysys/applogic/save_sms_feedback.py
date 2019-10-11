@@ -3,9 +3,9 @@ import datetime
 import sys,json
 #sys.path.insert(0, 'C:\\workspace\\test\\helloword\\sqlalchemy.zip')
 #sys.path.insert(0, 'sqlalchemy.zip')
-#from sqlalchemy import create_engine
-#from sqlalchemy.orm import sessionmaker
-#from bulkysms.database.sms_feedback_module import Feedback,db,dbconn
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
 
 from collections import OrderedDict
 import urllib2,urllib
@@ -16,6 +16,7 @@ from bulkysms.database.dbinit import db,dbconn
 
 import bulkysms.database.sms_feedback_module
 from manage_message_template import ManageMessageTemplates
+from bulkysms.database.sms_feedback_module import Feedback
 
 Base.metadata.create_all(db)
 
@@ -80,14 +81,7 @@ class QueueFeedback:
                        '''
                        values={"content": message,
                                "to": [mobile]}
-			       #"from": "ASAS Dairies"}
-              #"binary": false,
-              #"clientMessageId": "b3itx5JgS-O7nc7xJ9KVlw==",
-              #"scheduledDeliveryTime": "yyyy-MM-dd'T'HH:mm:ssZ",
-              #"userDataHeader": "0605040B8423F0",
-              #"validityPeriod": 0,
-              #"charset": "UTF-8"
-              #}
+
                        url="https://platform.clickatell.com/messages"
                        #url="http://api.clickatell.com/http/sendmsg?"+urllib.urlencode(values)
                        #url="https://platform.clickatell.com/messages/http/send?apiKey=-eKVKLmnSEiQhYNaR5UApQ==&to=255718255585&content=Test again"
@@ -109,8 +103,8 @@ class QueueFeedback:
                            req.add_header("Content-type",'application/json')
                            req.add_header("Accept",'application/json')
                            
-                           req.add_header('Authorization', 'b3itx5JgS-O7nc7xJ9KVlw==')
-                            
+                           req.add_header('Authorization', '6ICXH17PTLqKjXIUBz-VLA==')
+                           #req.add_header('Authorization', 'b3itx5JgS-O7nc7xJ9KVlw==') 
                            page = urllib2.urlopen(req)
                            print page.info()
                            #print page
@@ -179,18 +173,19 @@ class QueueFeedback:
                          req.add_header("Content-type",'application/json')
                          req.add_header("Accept",'application/json')
                            
-                         req.add_header('Authorization', 'b3itx5JgS-O7nc7xJ9KVlw==')
+                         req.add_header('Authorization', '6ICXH17PTLqKjXIUBz-VLA==')
                             
-                         #page = urllib2.urlopen(req)
-                         #print page.info()
+                         #page = urllib2.urlopen(req)#comment
+                         #print page.info()#comment
                          response = urllib2.urlopen(req)
                          
                          data = json.load(response)  
-                         #json.loads(json.JSONEncoder().encode(data))["messages"][0]["accepted"]
+                         #json.loads(json.JSONEncoder().encode(data))["messages"][0]["accepted"]#comment
                          accepted_status=json.loads(json.JSONEncoder().encode(data))["messages"][0]["accepted"]
-                         msg_error_status=json.loads(json.JSONEncoder().encode(data))["messages"][0]["error"]
-                         snd_error_status=json.loads(json.JSONEncoder().encode(data))["error"]
-                         #print data
+                         msg_error_status=json.loads(json.JSONEncoder().encode(data))["messages"][0]["errorCode"]
+                         snd_error_status=json.loads(json.JSONEncoder().encode(data))["messages"][0]["errorDescription"]
+                         print data
+                         
                          
                          if accepted_status == True and msg_error_status==None and snd_error_status==None:
                               result["message"]="SMS was sent successfully"
@@ -198,6 +193,7 @@ class QueueFeedback:
                          else:
                               result["message"]="SMS failed to send due to the following error: '%s'"%snd_error_status
                               result["status"]=-6
+                         
                          
 
                          #page.close()           
@@ -309,12 +305,12 @@ class QueueFeedback:
           print "Message queue"
           return (json.JSONEncoder().encode(result))
  
-#myjson={"message":"Hello Ntwa. You are doing great!!","recipient":"+255742340759"}
-#obj=QueueFeedback(myjson)
+myjson={"message":"Your OTP is 456789.. Sent by Yotte Messaging App ","recipient":"+255742340759"}
+obj=QueueFeedback(myjson)
 #result=obj.getQueuedSMS()
 #result=obj.saveFeedbackInDB()
-#result=obj.sendOneSMS(112)
-#print result
+result=obj.sendOneSMS(112)
+print result
 #msg_ids=json.loads(result)
 
 

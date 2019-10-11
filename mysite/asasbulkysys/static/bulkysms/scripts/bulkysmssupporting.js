@@ -15,7 +15,17 @@ var total_no_msg_box=0;// This variable is important when defining the number of
  var site="http://localhost:8000/asasbulkysys/";
 
 $( document ).ready(function() {
+
+    //start by clearing localStorage
+     localStorage.removeItem("Contacts");
+     localStorage.removeItem("AllContacts");
+     localStorage.removeItem("Groups");
+     localStorage.removeItem("Campaigns");
+     localStorage.removeItem("SMSTemplates");
+
     initializeMenu();
+
+    
 
    //var bootstrapButton = $.fn.button.noConflict()
    //$.fn.bootstrapBtn = bootstrapButton;
@@ -187,7 +197,9 @@ var existGroupMembers=function (group_id)
 {
  //alert(item);
  selected_group_item=group_id;//We need this incase we refresh the address book to get back to where we were last time. Fo istance when searching the user may decide to clear te search box and that can triggger the address book to be refreshed. What if the was an item displayed on the contact card, the we have to retain it
- json_obj=JSON.parse(localStorage.getItem("Groups"));
+ 
+
+json_obj=JSON.parse(localStorage.getItem("Groups"));
  
  for(var y in json_obj)
  {
@@ -418,6 +430,7 @@ $("#smstemplatesdialog").dialog( "open" );
              //alert("Message Sent");
               if (Modernizr.localstorage) {
                         //store into a local storage
+                        localStorage.removeItem("SMSTemplates");
                         localStorage.setItem("SMSTemplates",JSON.stringify(templateobject));
                         //alert(addressbookobj["AD00"]["birthdate"]);
                         //alert("Local Storage Supported");
@@ -530,6 +543,15 @@ var closeProfile=function(owner){
              cache: false
              })
             .done(function(obj) {
+              if (Modernizr.localstorage)
+                   
+              //now clear local storage within the scope of this application
+              localStorage.removeItem("Contacts");
+              localStorage.removeItem("AllContacts");
+              localStorage.removeItem("Groups");
+              localStorage.removeItem("Campaigns");
+              localStorage.removeItem("SMSTemplates");
+                  
 
               
               window.location=site;
@@ -968,6 +990,7 @@ var retrieveAddressBookContent=function (group_id,option)
                     var name_counter=0;
                     if (Modernizr.localstorage) {
                         //store into a local storage
+                        localStorage.removeItem("Contacts");
                         localStorage.setItem("Contacts",JSON.stringify(addressbookobj));
                         //alert(addressbookobj["AD00"]["birthdate"]);
                         //alert("Local Storage Supported");
@@ -1097,6 +1120,25 @@ var retrieveAddressBookContent=function (group_id,option)
 
   });
   
+
+
+};
+
+
+var retrieveBalanceTemplate=function(){
+
+
+      var urlstr=site;
+      urlstr=urlstr+"jsondata/RBT/";// Retrieve Balance Template
+      $.ajax({
+             url: urlstr,
+             cache: false
+             })
+            .done(function( html ) {
+            $("#main-content" ).html('');
+            $("#main-content" ).append(html);
+             });
+
 
 
 };
@@ -1407,6 +1449,7 @@ var retrieveAllContacts=function(group_id,option){
                     var contacts_counter=0;
                     if (Modernizr.localstorage) {
                         //store into a local storage
+                        localStorage.removeItem("AllContacts");
 
                         localStorage.setItem("AllContacts",JSON.stringify(contactsobj));
                        
@@ -1816,6 +1859,7 @@ var retrieveGroupsContent=function ()
               //return resjson;
               if (Modernizr.localstorage) {
                         //store into a local storage
+                        localStorage.removeItem("Groups");
                         localStorage.setItem("Groups",JSON.stringify(resjson));
                         //alert("Local Storage Supported");
                       }
@@ -1845,13 +1889,20 @@ var retrieveGroupsContent=function ()
                     //var contact_ids = [];
                     var group_objects=[];
                     var group_counter=0;
-                    var html_str="\n"
+                    var html_str="\n";
+                    
               
                     var resjson=JSON.parse(localStorage.getItem("Groups"));
                     //alert("Group Content Loaded"+resjson["AD00"]["group_description"]);
                     for(var x in resjson)
                     {
+                        if(resjson.AD00<0)
+                         {
+                          break;
+
+                         }
                         var retrieved_group_id=resjson[""+x+""]["GroupID"];
+                        
                         var retrieved_group_name="";
                         var retrieved_group_descr="";
                         var no_members=0;
@@ -2052,6 +2103,7 @@ var retrieveCampaignsContent=function ()
               //return resjson;
               if (Modernizr.localstorage) {
                         //store into a local storage
+                        localStorage.removeItem("Campaigns");
                         localStorage.setItem("Campaigns",JSON.stringify(resjson));
                         //alert("Local Storage Supported");
                       }
@@ -2159,6 +2211,12 @@ var displayCampaignsContent=function(display_type,campaign_id){
                          //  alert("got here");
                          // break;
                         //}
+
+                         if(resjson.AD00<0)
+                         {
+                          break;
+
+                         }
                         var retrieved_campaign_id=resjson[""+x+""]["CampaignID"];
                         var retrieved_campaign_name="";
                         var retrieved_campaign_descr="";
@@ -2648,6 +2706,17 @@ current_menu=menu_id;
 
 };
 
+var manageBalance=function(menu_id){
+
+ if(current_menu==menu_id)
+     return; 
+retrieveBalanceTemplate();
+current_menu=menu_id;
+
+
+
+};
+
 var scheduleBulkyMessages=function(menu_id)
 {
 
@@ -2749,6 +2818,7 @@ if(!initialized)//check if the menu has note been prviously initialized
               case "Settings":manageSettings(item);break;
               case "Grouping":manageGroups(item);break;
 			  case "Campaign":manageCampaigns(item);break;
+                          case "RechargeAccount":manageBalance(item);break;
 
 			         //case "MainPage":$.mobile.changePage( "#pageone", { transition: "slide", changeHash: false });break;
                
@@ -3168,6 +3238,11 @@ var populateGroupsForCampaign=function(selectedgrps){
 
 var newOptions={};
 json_obj=JSON.parse(localStorage.getItem("Groups"));
+if (json_obj===undefined)
+{
+retrieveGroupsContent();
+json_obj=JSON.parse(localStorage.getItem("Groups"));
+}
 
 for(var x in json_obj)
 {
@@ -3187,6 +3262,13 @@ $('#campaigntargetsms')
          .append($("<option id='campaigntargetallsms' name='campaigntargetallsms'></option>")
          .attr("value",'0')
          .text("All"));
+
+
+if(json_obj.AD00<0)
+ {
+ 
+  return; // it means the group 
+}
 
 //var count = Object.keys(newOptions).length;
 

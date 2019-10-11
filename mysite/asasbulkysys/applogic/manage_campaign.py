@@ -69,9 +69,10 @@ class ManageCampaign:
                # create a Session
                Session = sessionmaker(bind=engine)
                session = Session()
-               result={}                    
+               result={}  
+               company_id=self.myjson["CompanyID"]                  
                # querying for a record if it exists already.
-               res= session.query(Campaign).order_by(Campaign.date_created.desc()).order_by(Campaign.campaign_name).all()
+               res= session.query(Campaign).filter(Campaign.company_id==company_id).order_by(Campaign.date_created.desc()).order_by(Campaign.campaign_name).all()
                
                if len(res) ==0:
                     session.close()
@@ -283,7 +284,7 @@ class ManageCampaign:
                Session = sessionmaker(bind=engine)
                session = Session()
 
-               res= session.query(Campaign).filter(Campaign.is_campaign_active==1).all()  
+               res= session.query(Campaign).filter(Campaign.is_campaign_active==1).filter(Campaign.company_id==company_id).all()  
 
                if len(res)==0 is None:
                     pass #It means at the moment there are no active campaigns.
@@ -635,7 +636,7 @@ class ManageCampaign:
                Session = sessionmaker(bind=engine)
                session = Session()
 
-               res= session.query(Campaign).filter(Campaign.id==campaign_id).first()  
+               res= session.query(Campaign).filter(Campaign.id==campaign_id).filter(Campaign.company_id==company_id).first()  
 
                if res is None:
                     pass #We can't do anything
@@ -1263,7 +1264,7 @@ class ManageCampaign:
                session = Session()
                                    
                # querying if a campaign with the same name exists incase we are trying to add a new campaign.
-               res= session.query(Campaign).filter(Campaign.campaign_name==campaign_name).first()
+               res= session.query(Campaign).filter(Campaign.campaign_name==campaign_name).filter(Campaign.company_id==company_id).first()
 
 
 
@@ -1290,7 +1291,7 @@ class ManageCampaign:
                               result["message"]="Error: Campaign name '%s' already taken. Use a different name if you are editing your campaign"%campaign_name
                               return (json.JSONEncoder().encode(result)) 
                #now query the ID and update incase a match is found   
-               res= session.query(Campaign).filter(Campaign.id==campaign_id).first()  
+               res= session.query(Campaign).filter(Campaign.id==campaign_id).filter(Campaign.company_id==company_id).first()  
 
                if res is None:
                     pass #Probably it is new campaign. Hence we will insert it to the database
@@ -1533,7 +1534,7 @@ class ManageCampaign:
                try:
                     
                 
-                    new_campaign=Campaign(campaign_name,campaign_descr,delivery_medium,campaign_category,target_level)
+                    new_campaign=Campaign(campaign_name,campaign_descr,delivery_medium,campaign_category,target_level,company_id)
                     new_campaign_messages=[]
                     delivery_days=[]
                     new_campaign_audience=[]
@@ -1651,7 +1652,7 @@ class ManageCampaign:
 #myjson={"campaign_name":"Birthday Greetings","campaign_descr":"This campaign has been dedicated for birthday greetings to customers","campaign_category":"Individual Best Wishes","target_level":"Individual","frequency_in_days":"Selective Days","is_it_life_time":"1","is_annual_delivery_date_constant":"1","messages":[[3,"We wish you happy birthday. Thank you for being our loyal customer"],[2,"Happy birthday. We value you as our esteemed customer"],[1,"As you celebrate your birthday, we wish you more success in business. Thank for being with us all this time."]]}
 #myjson={"CampaignName":"Birthday Greetings","CampaignDescr":"This campaign has been dedicated for birthday greetings to customers","CampaignCategory":"Individual Best Wishes","TargetLevel":"Individual","Frequency_in_Days":"Selective Days","is_it_life_time":"1","is_annual_delivery_date_constant":"1","NumMessages":3,"Messages":{"Message0":"Hello there. We wish you happy birthday. Thank you for being our loyal customer","Message1":"Happy birthday. We value you as our esteemed customer","Message2":"As you celebrate your birthday, we wish you more success in business. Thank for being with us all this time."}}
 #myjson={"CampaignID":"21","Action":"Deactivate"}
-#myjson={}
+#myjson={"CompanyID":9}
 #obj=ManageCampaign(myjson)
 #msg=obj.scheduleMessages()
 #msg=obj.triggerCampaignStatus()

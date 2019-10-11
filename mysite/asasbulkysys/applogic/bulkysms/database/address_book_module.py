@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 #from sqlalchemy import *
 #from sqlalchemy import create_engine, ForeignKey, ForeignKeyConstraint
 from sqlalchemy import ForeignKey, ForeignKeyConstraint
-from sqlalchemy import Column, Date, DateTime, Integer, String, Boolean
+from sqlalchemy import Column, Date, DateTime, Integer, String, Boolean,Float
 #from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 #from dbconnect import connstr
@@ -70,6 +70,10 @@ class Company(Base):
      #user_id= Column(Integer, ForeignKey("auth_user.id"),primary_key=True) # A user cannot exist in more than one company
      company_address_book = relationship("AddressBook", backref=backref("company_address_book", order_by=id))
      company_users = relationship("CompanyUsers", backref=backref("company_users", order_by=id))
+     company_recharge = relationship("AccountRecharge", backref=backref("company_recharges", order_by=id))
+     company_campaigns=relationship("Campaign", backref="Company.id")
+
+     company_groups = relationship("Group", backref=backref("company_groups", order_by=id))
 
      def __init__(self,company_name,business_descr,postal_address,street,ward,district,region,mobile_number,email_address): 
           self.company_name=company_name
@@ -83,6 +87,63 @@ class Company(Base):
           self.email_address=email_address
           self.mobile_verified=0
 
+class Bundle(Base):
+     __tablename__="bundles" 
+     id=Column("bundle_id",Integer,primary_key=True) 
+     bundle_name=Column(String(200),nullable=False)
+     bundle_descr=Column(String(500),nullable=True)
+     date_activated=Column(DateTime)
+     date_deactivated=Column(DateTime,nullable=True)#If this is set then a bundle will be available for buying to customers until this date
+     price=Column(Float)
+     number_of_days_valid=Column(Float) # Use of double to allow even hours to be included. For instance 1/24 means 1 hour since a day has 24 hours
+     number_of_units=Column(Integer)
+     #account_recharge = relationship("AccountRecharge", backref=backref("account_recharge", order_by=id))
+    
+#Bundle and AccountRecharge are not linked through foreign key because tarrifs can be changed in bundle and this may affect records for account recharge that were captured previously
+class AccountRecharge(Base):
+     __tablename__="account_recharge" 
+     id=Column("recharge_id",Integer,primary_key=True)
+     company_id=Column(Integer, ForeignKey("companies.company_id")) 
+     recharge_date=Column(DateTime)
+     valid_until=Column(DateTime)
+     acquired_units=Column(Integer)
+     remaining_units=Column(Integer)#We keep this even after expiry so that 
+     transaction_receipt=Column(String(500),nullable=True)# Store records of mobile money or VISA card transaction
+     integrity_key=Column(String(500),nullable=True) #This key changes in every update and use to compute a new hash (Use all fields)
+     hashed_data=Column(String(500),nullable=True) #This ensures that expiry date is not manipulated.So every time there is a use of units, a new payload will be created based on recharge date, expiry date, acquired units and remaining units. So any attempts to change the expiry date or remaining units will result into data integrity being compromised. If there is data compromise, an event will be logged. So even inserting an authorized data is likely to trigger an alarm. A block chain technology can also be used of where the same copy of data 
+     
+
+    
+     #def __init__(self,company_id,bundle_id,recharge_date,transaction_receipt):
+     def __init__(self,recharge_date,valid_until,acquired_units,transaction_receipt,integrity,key,hashed_data):
+          #self.company_id=company_id
+          #self.bundle_id=bundle_id
+          self.recharge_date=recharge_date
+          self.valid_until=valid_until
+          self.acquired_units=acquired_units # Number of units in a bundle can change every time we recharge, we have to know how many units were bought.
+          self.remaining_units=acquired_units#
+          self.transaction_receipt=transaction_receipt
+          self.hashed_data=hashed_data
+          self.integrity_key=integrity_key
+          
+          
+
+'''
+class MessageBalance(Base):
+     __tablename__="message_balance" 
+     id=Column("balance_id",Integer,primary_key=True)
+     recharge_id=Column(Integer, ForeignKey("account_recharge.recharge_id")) 
+     available_units=Column(Integer)
+     expiry_status=Column(Boolean)
+
+     def __init__(self,recharge_date,transaction_receipt):
+          self.company_id=company_id
+          self.bundle_id=bundle_id
+          self.recharge_date=recharge_date
+          self.transaction_receipt=transaction_receipt
+    
+'''
+     
 
     #company_message_groups = relationship("Group", backref=backref("company_message_groups", order_by=id))
 
@@ -125,7 +186,7 @@ class AddressBook(Base):
      group_member_contact = relationship("GroupMember", backref=backref("group_member_contact", order_by=id))
      individual_campaign  = relationship("IndividualizedReminder", backref="AddressBook.id")
 
-     def __init__(self,first_name,middle_name,last_name,gender,birth_date,ward,district,region,country):
+     def __init__(self,first_name,middle_name,last_name,gender,birth_date,ward,district,region,country,company_id):
           self.first_name=first_name
           self.middle_name=middle_name
       	  self.last_name=last_name
@@ -135,6 +196,7 @@ class AddressBook(Base):
       	  self.region= region
       	  self.district=district
       	  self.ward=ward
+          self.company_id=company_id
 
     #@abstractmethod    
      def editAddressDetails(self,first_name,middle_name,last_name,gender,birth_date,ward,district,region,country):
@@ -216,15 +278,16 @@ class Group(Base):
   
      group_name=Column(String(50))
      group_description=Column(String(200))
-     #company_id= Column(Integer, ForeignKey("company.company_id")) #Links the groups created by a certain company
+     company_id= Column(Integer, ForeignKey("companies.company_id")) #Links the groups created by a certain company
  
 
      group_member = relationship("GroupMember", backref=backref("group", order_by=id))
      sms_campaign_audience = relationship("CampaignAudienceSMS", backref=backref("groupcampaign", order_by=id))
      #email_address = relationship("EmailDetails", backref=backref("address_book_emails", order_by=id))
-     def __init__(self,group_name,group_description):
+     def __init__(self,group_name,group_description,company_id):
 	  self.group_name=group_name
     	  self.group_description=group_description
+          self.company_id=company_id
 
 
     #@abstractmethod    

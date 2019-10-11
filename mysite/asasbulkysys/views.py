@@ -99,6 +99,7 @@ def index(request):
     myjson["user_id"]=user_id
     company_details=getCompanyDetails(myjson)
     company_id=json.loads(company_details)["company_id"]
+    print json.loads(company_details)
     mobile_verified=json.loads(company_details)["mobile_verified"]
     
 
@@ -134,7 +135,7 @@ def retrieveAddressBookContent(myjson):
     contacts=obj.retrieveContactDetailsFromDB() #the returned contacts is an encoded json object    
     return contacts
 
-def retrieveGroups(myjson):
+def retrieveGroupDetails(myjson):
     obj=GroupsManager(myjson)
     msg=obj.retrieveGroupDetailsFromDB()
     return msg
@@ -199,39 +200,57 @@ def searchArray(item,array):
 
 @csrf_exempt
 def dataupdate(request,command_id):#REST API used by the client side of a web application to load data for display
+     
+     if request.user.is_authenticated():
+          pass
+     else:
+          status={}
+          status["code"]="Access Denied"
+          myjson=json.JSONEncoder().encode(status)
+          return HttpResponse(myjson, content_type='application/json')
+
      myjson={}
+     #for each operation it is important to know the company id.
+     user_id=request.user.id
+     myjson_user={}
+     myjson_user["user_id"]=user_id
+     company_details=getCompanyDetails(myjson_user)
+     user_company_id=json.loads(company_details)["company_id"]
+
+
 
 
      if command_id =="SS":#Command for sending one SMS
           #myjson={"MessageBody":"Hello. We wish you happy new year...","MobNo":"+255742340759"}
           myjson=json.loads(request.body)
-         
+          myjson["CompanyID"]=user_company_id # put an extra key for company ID to be used whenever campaigns, or groups are updated
           #status=smsScheduling(myjson)
           #myjson=json.JSONEncoder().encode(myjson)
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
 
      elif command_id =="SGD":#Command for saving groups' details
           myjson=json.loads(request.body)
-          #myjson={}
+          myjson["CompanyID"]=user_company_id # put an extra key for company ID to be used whenever campaigns, or groups are updated
           status=saveGroups(myjson)
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
 
      elif command_id =="AGM":#Command for Adding Group Member
           myjson=json.loads(request.body)
-          #myjson={}
+          myjson["CompanyID"]=user_company_id # put an extra key for company ID to be used whenever campaigns, or groups are updated
           status=addGroupMember(myjson)
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
 
 
      elif command_id =="RGM":#Command for removing Group MEmber
           myjson=json.loads(request.body)
-          #myjson={}
+          myjson["CompanyID"]=user_company_id # put an extra key for company ID to be used whenever campaigns, or groups are updated
           status=removeGroupMember(myjson)
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
 
      elif command_id =="SCD":#Command for saving campaigns' details
           #myjson=json.loads(request.body)
           myjson=json.loads(request.POST.get('json'))
+          myjson["CompanyID"]=user_company_id # put an extra key for company ID to be used whenever campaigns, or groups are updated
           #result={}
           #request.POST.get('')
         
@@ -244,7 +263,7 @@ def dataupdate(request,command_id):#REST API used by the client side of a web ap
 
      elif command_id =="CCS":#change campaign status
           myjson=json.loads(request.body)
-        
+          myjson["CompanyID"]=user_company_id # put an extra key for company ID to be used whenever campaigns, or groups are updated
           #myjson={"CampaignID":"21","Action":"Activate"}
           status=changeCampaignStatus(myjson)
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
@@ -268,9 +287,9 @@ def dataupdate(request,command_id):#REST API used by the client side of a web ap
           myjson_user={}
           myjson_user["user_id"]=user_id
           company_details=getCompanyDetails(myjson_user)
-          company_id=json.loads(company_details)["company_id"]
+          user_company_id=json.loads(company_details)["company_id"]
  
-          myjson["CompanyID"]=company_id #This important in knowing which company needs to have its number verified
+          myjson["CompanyID"]=user_company_id #This important in knowing which company needs to have its number verified
           
           status=verifyCompanyMobile(myjson)
               
@@ -279,7 +298,7 @@ def dataupdate(request,command_id):#REST API used by the client side of a web ap
 
      elif command_id =="UAF": #Upload Address File
           myjson={"status": "file uploaded"}
-
+          
           #addressfile = request.FILES['addressfile']
           #workbook = xlrd.open_workbook(addressfile)
           msg={"message":""}
@@ -481,6 +500,7 @@ def dataupdate(request,command_id):#REST API used by the client side of a web ap
                          if ignore_record==1:
                               pass
                          else:
+                              jsondata["CompanyID"]=user_company_id # put an extra key when records are updated
                             
                               #if the record is ok then put it to a database
                               obj=AddressBookManager(jsondata)
@@ -552,7 +572,23 @@ def dataupdate(request,command_id):#REST API used by the client side of a web ap
 
 @csrf_exempt 
 def dataloader(request,command_id):#REST API used by the client side of web application to load data for display
+     
+     if request.user.is_authenticated():
+          pass
+     else:
+          status={}
+          status["code"]="Access Denied"
+          myjson=json.JSONEncoder().encode(status)
+          return HttpResponse(myjson, content_type='application/json')     
+
+
      myjson={}
+     #First get the company associated with user currently logged in
+     user_id=request.user.id
+     myjson_user={}
+     myjson_user["user_id"]=user_id
+     company_details=getCompanyDetails(myjson_user)
+     user_company_id=json.loads(company_details)["company_id"]
 
      if command_id =="LGT":
         
@@ -562,7 +598,15 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status_encoded), content_type='application/json')
 
      elif command_id == "RABC":#RAB stands for Retrieve Address Book Content
-          myjson=json.loads(request.body)
+          try:
+
+               myjson=json.loads(request.body)
+          except Exception as e:
+               status={}
+               status["code"]="Direct access to this operation is not permitted"
+               myjson=json.JSONEncoder().encode(status)
+               return HttpResponse(myjson, content_type='application/json')
+          myjson["CompanyID"]=user_company_id # put an extra key to access record related to the company only
           #myjson={"GroupID":"-1","Option":"-1"}
           #myjson={"GroupID":"-1"}  
           alldata=retrieveAddressBookContent(myjson)
@@ -575,6 +619,11 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
 
 
           #return HttpResponse(status, content_type='application/json')
+
+
+     elif command_id =="RBT":#RBT stands for Retrieve Balance Template
+          context = RequestContext(request)
+          return render_to_response('account_balance.html', context)
 
 
 
@@ -590,6 +639,7 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
      elif command_id =="RCC":#Command for retrieving content for campaigns 
           #myjson=json.loads(request.body)
           #myjson={}
+          myjson["CompanyID"]=user_company_id # put an extra key to access record related to the company only
           status=retrieveCampaigns(myjson)
           #return HttpResponse(status, content_type='application/json')
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
@@ -609,20 +659,43 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
     
 
      elif command_id =="RGC":#Command for retrieving for retrieving groups' details
-          myjson=json.loads(request.body)
+          try:
+
+               myjson=json.loads(request.body)
+          except Exception as e:
+               status={}
+               status["code"]="Direct access to this operation is not permitted"
+               myjson=json.JSONEncoder().encode(status)
+               return HttpResponse(myjson, content_type='application/json')     
+          myjson["CompanyID"]=user_company_id # put an extra key to access record related to the company only
           #myjson={}
-          status=retrieveGroups(myjson)
+          status=retrieveGroupDetails(myjson)
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
           #return HttpResponse(status, content_type='application/json')
 
 
 
      elif command_id =="RGAT":#Command for retrieving template for displaying all contacts. This used for assigning members to groups
-          context = RequestContext(request)
+          try:
+
+               myjson=json.loads(request.body)
+          except Exception as e:
+               status={}
+               status["code"]="Direct access to this operation is not permitted"
+               myjson=json.JSONEncoder().encode(status)
+               return HttpResponse(myjson, content_type='application/json')
           return render_to_response('groupallocation.html', context)
 
      elif command_id =="RMSGT":#Retrieve Message Templates
-          myjson=json.loads(request.body)
+          try:
+
+               myjson=json.loads(request.body)
+          except Exception as e:
+               status={}
+               status["code"]="Direct access to this operation is not permitted"
+               myjson=json.JSONEncoder().encode(status)
+               return HttpResponse(myjson, content_type='application/json')
+          myjson["CompanyID"]=user_company_id # put an extra key to access record related to the company only
           #myjson={}
           #myjson={"CategoryId":4,"TemplateId":-1,"TemplateContent":"Happy holidays @@firstname@@! We value you as our esteemed customer. Thank you for your support."}   
           status=retrieveMessageTemplates(myjson)
@@ -729,11 +802,12 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
                   #group_ids.append(selected_group_id)
                   #group_members=GroupMember.objects.all().filter(group=selected_group_id)
                   if selected_group_id==0:
-                      rows=AddressBook.objects.all().values_list('contact_id','first_name','last_name')# get all people in the address book
+                      #rows=AddressBook.objects.all().values_list('contact_id','first_name','last_name').filter(company_id=company_id)# get all people in the address book associated with the company
+                      rows=AddressBook.objects.values_list('contact_id','first_name','last_name').filter(company=user_company_id)# get all people in the address book associated with the company
 
                   else:
 
-                      rows=AddressBook.objects.values_list('contact_id','first_name','last_name').filter(groupmembers__group=selected_group_id)
+                      rows=AddressBook.objects.values_list('contact_id','first_name','last_name').filter(groupmembers__group=selected_group_id).filter(company=user_company_id)
                   
         
                   #rows=group_members.AddressBook.objects.all()
@@ -1021,7 +1095,7 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
 
 
 
-          rows = AddressBook.objects.all().values_list('contact_id','first_name', 'middle_name','last_name', 'gender','birth_date','ward','district','region','country')
+          rows = AddressBook.objects.values_list('contact_id','first_name', 'middle_name','last_name', 'gender','birth_date','ward','district','region','country').filter(company=user_company_id)
           
           for row in rows:
                row_num += 1

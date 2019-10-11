@@ -73,6 +73,7 @@ class Campaign(Base):
      target_level=Column(Enum('Specific Groups','All'),nullable=False)
      date_created=Column(Date,nullable=False)
      is_campaign_active=Column(Boolean) #is the campaign currently running.A campaign will be active if it has not been stopped manually or its deadline has not yet passed
+     company_id=Column(Integer, ForeignKey("companies.company_id")) # a company that owns his campaign.
 
      campaign_messages = relationship("CampaignDefinedMessages", backref=backref("campaign_messages", order_by=id))
      starting_day = relationship("CampaignStartDay", backref=backref("campaign_end_day", order_by=id))
@@ -83,7 +84,7 @@ class Campaign(Base):
      sms_campaign_audience = relationship("CampaignAudienceSMS", backref=backref("campaignaudience", order_by=id))
      individual_campaign =relationship("IndividualizedReminder", backref=backref("individualized_reminders", order_by=id))
      
-     def __init__(self,campaign_name,campaign_descr,delivery_mechanism,campaign_category,target_level):
+     def __init__(self,campaign_name,campaign_descr,delivery_mechanism,campaign_category,target_level,company_id):
           self.campaign_name=campaign_name
           self.campaign_descr=campaign_descr
           self.delivery_mechanism=delivery_mechanism
@@ -91,6 +92,7 @@ class Campaign(Base):
           self.target_level=target_level
           self.is_campaign_active=True
           self.date_created=datetime.date.today() 
+          self.company_id=company_id
      #if a campaign is not in this table it means it has been set to run indefinately
  
 

@@ -137,7 +137,7 @@ class AddressBookManager:
 	 
 	  #get all contacts and their respective details from the database
           try:
-               
+               company_id=self.myjson["CompanyID"]
                engine=db
                # create a Session
                Session = sessionmaker(bind=engine)
@@ -150,7 +150,7 @@ class AddressBookManager:
                # querying for a record if it exists already.
 
                if self.myjson["GroupID"] =='-1' and self.myjson["Option"] =='-1':
-               	    res= session.query(AddressBook).order_by(AddressBook.first_name).order_by(AddressBook.last_name).all()
+               	    res= session.query(AddressBook).filter(AddressBook.company_id==company_id).order_by(AddressBook.first_name).order_by(AddressBook.last_name).all()
                
                    
                
@@ -208,7 +208,7 @@ class AddressBookManager:
                     group_id_exclude=int(self.myjson["Option"])
                     contact_ids_exclude=[]
                     #first get all contacts IDs that need to be excluded
-                    res= session.query(AddressBook,GroupMember).filter(AddressBook.id==GroupMember.contact_id).filter(GroupMember.group_id==group_id_exclude).order_by(AddressBook.first_name).order_by(AddressBook.last_name).all() 
+                    res= session.query(AddressBook,GroupMember).filter(AddressBook.id==GroupMember.contact_id).filter(GroupMember.group_id==group_id_exclude).filter(AddressBook.company_id==company_id).order_by(AddressBook.first_name).order_by(AddressBook.last_name).all() 
                     if len(res) ==0:
                          #The group, then get everyone else
                          res= session.query(AddressBook).order_by(AddressBook.first_name).order_by(AddressBook.last_name).all()
@@ -244,7 +244,7 @@ class AddressBookManager:
                         
                             
 
-                         res= session.query(AddressBook).order_by(AddressBook.first_name).order_by(AddressBook.last_name).all()
+                         res= session.query(AddressBook).filter(AddressBook.company_id==company_id).order_by(AddressBook.first_name).order_by(AddressBook.last_name).all()
                          for addrbk_rec in res:
                               #do a binary search to check if the retrieved id belong to the list of contact ids t be excluded
                               found=self.binary_search(contact_ids_exclude,addrbk_rec.id)
@@ -271,7 +271,7 @@ class AddressBookManager:
                else:
                    
                     group_id=self.myjson["GroupID"]
-                    res= session.query(AddressBook,GroupMember).filter(AddressBook.id==GroupMember.contact_id).filter(GroupMember.group_id==group_id).order_by(AddressBook.first_name).order_by(AddressBook.last_name).all() 
+                    res= session.query(AddressBook,GroupMember).filter(AddressBook.id==GroupMember.contact_id).filter(GroupMember.group_id==group_id).filter(AddressBook.company_id==company_id).order_by(AddressBook.first_name).order_by(AddressBook.last_name).all() 
                     if len(res) ==0:
                          session.close()
                          engine.dispose()
@@ -357,7 +357,8 @@ class AddressBookManager:
             
 	       email1=self.myjson["Email Address #1"]
 	       email2=self.myjson["Email Address #2"]
-	       email3=self.myjson["Email Address #3"]       
+	       email3=self.myjson["Email Address #3"]
+               company_id=self.myjson["CompanyID"]       
                
               
                
@@ -465,7 +466,7 @@ class AddressBookManager:
                session = Session()
                                    
                # querying for a record if it exists already.
-               res= session.query(AddressBook).filter(AddressBook.id==contact_id).first()
+               res= session.query(AddressBook).filter(AddressBook.id==contact_id).filter(AddressBook.company_id==company_id).first()
                
                if res is None:
                     session.close()
@@ -673,7 +674,7 @@ class AddressBookManager:
                try:
                     
                 
-                    new_address=AddressBook(first_name,middle_name,last_name,gender,dob,ward,district,region, country)
+                    new_address=AddressBook(first_name,middle_name,last_name,gender,dob,ward,district,region, country,company_id)
                     new_mobiles=[]
                     count_mobiles=0
 
