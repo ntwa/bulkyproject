@@ -80,6 +80,32 @@ def verifyCompanyMobile(myjson):
     obj=CompanyManager(myjson)
     ver_status=obj.verifyCompanyMobile()
     return ver_status
+
+
+
+def buyCredits(myjson):
+    obj=CompanyManager(myjson)
+    buy_status=obj.buyCredits()
+    return buy_status
+
+
+def getBalance(myjson):
+    obj=CompanyManager(myjson)
+    balance_status=obj.getBalance()
+    return balance_status
+    
+
+def getBundleOptions(myjson):
+    obj=CompanyManager(myjson)
+    bundles=obj.getBundleOptions()
+    return bundles
+
+def retrieveAllMessages(myjson):
+    obj=ManageCampaign(myjson)
+    msg=obj.retrieveAllMessages()
+    #print
+    return msg
+    
     
 
 
@@ -99,7 +125,7 @@ def index(request):
     myjson["user_id"]=user_id
     company_details=getCompanyDetails(myjson)
     company_id=json.loads(company_details)["company_id"]
-    print json.loads(company_details)
+    #print json.loads(company_details)
     mobile_verified=json.loads(company_details)["mobile_verified"]
     
 
@@ -294,6 +320,24 @@ def dataupdate(request,command_id):#REST API used by the client side of a web ap
           status=verifyCompanyMobile(myjson)
               
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
+
+
+     elif command_id =="BYC":#Buy Credits
+          myjson=json.loads(request.body) 
+
+
+          user_id=request.user.id
+          myjson_user={}
+          myjson_user["user_id"]=user_id
+          company_details=getCompanyDetails(myjson_user)
+          user_company_id=json.loads(company_details)["company_id"]
+ 
+          myjson["CompanyID"]=user_company_id #This important in knowing which company needs to have its number verified
+          
+          status=buyCredits(myjson)
+              
+          return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
+
      
 
      elif command_id =="UAF": #Upload Address File
@@ -597,6 +641,78 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
           status_encoded=json.JSONEncoder().encode(logout_status)
           return HttpResponse('%s(%s)' % (request.GET.get('callback'),status_encoded), content_type='application/json')
 
+     elif command_id =="GB":#Get Balance
+          try:
+
+               myjson=json.loads(request.body)
+          except Exception as e:
+               status={}
+               status["code"]="Direct access to this operation is not permitted"
+               myjson=json.JSONEncoder().encode(status)
+               return HttpResponse(myjson, content_type='application/json') 
+
+
+          user_id=request.user.id
+          myjson_user={}
+          myjson_user["user_id"]=user_id
+          company_details=getCompanyDetails(myjson_user)
+          user_company_id=json.loads(company_details)["company_id"]
+ 
+          myjson["CompanyID"]=user_company_id #This important in knowing which company needs to have its number verified
+          
+          status=getBalance(myjson)
+              
+          return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
+
+
+     elif command_id =="RBO":#Retrieve Bundle Options
+          try:
+
+               myjson=json.loads(request.body)
+          except Exception as e:
+               status={}
+               status["code"]="Direct access to this operation is not permitted"
+               myjson=json.JSONEncoder().encode(status)
+               return HttpResponse(myjson, content_type='application/json') 
+
+
+          user_id=request.user.id
+          myjson_user={}
+          myjson_user["user_id"]=user_id
+          company_details=getCompanyDetails(myjson_user)
+          user_company_id=json.loads(company_details)["company_id"]
+ 
+          myjson["CompanyID"]=user_company_id #This important in knowing which company needs to have its number verified
+          
+          status=getBundleOptions(myjson)
+              
+          return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
+ 
+
+     elif command_id =="RAM":#Retrieve All Sent Messages
+          try:
+
+               myjson=json.loads(request.body)
+          except Exception as e:
+               status={}
+               status["code"]="Direct access to this operation is not permitted"
+               myjson=json.JSONEncoder().encode(status)
+               return HttpResponse(myjson, content_type='application/json')
+
+          user_id=request.user.id
+          myjson_user={}
+          myjson_user["user_id"]=user_id
+          company_details=getCompanyDetails(myjson_user)
+          user_company_id=json.loads(company_details)["company_id"]
+ 
+          myjson["CompanyID"]=user_company_id #This important in knowing which company needs to have its number verified
+          
+          status=retrieveAllMessages(myjson)
+              
+          return HttpResponse('%s(%s)' % (request.GET.get('callback'),status), content_type='application/json')
+
+
+
      elif command_id == "RABC":#RAB stands for Retrieve Address Book Content
           try:
 
@@ -637,7 +753,15 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
 
 
      elif command_id =="RCC":#Command for retrieving content for campaigns 
-          #myjson=json.loads(request.body)
+          try:
+
+               myjson=json.loads(request.body)
+          except Exception as e:
+               status={}
+               status["code"]="Direct access to this operation is not permitted"
+               myjson=json.JSONEncoder().encode(status)
+               return HttpResponse(myjson, content_type='application/json')
+
           #myjson={}
           myjson["CompanyID"]=user_company_id # put an extra key to access record related to the company only
           status=retrieveCampaigns(myjson)
@@ -654,7 +778,13 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
 
      elif command_id =="RSTT":#Command for retrieving template for displaying settings
           context = RequestContext(request)
-          return render_to_response('settings.html', context)    
+          return render_to_response('settings.html', context)  
+
+
+
+     elif command_id =="RDBT":#Command for retrieving template for displaying dshaboard
+          context = RequestContext(request)
+          return render_to_response('dashboard.html', context)   
 
     
 
@@ -675,15 +805,8 @@ def dataloader(request,command_id):#REST API used by the client side of web appl
 
 
 
-     elif command_id =="RGAT":#Command for retrieving template for displaying all contacts. This used for assigning members to groups
-          try:
-
-               myjson=json.loads(request.body)
-          except Exception as e:
-               status={}
-               status["code"]="Direct access to this operation is not permitted"
-               myjson=json.JSONEncoder().encode(status)
-               return HttpResponse(myjson, content_type='application/json')
+     elif command_id =="RGAT":#Command for retrieving template for displaying all contacts. This used for assigning members to groups    
+          context = RequestContext(request)
           return render_to_response('groupallocation.html', context)
 
      elif command_id =="RMSGT":#Retrieve Message Templates

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import datetime
+import datetime,time
 import sys,json
 from random import randint
 import os
@@ -22,13 +22,179 @@ import bulkysms.database.sms_feedback_module
 
 Base.metadata.create_all(db)
 
-from bulkysms.database.address_book_module import Company, CompanyUsers
+from bulkysms.database.address_book_module import Company, CompanyUsers,Bundle,AccountRecharge
 
 
 
 class CompanyManager:
      def __init__(self,myjson):
           self.myjson=myjson
+
+
+
+     def getBundleOptions(self):
+          status={}
+          try:
+              
+               pos=0
+               engine=db
+               # create a Session
+               Session = sessionmaker(bind=engine)
+               session = Session() 
+	       res=session.query(Bundle).order_by(Bundle.bundle_name).all()
+
+               if len(res)==0:
+                    status["BL00"]={"BundleID":-1,"BundleName":"None","BundleDescr":"None","Units":"0"}
+                    return (json.JSONEncoder().encode(status))
+               else:
+                    #Get all available bundles
+                    
+                    for rec in res:
+                         tuple_rec={}
+                         tuple_rec["BundleID"]=rec.id
+                         tuple_rec["BundleName"]=rec.bundle_name
+                         tuple_rec["BundleDescr"]=rec.bundle_descr
+                         tuple_rec["BundlePrice"]="Tsh %s"%int(rec.price)
+                         days=int(rec.number_of_days_valid) 
+                         if days==1:
+                              tuple_rec["BundleValidityPeriod"]="24 hours"
+                         elif days>1:
+                              tuple_rec["BundleValidityPeriod"]="%s days"%days
+               
+                         tuple_rec["Units"]=rec.number_of_units
+                         if pos<10:
+                              key="BL0"
+                         else:
+                              key="BL"
+                         json_key="%s%s"%(key,pos)
+                         status[json_key]=tuple_rec
+                         pos=pos+1
+
+                    return(json.JSONEncoder().encode(OrderedDict(sorted(status.items(), key=lambda t: t[0]))))  
+                     
+               
+          except Exception as e:
+               error="%s"%e
+               status["BL00"]={"BundleID":-2,"BundleName":"None","BundleDescr":error,"Units":"0"}
+               return (json.JSONEncoder().encode(status))
+
+
+
+
+
+     def getBalance(self):
+          status={}
+          try:
+               #pass
+               company_id=self.myjson["CompanyID"]
+              
+               pos=0
+               engine=db
+               # create a Session
+               Session = sessionmaker(bind=engine)
+               session = Session() 
+	       res=session.query(AccountRecharge).filter(AccountRecharge.company_id==company_id).order_by(AccountRecharge.bundle_name).order_by(AccountRecharge.recharge_date).all()
+               if len(res)==0:
+                    status["BL00"]={"BundleName":"None","ExpiryDate":"None","Credits":"0"}
+                    return (json.JSONEncoder().encode(status))
+               else:
+                    tuple_rec={}
+                    for rec in res:
+                         tuple_rec={}
+                         tuple_rec["BundleName"]=rec.bundle_name
+                         date_raw=rec.valid_until
+                         #date_str=date_raw.strftime("%d-%m-%Y")
+                         date_str=date_raw.strftime('%d %B %Y %H:%M:%S')
+                         tuple_rec["ExpiryDate"]=date_str
+                         tuple_rec["Credits"]=rec.acquired_units
+                         if pos<10:
+                              key="BL0"
+                         else:
+                              key="BL"
+                         json_key="%s%s"%(key,pos)
+                         status[json_key]=tuple_rec
+                         pos=pos+1
+                          
+                    #return (json.JSONEncoder().encode(status))
+                    return(json.JSONEncoder().encode(OrderedDict(sorted(status.items(), key=lambda t: t[0]))))  
+                     
+               
+          except Exception as e:
+               pass
+               error="%s"%e
+               status["BL00"]={"BundleName":"None","ExpiryDate":"None","Credits":"-1","Error":error}
+               return (json.JSONEncoder().encode(status))
+
+     def buyCredits(self):
+          status={}
+          
+          try:
+               company_id=self.myjson["CompanyID"]
+	       bundle_id=self.myjson["BundleID"]
+               trans_receipt=self.myjson["TransReceipt"]
+               engine=db
+               # create a Session
+               Session = sessionmaker(bind=engine)
+               session = Session()           
+               bundle_details=session.query(Bundle).filter(Bundle.id==bundle_id).first()
+               if bundle_details is None:
+          	    session.close()
+                    engine.dispose()
+                    dbconn.close()
+
+		    status["code"]=-1
+                    status["descr"]="The selected bundle doesn't exist"
+                    return (json.JSONEncoder().encode(status))
+
+               else:
+                    bundle_name=bundle_details.bundle_name
+                    price=bundle_details.price
+                    validity_period=bundle_details.number_of_days_valid
+                    acquired_units=bundle_details.number_of_units
+
+                    #recharge_date=datetime.date.today()
+                    recharge_date=datetime.datetime.now()#GMT Time. 
+                    recharge_date=recharge_date+datetime.timedelta(hours=3) # Add GMT +3 hours to get east african time
+                    #recharge_time=time.strftime("%H:%M:%S")
+                    #recharge_date_str="%s %s"%(recharge_date,recharge_time)
+                    recharge_date_str=recharge_date.strftime("%Y-%m-%d %H:%M:%S")
+                    if validity_period>=1:
+                         validity_in_days=int(validity_period)
+                         valid_until_date=recharge_date+datetime.timedelta(days=validity_in_days)
+                         valid_until_date_str=valid_until_date.strftime("%Y-%m-%d %H:%M:%S")
+                         #valid_until_date_str="%s %s"%(valid_until_date,recharge_time)  
+
+
+               #datetime.date.today()+datetime.timedelta(days=1)
+               #(self,recharge_date,valid_until,acquired_units,transaction_receipt,integrity,key,hashed_data)
+               
+               company_obj=session.query(Company).filter(Company.id==company_id).first()
+               if company_obj is None:
+                    
+		    status["code"]=-2
+                    status["descr"]="The selected company doesn't exist"
+               else:
+                    #Now a
+                    #company_obj.company_recharge.append()
+                    
+                    new_account_recharge=AccountRecharge(bundle_name,recharge_date_str,valid_until_date_str,acquired_units,trans_receipt,None,None)
+                    company_obj.company_recharge.append(new_account_recharge)
+
+                    session.merge(company_obj)
+                    session.commit()
+                    status["code"]=1
+                    status["descr"]="The account was successfully credited"
+               session.close()
+               engine.dispose()
+               dbconn.close()
+                    
+
+
+	  except Exception as e:
+	            status["code"]=-3
+                    status["descr"]="Error with: %s"%e
+
+          return (json.JSONEncoder().encode(status))
 
 
 
@@ -299,6 +465,14 @@ class CompanyManager:
 
                #result["R00"]={"F1":1,"F0":"The contact was recorded sucessfully"}
                #return (json.JSONEncoder().encode(result))
+
+myjson={"CompanyID":1,"BundleID":1}
+obj=CompanyManager(myjson)
+msg=obj.getBundleOptions()
+#msg=obj.buyCredits()
+#msg=obj.getBalance()
+print msg
+
      
 #Suser_id=5   
 #myjson={"Code":"520622","Key":"61a5f4e32a2e41acbf5de6d5a5c87f9acb8788863d88680a9e43e56e760497c3d2416e1d2fbd60236450a70ae9bd3a078611816bf13c36dd643ac121058dfbfe"}

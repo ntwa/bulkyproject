@@ -8,8 +8,6 @@ var contact_ids_found=0;
 
 var user_defined_campaign_frequency_status=0;
 
-
-
 var total_no_msg_box=0;// This variable is important when defining the number of messages to be used in a campaign
 
  var site="http://localhost:8000/asasbulkysys/";
@@ -135,6 +133,21 @@ var removeLoadingCircleCampaign=function (){
 var addLoadingCircleCampaign=function (){
  //$("#progressbar").html("");
   $("#myprogressbar_campaign").addClass("loader");
+// alert($("#progressbar").html());
+
+};
+
+
+var removeLoadingCircleChart=function (){
+ //$("#progressbar").html("");
+  $("#myprogressbar_chart").removeClass("loader");
+// alert($("#progressbar").html());
+
+};
+
+var addLoadingCircleChart=function (){
+ //$("#progressbar").html("");
+  $("#myprogressbar_chart").addClass("loader");
 // alert($("#progressbar").html());
 
 };
@@ -1143,6 +1156,320 @@ var retrieveBalanceTemplate=function(){
 
 };
 
+var viewBalance=function(){
+
+$("#viewbalance").show();
+$("#buycredits").hide();
+
+};
+
+var viewBalance=function(){
+
+$("#viewbalance").show();
+$("#buycredits").hide();
+
+      jsonObject={BundleID:$("bundleid").val()};
+
+   
+      var urlstr=site;
+      urlstr=urlstr+"jsondata/GB/";// get balance
+      $.ajax({
+             url: urlstr,
+             dataType: "jsonp",
+             method: "POST",
+             data:JSON.stringify(jsonObject),
+             cache: false
+             })
+            .done(function( result ) {
+            
+             //alert(result.message); 
+              var html_str="";
+              //alert("Credits Retrieved");
+               for(var key in result){
+
+                  html_str=html_str+'<div id="rcorners_acc_balance" align="center" valign="center">\n';
+                  html_str=html_str+'<table>\n <tr>\n        <td><b><i>Bundle Name</i></b>: </td>\n         <td>'+result[""+key+""]["BundleName"]+'</td>\n  </tr>\n';
+                  html_str=html_str+'<tr>\n        <td><b><i>Bundle Type</i></b>: </td>\n         <td>SMS</td>\n  </tr>\n';
+                  html_str=html_str+'<tr>\n        <td><b><i>Balance</i></b>: </td>\n         <td>'+result[""+key+""]["Credits"]+'</td>\n  </tr>\n';
+                  html_str=html_str+'<tr>\n        <td><b><i>Expiry Date</i></b>: </td>\n         <td>'+result[""+key+""]["ExpiryDate"]+'</td>\n  </tr>\n';
+
+                       
+                  html_str=html_str+" </table>\n</div>";
+                  
+
+
+
+              }
+              
+              $("#viewbalancecontent").html(html_str);
+
+
+             });
+
+};
+
+
+
+var retrieveBundleDetails=function(bundle_id){
+
+	bundleObj=JSON.parse(localStorage.getItem("Bundles"));
+        var found=false;
+	for(var key in bundleObj){
+          
+          if(bundleObj[""+key+""]["BundleID"]==bundle_id)
+           {
+            //We have found the bundle picked by user, now find its details
+            $("#bundle_descr").html(bundleObj[""+key+""]["BundleDescr"]);
+            $("#bundle_no_sms").html(bundleObj[""+key+""]["Units"]);
+            $("#bundle_price").html(bundleObj[""+key+""]["BundlePrice"]);
+            $("#bundle_days").html(bundleObj[""+key+""]["BundleValidityPeriod"]);
+            
+            found=true;
+            break;
+
+
+           }
+
+
+	}
+        if(found){
+          $("#buystep1").unbind("click");//remove previous bind
+           $("#buystep1").bind("click", function(event){
+           
+              choosePaymentMethod();
+
+            })
+
+
+         }
+        else{
+            $("#bundle_descr").html("");
+            $("#bundle_no_sms").html("");
+            $("#bundle_price").html("");
+            $("#bundle_days").html("");
+            $("#buystep1").unbind("click");//remove any existing bind to click
+             $("#buystep1").bind("click",function(event){
+              alert("You have to select a bundle first!!"); //You can't proceed to payments without selecting a valid bundle
+             });
+
+
+         }
+
+
+};
+
+var buyCredits=function(paymentmethod){
+
+  var transnumber="1234";
+  var receipt= "Bought using "+paymentmethod+" with Transaction Number "+transnumber;
+  
+     
+      jsonObject={BundleID:parseInt($("#bundle_id").val()),TransReceipt:receipt};
+   
+   
+      var urlstr=site;
+      urlstr=urlstr+"jsonupdate/BYC/";// Buy Credits
+      $.ajax({
+             url: urlstr,
+             dataType: "jsonp",
+             method: "POST",
+             data:JSON.stringify(jsonObject),
+             cache: false
+             })
+            .done(function( result ) {
+
+              alert(result.descr);
+                  
+
+             });
+
+
+
+};
+
+
+var prevloadBuyCreditCont="";
+var prev_bundle_id;
+var choosePaymentMethod=function()
+{
+prev_bundle_id=$("#bundle_options").val();
+
+prevloadBuyCreditCont=$("#buycreditcontainer").html(); //store this content incase you want to go back to selecting which bundle to buy
+var payment_methods_str="<table class='table-forms'>   \
+                              <tr>  \
+                                 <td><img src='/static/bulkysms/images/airtelmoney_logo.png' style='cursor:pointer' alt='Select Payment Method' id='airtel_pay'></td>\
+                                 <td><img src='/static/bulkysms/images/mpesa_logo.png' style='cursor:pointer' alt='Select Payment Method' id='mpesa_pay' ></td>\
+                                 <td><img src='/static/bulkysms/images/tigo_pesa_logo.png' style='cursor:pointer' alt='Select Payment Method' id='tigopesa_pay' ></td>\
+                              </tr>  \
+                             <tr><td colspan=3 align='center'><button type='button' class='btn btn-info' id='movebackstep1'>Previous</button></td></tr> \
+                         </table> \
+                         <input type=hidden id='bundle_id' value=";
+     payment_methods_str=payment_methods_str+$("#bundle_options").val();
+     payment_methods_str=payment_methods_str+">";
+
+
+
+
+ $("#buycreditcontainer").html(payment_methods_str);
+
+ $("#movebackstep1").unbind("click");//remove previous bind
+  $("#movebackstep1").bind("click", function(event){
+                         
+    $("#buycreditcontainer").html(prevloadBuyCreditCont); 
+    $("#movebackstep1").unbind("click");//remove previous bind 
+    $("#airtel_pay").unbind("click");//remove previous bind
+    $("#mpesa_pay").unbind("click");//remove previous bind
+    $("#tigopesa_pay").unbind("click");//remove previous bind
+
+  
+
+    $('#bundle_options option[value='+prev_bundle_id+']').attr('selected','selected');
+    prev_bundle_id=null; 
+
+   //now unbind and bind pay button  
+
+    $("#buystep1").unbind("click");//remove previous bind
+
+     $("#buystep1").bind("click", function(event){
+           
+      choosePaymentMethod();
+
+       });    
+
+ });
+
+
+ $("#airtel_pay").unbind("click");//remove previous bind
+  $("#airtel_pay").bind("click", function(event){
+
+   buyCredits("AIRTEL");
+   });
+
+ $("#mpesa_pay").unbind("click");//remove previous bind
+  $("#mpesa_pay").bind("click", function(event){
+
+   buyCredits("MPESA");
+   });
+
+ $("#tigopesa_pay").unbind("click");//remove previous bind
+  $("#tigopesa_pay").bind("click", function(event){
+
+   buyCredits("TIGOPESA");
+   });
+
+
+
+
+
+};
+
+
+var loadBuyCredits=function(){
+  $("#viewbalance").hide();
+  $("#buycredits").show();
+  
+
+
+      var urlstr=site;
+      urlstr=urlstr+"jsondata/RBO/";// Retrieve Bundle Options
+      $.ajax({
+             url: urlstr,
+             dataType: "jsonp",
+             method: "POST",
+             data:JSON.stringify(jsonObject),
+             cache: false
+             })
+            .done(function( bundleObj ) {
+              
+              if(bundleObj.BL00.BundleID<0)
+                {
+
+                  alert("There are no available bundles to buy");
+                }
+               else
+                  {
+                    
+                      if (Modernizr.localstorage) {
+                        //store into a local storage
+                        localStorage.removeItem("Bundles");
+
+                        localStorage.setItem("Bundles",JSON.stringify(bundleObj));
+               
+
+                      }
+                      //next populate options with all available bundles
+                      var select = $('#bundle_options');
+                      $('option', select).remove();
+
+
+                      $('#bundle_options')
+                       	  .append($("<option id='select_bundle' name='select_bundle_name'></option>")
+                          .attr("value",'0')
+                          .text("Select a bundle to buy"));
+
+
+                        //get all bundle ID and their names to be included in Bundle options
+                        var newOptions={};
+			for(var x in bundleObj)
+			{
+			  let bid=""+bundleObj[""+x+""]["BundleID"];
+			  let bname=""+bundleObj[""+x+""]["BundleName"];
+			  newOptions[""+bid]=bname;
+			
+
+			}
+
+
+			$.each(newOptions, function(key, value) {
+			      let option_str= "<option class='bundleoption' id='bid_";
+			      option_str=option_str+key;
+			      option_str=option_str+"'></option>";
+			     $('#bundle_options')
+				 .append($(option_str)
+				 .attr("value",key)
+				 .text(value));
+			});
+                         $("#buystep1").unbind("click");//remove any existing bind to click so tha
+                          $("#buystep1").bind("click",function(event){
+                            alert("You have to select a bundle first!!");
+                        });
+
+
+                         $("#bundle_options").unbind("change");//remove previous bind
+                         $("#bundle_options").bind("change", function(event){
+                         
+                           var selected_bundle_id=$(this).val();
+                           retrieveBundleDetails(selected_bundle_id);
+
+                        });
+
+
+                     //clear all previos content 
+
+                              $("#bundle_descr").html("");
+                             $("#bundle_no_sms").html("");
+                            $("#bundle_price").html("");
+                             $("#bundle_days").html("");
+
+     
+
+
+
+
+
+                  }//end of else statement
+
+
+
+             });
+
+
+
+};
+
+
+
+
 
 var retrieveAddressBookTemplate=function ()
 {     
@@ -1318,7 +1645,7 @@ var saveGroupMembers=function(group_id){
 
 var retrieveGroupAllocatioTemplate=function(){
 
-
+      jsonObject={};
       var urlstr=site;
       urlstr=urlstr+"jsondata/RGAT/";// Retrieve Group Allocation Template
       $.ajax({
@@ -1326,8 +1653,11 @@ var retrieveGroupAllocatioTemplate=function(){
              cache: false
              })
             .done(function(html) {
+          
             $( "#main-content" ).html('');
             $( "#main-content" ).append(html);
+            
+            //alert(html);
                //Now append that interface
             
                            //$(document).ready(function () {
@@ -1337,8 +1667,8 @@ var retrieveGroupAllocatioTemplate=function(){
                             //});
              //retrieveAllContacts();
          
-             });
-
+             })
+             .fail(function(html) {alert("Fail")});
 
 
 };
@@ -1792,6 +2122,7 @@ var setupGroupAllocationInterface=function(interface_choice)
 
 
 var expandGroup=function(group_id,menu_id,group_name){
+ 
 
  var record_id=menu_id+"";
  record_id=record_id+group_id;
@@ -1845,7 +2176,7 @@ var retrieveGroupsContent=function ()
      jsonObject={Empty:""};
      
       var urlstr=site;
-      urlstr=urlstr+"jsondata/RGC/";// Retrieve
+      urlstr=urlstr+"jsondata/RGC/";// Retrieve Group Content
       $.ajax({
              url: urlstr,
              dataType: "jsonp",
@@ -1914,7 +2245,7 @@ var retrieveGroupsContent=function ()
                         if((display_type==EDITING_MODE)&&(group_id==retrieved_group_id)){
                          //alert("Got here");
                           // this is editing mode so it should be viewed in text box ready for editing
-                           retrieved_group_name="<input type=\"text\" value=\""+resjson[""+x+""]["group_name"]+"\" id=\"group_name_edit\" maxlength=\"50\">" ;
+                           retrieved_group_name="<input type=\"text\" value=\""+resjson[""+x+""]["GroupName"]+"\" id=\"group_name_edit\" maxlength=\"50\">" ;
                           //retrieved_group_descr=resjson[""+x+""]["group_description"]; 
                           retrieved_group_descr="<textarea id=\"group_descr_edit\"  rows=\"5\" cols=\"20\" maxlength=\"200\">"+resjson[""+x+""]["group_description"]+"</textarea>" ;
 
@@ -1922,7 +2253,7 @@ var retrieveGroupsContent=function ()
 
                         }
                         else{
-                          retrieved_group_name=resjson[""+x+""]["group_name"];  ;
+                          retrieved_group_name=resjson[""+x+""]["GroupName"];  ;
                           retrieved_group_descr=resjson[""+x+""]["group_description"];  
                           no_members=resjson[""+x+""]["NumMembers"]; 
 
@@ -1987,7 +2318,7 @@ var retrieveGroupsContent=function ()
                         html_str=html_str+"\n   <br><button style=\"font-size:24px;color:orange;\" title=\"Send SMS to this group\" onclick=\"initiateSMSDialog('2','";
                         html_str=html_str+resjson[""+x+""]["GroupID"];
                         html_str=html_str+"','";
-                        html_str=html_str+resjson[""+x+""]["group_name"];
+                        html_str=html_str+resjson[""+x+""]["GroupName"];
                         html_str=html_str+"')\"><i class=\"glyphicon glyphicon-envelope\"></i></button>"; 
 
                         html_str=html_str+"\n   <button style=\"font-size:24px;color:blue\" title=\"Edit this group\" onclick=\"editGroup('";
@@ -2002,7 +2333,7 @@ var retrieveGroupsContent=function ()
                         html_str=html_str+"\n   <button style=\"font-size:24px;color:green;\" title=\"Edit Group Members\" onclick=\"expandGroup('";
                         html_str=html_str+resjson[""+x+""]["GroupID"];
                         html_str=html_str+"','EXPANDGROUP','";
-                        html_str=html_str+resjson[""+x+""]["group_name"];
+                        html_str=html_str+resjson[""+x+""]["GroupName"];
                         html_str=html_str+"')\"><i class=\"glyphicon glyphicon-expand\"></i></button>";
                         html_str=html_str+"\n   </td>";
 
@@ -2123,6 +2454,336 @@ var retrieveCampaignsContent=function ()
   };
 
 
+var chartData;
+var report_displayed;
+var createChart=function(){
+
+
+	var chart = new CanvasJS.Chart("chartContainer", {
+		theme: "white",
+		exportFileName: "Doughnut Chart",
+		exportEnabled: true,
+		animationEnabled: true,
+		title:{
+			text: report_displayed
+		},
+		legend:{
+			cursor: "pointer",
+			itemclick: explodePie
+		},
+		data: [{
+			type: "doughnut",
+			innerRadius: 90,
+			showInLegend: true,
+			toolTipContent: "<b>{name}</b>: No of messages: {y} (#percent%)",
+			indexLabel: "{name} - #percent%",
+			dataPoints: chartData
+		}]
+	});
+
+//now render chart
+
+
+	chart.render();
+
+
+
+
+	function explodePie (e) {
+		if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
+			e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
+		} else {
+			e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
+		}
+		e.chart.render();
+	}
+
+
+
+};
+var content_type;
+var displayDashboard=function(type)
+{
+content_type=type;
+//alert("startContentDownloading");
+//Make sure you get all campaigns
+retrieveCampaignsContent();
+
+$("#chartContainer").html('');//clear the container
+//Make sure you get groups
+
+retrieveGroupsContent();
+ 
+addLoadingCircleChart();
+$(".progressboxchart").show();
+//alert("Content ready") ;       
+//delay execution of this 
+setTimeout(function(){
+
+
+        $(".progressboxchart").hide();
+        removeLoadingCircleChart();
+	var resmessages=JSON.parse(localStorage.getItem("AllMessages"));
+
+	var rescampaigns=JSON.parse(localStorage.getItem("Campaigns"));
+
+	var resgroups=JSON.parse(localStorage.getItem("Groups"));
+	var data_array=new Array()
+	var array_items_counter=0;
+	var array_posn=0;
+        var checked_not_group_nor_campaign=true;//for keeping track the number of outside iterations for group or campaign
+        var not_for_group_or_camp_counter=0;
+       
+	//var array_pos_init=false; //This checks if the counter for a campaign has already 
+
+		if(type=="Campaigns")
+		{
+		   
+                          report_displayed="Campaigns' Messages Report";
+			  for(var x in rescampaigns){
+		            
+		           array_items_counter=0; 
+                              
+		            var campaign_name=rescampaigns[""+x+""]["CampaignName"];
+		            // now count the number messages in this campaign. If there are no messages ignore it
+		              for(var y in resmessages){
+		                 
+		                 message_camp_name=resmessages[""+y+""]["CampaignName"];
+		               
+		                 if(campaign_name==message_camp_name)
+		                   {
+		                    array_items_counter++;
+
+		                   }
+                                    else
+                                      {
+                                         if ((message_camp_name=="Not for Campaign")&&(checked_not_group_nor_campaign))//We only check in the first round. When moving to the next campaign in the out loop we don't check again
+                                           {
+                                           
+                                             not_for_group_or_camp_counter++;
+                                      
+
+                                           }
+
+
+
+                                      }
+                                 
+
+		                } //end inner for loop
+		                if(array_items_counter>0)
+		                {
+		                  //then this campaign has some messages
+		                  jsonObj={ y: array_items_counter, name: campaign_name};
+		                  data_array[array_posn]=jsonObj;//here we are initializing data to be used during plotting
+		                  
+		                  array_posn++; //increment position by one
+		                  
+		                }
+                                checked_not_group_nor_campaign=false; //Check only once for messages not belonging to campaign
+	 
+
+			 }//end outer for loop
+
+		     //now check possibility of plotting if we have at least two campaigns
+
+		       if(array_posn>=1){
+
+                         //Now check not for campaign and if it exists add to the array
+                         if(not_for_group_or_camp_counter>0)
+                           {
+                                  
+                                  jsonObj={ y: not_for_group_or_camp_counter, name:"Messages not belonging to Campaigns"};
+		                  data_array[array_posn]=jsonObj;//here we are initializing data to be used during plotting
+
+
+                           }
+
+		         chartData=data_array;
+		         array_posn++;
+
+		         createChart();
+		         
+
+		       }
+
+
+		}//end if statement for checking if type is campaign
+		else if(type=="Groups"){
+
+		       report_displayed="Groups' Messages Report";
+			  for(var x in resgroups){
+		            
+		           array_items_counter=0;    
+		            var group_name=resgroups[""+x+""]["GroupName"];
+		            // now count the number messages in this campaign. If there are no messages ignore it
+		              for(var y in resmessages){
+		                 
+		                 message_group_name=resmessages[""+y+""]["GroupName"];
+		                 
+		                 if(group_name==message_group_name)
+		                   {
+		                    array_items_counter++;
+
+		                   }
+                                    else
+                                      {
+                                         if ((message_group_name=="Not for Group")&&(checked_not_group_nor_campaign))//We only check in the first round. When moving to the next campaign in the out loop we don't check again
+                                           {
+                                             not_for_group_or_camp_counter++;
+
+                                           }
+
+
+
+                                      }
+
+		                } //end inner for loop
+		                if(array_items_counter>0)
+		                {
+		                  //then this campaign has some messages
+		                  jsonObj={ y: array_items_counter, name: group_name};
+		                  data_array[array_posn]=jsonObj;//here we are initializing data to be used during plotting
+
+                                  
+		                  //console.log(""+campaign_name+""+array_posn);
+		                  array_posn++; //increment position by one
+
+                                   //Now check not for group but only once
+		                  
+		                }
+                                checked_not_group_nor_campaign=false //check only once for messages not belonging to any group
+	 
+
+			 }//end outer for loop
+
+		     //now check possibility of plotting if we have at least one campaign
+
+		       if(array_posn>=1){
+                         //Now check not for group and if it exists add to the array
+                         if(not_for_group_or_camp_counter>0)
+                           {
+                                  jsonObj={ y: not_for_group_or_camp_counter, name:"Messages not belonging to groups"};
+		                  data_array[array_posn]=jsonObj;//here we are initializing data to be used during plotting
+
+
+                           }
+                         array_posn++;
+		         chartData=data_array;
+		        
+
+		         createChart();
+		         
+
+		       }
+
+
+
+
+		}
+               else{//for category
+
+                         report_displayed="Campaigns Categories' Messages Report";
+                          campaign_categories=["Personalized Reminders","Birthday Greetings","General Reminders","Holidays Greetings and Wishes","Holidays Deals","General Deals, and Discounts"];
+			  for(var i=0;i<campaign_categories.length;i++){
+		            
+		           array_items_counter=0; 
+                              
+		            var campaign_category=campaign_categories[i];
+                             
+		            // now count the number messages in this campaign. If there are no messages ignore it
+		              for(var y in resmessages){
+		                 
+		                 message_category_name=resmessages[""+y+""]["CampaignCategory"];
+		               
+		                 if(campaign_category==message_category_name)
+		                   {
+		                    array_items_counter++;
+
+		                   }
+                             
+                                 
+
+		                } //end inner for loop
+		                if(array_items_counter>0)
+		                {
+		                  //then this campaign has some messages
+		                  jsonObj={ y: array_items_counter, name: campaign_category};
+		                  data_array[array_posn]=jsonObj;//here we are initializing data to be used during plotting
+		                  
+		                  array_posn++; //increment position by one
+		                  
+		                }
+                               
+	 
+
+			 }//end outer for loop
+
+		     //now check possibility of plotting if we have at least one campaign
+
+		       if(array_posn>=1){
+
+                         chartData=data_array;
+		         array_posn++;
+
+		         createChart();
+		         
+
+		       }
+
+
+
+
+
+                 }
+
+    },2000);
+
+
+};
+
+
+//Retrieve All messages
+var retrieveAllMessages=function ()
+{     
+     
+     jsonObject={Empty:""};
+     
+      var urlstr=site;
+      urlstr=urlstr+"jsondata/RAM/";// Retrieve All Sent Messages
+      $.ajax({
+             url: urlstr,
+             dataType: "jsonp",
+             method: "POST",
+             data:JSON.stringify(jsonObject),
+             cache: false
+             })
+            .done(function( resjson ) {
+               //alert(resjson.AD00.messagestxt.MTXT00);
+                  //alert("Messages Retrieved")
+              //return resjson;
+              if (Modernizr.localstorage) {
+                        //store into a local storage
+                        localStorage.removeItem("AllMessages");
+                        localStorage.setItem("AllMessages",JSON.stringify(resjson));
+                      
+                      }
+
+                
+
+                   
+
+          
+
+             });
+
+
+
+
+
+  };
+
+
 
 //Activate or deactivate campaign
 
@@ -2220,7 +2881,7 @@ var displayCampaignsContent=function(display_type,campaign_id){
                         var retrieved_campaign_id=resjson[""+x+""]["CampaignID"];
                         var retrieved_campaign_name="";
                         var retrieved_campaign_descr="";
-                        retrieved_campaign_name=resjson[""+x+""]["campaign_name"];  ;
+                        retrieved_campaign_name=resjson[""+x+""]["CampaignName"];  ;
                         retrieved_campaign_descr=resjson[""+x+""]["campaign_description"];  
 
                        
@@ -2679,6 +3340,71 @@ var retrieveEditingCampaignTemplate=function (campaign_id)
 
 //end of  displaying campaigns
 
+
+var retrieveDashBoardTemplate=function(){
+
+
+      var urlstr=site;
+      urlstr=urlstr+"jsondata/RDBT/";// Retrieve dash board template
+      $.ajax({
+             url: urlstr,
+             cache: false
+             })
+            .done(function( html ) {
+            
+              $("#main-content").html(html);
+              $("#viewbycampaign").unbind( "click" ); // Remove the previous click handlers.
+              $("#viewbycampaign").bind('click',function(){
+              
+                
+
+                setTimeout(function(){
+
+	   
+                displayDashboard('Campaigns');
+
+               },100);
+
+              
+                });
+
+
+              $("#viewbygroup").unbind( "click" ); // Remove the previous click handlers.
+              $("#viewbygroup").bind('click',function(){
+              
+                
+
+                setTimeout(function(){
+
+	   
+                displayDashboard('Groups');
+
+               },100);
+
+              
+                });
+
+
+              $("#viewbycampaigncategory").unbind( "click" ); // Remove the previous click handlers.
+              $("#viewbycampaigncategory").bind('click',function(){
+              
+                
+
+                setTimeout(function(){
+
+	   
+                displayDashboard('Category');
+
+               },100);
+
+              
+                });
+           
+             });
+
+
+
+};
 var resetToHome=function(menu_id)
 {
 
@@ -2717,13 +3443,19 @@ current_menu=menu_id;
 
 };
 
-var scheduleBulkyMessages=function(menu_id)
+var viewDashboards=function(menu_id)
 {
 
 
-alert("Schedule Bulky Messages");
+
 if(current_menu==menu_id)
      return; 
+
+retrieveDashBoardTemplate();
+
+retrieveAllMessages();
+
+
 current_menu=menu_id;
 };
 
@@ -2812,13 +3544,13 @@ if(!initialized)//check if the menu has note been prviously initialized
 			 switch(item)
 
 			  {
-              case "Home":resetToHome(item);break;
+                          case "Home":resetToHome(item);break;
 			  case "AddressBook":contact_card_hidden=true;manageAddressBook(item);break;
-		      case "Scheduler":scheduleBulkyMessages(item);break;
-              case "Settings":manageSettings(item);break;
-              case "Grouping":manageGroups(item);break;
+		          case "DashBoard":viewDashboards(item);break;
+                          case "Settings":manageSettings(item);break;
+                          case "Grouping":manageGroups(item);break;
 			  case "Campaign":manageCampaigns(item);break;
-                          case "RechargeAccount":manageBalance(item);break;
+                          case "RechargeAccount":manageBalance(item);viewBalance();break;
 
 			         //case "MainPage":$.mobile.changePage( "#pageone", { transition: "slide", changeHash: false });break;
                
@@ -3247,7 +3979,7 @@ json_obj=JSON.parse(localStorage.getItem("Groups"));
 for(var x in json_obj)
 {
   let gid=""+json_obj[""+x+""]["GroupID"];
-  let gname=""+json_obj[""+x+""]["group_name"];
+  let gname=""+json_obj[""+x+""]["GroupName"];
   newOptions[""+gid]=gname;
   //alert(newOptions["id_"+gid]);
 
@@ -3433,7 +4165,7 @@ createNewCampaign('EXIST'); // bring the box.
     {//start for loop
                   var retrieved_campaign_id=resjson[""+x+""]["CampaignID"];
                   
-                  var retrieved_campaign_name=resjson[""+x+""]["campaign_name"];
+                  var retrieved_campaign_name=resjson[""+x+""]["CampaignName"];
                   var retrieved_campaign_descr=resjson[""+x+""]["campaign_description"];  
 
                   var retrieved_start_date=resjson[""+x+""]["CampaignStartDate"];
@@ -3442,7 +4174,7 @@ createNewCampaign('EXIST'); // bring the box.
                   var targeted_audience=resjson[""+x+""]["TargetedAudience"];
                   var campaign_category=resjson[""+x+""]["CampaignCategory"];
 
-                  var campaign_hours=resjson[""+x+""]["CampaingDeliveryHours"];
+                  var campaign_hours=resjson[""+x+""]["CampaignDeliveryHours"];
                   var campaign_days_of_week=resjson[""+x+""]["CampaignDays"];
                   
 
@@ -3781,7 +4513,7 @@ createNewCampaign('EXIST'); // bring the box.
                                                              $("#campaignselectivedays").show();
                                                               //next put tick  to appropriate days
                                                               for(var i=0;i<6;i++){
-                                                                  if(int(delivery_days[i])==i)
+                                                                  if(parseInt(delivery_days[i])==i)
                                                                     {
                                                                       var box_posn=i+1;
                                                                       var box_name="input[type='checkbox'][name='campaigndayofweek_";

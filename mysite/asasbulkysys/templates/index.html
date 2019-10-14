@@ -70,6 +70,8 @@
 
 <script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/bulkysmssupporting.js" %}"></script>
 
+<script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/canvasjs.min.js" %}"></script>
+
 <script language="javascript" type="text/javascript" src="{% static "bulkysms/scripts/modernizr.custom.87504.js" %}"></script> 
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -97,7 +99,7 @@
    background-color: #FFFFFF;
    border-spacing: 15px;
   border-collapse: separate;
-  border: 15px solid #8b9dc3;
+  border: 5px solid #8b9dc3;
   /*border: 15px solid rgb(227,58,12);*/
 
 
@@ -192,10 +194,10 @@ text-align:center;
     /*background: #8b9dc3;*/
     /*background-color: rgb(227,58,12);*/
     /*background-color:   #FF6347;*/
-
-    padding: 10px; 
-    width: 200px;
-    height: 100px; 
+    background: white;
+    padding: 5px; 
+    width: 320px;
+    height: 150px; 
 
   /*border-radius: 25px;*/
   border: 2px solid #FF6347;
@@ -204,6 +206,26 @@ text-align:center;
   width: 400px;
   height: 150px; */  
 }
+
+
+.rcorners_recharge_account {
+    border-radius: 15px;
+    /*background: #8b9dc3;*/
+    /*background-color: rgb(227,58,12);*/
+    /*background-color:   #FF6347;*/
+    background: white;
+    padding: 5px; 
+    width: 480px;
+    height: 300px; 
+
+  /*border-radius: 25px;*/
+  border: 2px solid #FF6347;
+/*
+  padding: 20px; 
+  width: 400px;
+  height: 150px; */  
+}
+
 
 .content {
     border-radius: 5px;
@@ -641,7 +663,7 @@ input:checked + .sliderswitch .off
                               <a href="#">
                                  <table border=0>
                                     <tr>
-                                       <td><img src="{% static "bulkysms/images/scheduler.png" %}" alt="" width="40" height="50" class="menuimage" style="cursor:pointer" value="Scheduler"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="Scheduler">Dashboard</td>
+                                       <td><img src="{% static "bulkysms/images/scheduler.png" %}" alt="" width="40" height="50" class="menuimage" style="cursor:pointer" value="DashBoard"/></td><td valign="center" class="menuimage" style="cursor:pointer" value="DashBoard">Dashboard</td>
                                        
                                     </tr>  
                                 </table>

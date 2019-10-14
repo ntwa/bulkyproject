@@ -22,6 +22,7 @@ from sqlalchemy.orm import relationship,backref
 class Feedback(Base):
      __tablename__="feedback"
      id=Column(Integer, primary_key=True)
+     company_id=Column(Integer, ForeignKey("companies.company_id")) # We can only have access to messages in our company
      recipient_mobile=Column(String(20))
      message=Column(String(1000))
      recipient_contact_id=Column(String(20))

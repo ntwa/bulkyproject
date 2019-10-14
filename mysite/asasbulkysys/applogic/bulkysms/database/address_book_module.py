@@ -72,6 +72,8 @@ class Company(Base):
      company_users = relationship("CompanyUsers", backref=backref("company_users", order_by=id))
      company_recharge = relationship("AccountRecharge", backref=backref("company_recharges", order_by=id))
      company_campaigns=relationship("Campaign", backref="Company.id")
+     company_messages = relationship("Feedback", backref=backref("company_messages", order_by=id))
+     
 
      company_groups = relationship("Group", backref=backref("company_groups", order_by=id))
 
@@ -104,6 +106,7 @@ class AccountRecharge(Base):
      __tablename__="account_recharge" 
      id=Column("recharge_id",Integer,primary_key=True)
      company_id=Column(Integer, ForeignKey("companies.company_id")) 
+     bundle_name=Column(String(200),nullable=False)
      recharge_date=Column(DateTime)
      valid_until=Column(DateTime)
      acquired_units=Column(Integer)
@@ -115,9 +118,9 @@ class AccountRecharge(Base):
 
     
      #def __init__(self,company_id,bundle_id,recharge_date,transaction_receipt):
-     def __init__(self,recharge_date,valid_until,acquired_units,transaction_receipt,integrity,key,hashed_data):
+     def __init__(self,bundle_name,recharge_date,valid_until,acquired_units,transaction_receipt,integrity_key,hashed_data):
           #self.company_id=company_id
-          #self.bundle_id=bundle_id
+          self.bundle_name=bundle_name
           self.recharge_date=recharge_date
           self.valid_until=valid_until
           self.acquired_units=acquired_units # Number of units in a bundle can change every time we recharge, we have to know how many units were bought.

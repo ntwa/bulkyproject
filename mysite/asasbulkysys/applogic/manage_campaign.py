@@ -20,6 +20,7 @@ from bulkysms.database.dbinit import db,dbconn
 
 import bulkysms.database.address_book_module
 import bulkysms.database.sms_feedback_module
+from bulkysms.database.sms_feedback_module import Feedback
 
 Base.metadata.create_all(db)
 
@@ -49,10 +50,88 @@ class ManageCampaign:
           t=(calendar.monthrange(d.year,d.month))
           return datetime.date(d.year,d.month,t[1])
 
+     def retrieveAllMessages(self):
+          message_data={}
+          try:
+               company_id=self.myjson["CompanyID"]
+               
+               engine=db
+               # create a Session
+               Session = sessionmaker(bind=engine)
+               session = Session()
+               result={}  
+
+               res_messages=session.query(Feedback).filter(Feedback.company_id==company_id).order_by(Feedback.scheduled_date).all()
+               if len(res_messages)==0:
+                    pass
+               else:
+                    pos=0
+                    for message in res_messages:
+                         tuple_message_details={}
+                         campaign_id=message.recipient_campaign_id
+                         group_id=message.recipient_group_id
+
+                         #find campaign name
+                         if campaign_id is None:
+                              tuple_message_details["CampaignName"]="Not for Campaign"
+                              #print tuple_message_details["CampaignName"]
+                         else:
+                              #Find name for this Campaign
+                              res_campaign=session.query(Campaign).filter(Campaign.id==campaign_id).first()
+                              if res_campaign is None:
+                                   tuple_message_details["CampaignName"]="Not for Campaign"
+                                   #print tuple_message_details["CampaignName"]
+                              else:
+                                   category=res_campaign.campaign_category
+                                   if category=="IR":
+                                        category="Personalized Reminders"
+                                   elif category=="BW":
+                                        category="Birthday Greetings"
+                                   elif category=="GR":
+                                        category="General Reminders"
+                                   elif category=="HG":
+                                        category="Holidays Greetings and Wishes"
+                                   elif category=="HO":
+                                        category="Holidays Deals"
+                                   else:
+                                        category="General Deals, and Discounts"
+                                   tuple_message_details["CampaignCategory"]=category
+
+                                   tuple_message_details["CampaignName"]=res_campaign.campaign_name
+                         #find group name
+                         if group_id is None:
+                              tuple_message_details["GroupName"]="Not for Group"
+                         else:
+                              #Find name for this Group
+                              res_group=session.query(Group).filter(Group.id==group_id).first()
+                              if res_group is None:
+                                   tuple_message_details["GroupName"]="Not for Group"
+                              else:
+                                   tuple_message_details["GroupName"]=res_group.group_name
+                         scheduled_date=message.scheduled_date
+                         date_str=scheduled_date.strftime('%Y-%m-%d')
+                         tuple_message_details["ScheduleDate"]=date_str
+                         tuple_message_details["ISDATAAVAILABLE"]=1
+                         tuple_message_details["Error"]="None"
+                         if pos<10:
+                              key="MD0"
+                         else:
+                              key="MD"
+                         message_data["%s%s"%(key,pos)]=tuple_message_details
+                         pos=pos+1
+          except Exception as e:
+               message_data["MD00"]={"ISDATAAVAILABLE":-1,"Error":"The following error was encouuntered: %s"%e}
+
+          return(json.JSONEncoder().encode(OrderedDict(sorted(message_data.items(), key=lambda t: t[0]))))
+          
+          
+
      def retrieveCampaignDetailsFromDB(self):
            
           #The tuples are used for definition of JSON objects
           campaign_tuple={}
+          level_one_json_counter=0
+          level_two_json_counter=0           
     
 
           #important in keeping track of number of groups
@@ -213,7 +292,7 @@ class ManageCampaign:
 
 
                          
-                         campaign_tuple[key1+"%d"%level_one_json_counter]={"CampaignID":campaign_id, "campaign_name":campaign_rec.campaign_name, "campaign_description":campaign_rec.campaign_descr,"DateCreated":date_str, "DeliveryMedium":delivery_medium, "TargetedAudience":group_tuple,"CampaignCategory":campaign_category,"TotalMessages":count_msgs,"messagestxt": message_tuple,"CampaignStartDate":campaign_start_date,"CampaignEndDate":campaign_end_date,"CampaignDays":days_tuple,"CampaingDeliveryHours":time_tuple,"CampaignActive":campaign_rec.is_campaign_active}
+                         campaign_tuple[key1+"%d"%level_one_json_counter]={"CampaignID":campaign_id, "CampaignName":campaign_rec.campaign_name, "campaign_description":campaign_rec.campaign_descr,"DateCreated":date_str, "DeliveryMedium":delivery_medium, "TargetedAudience":group_tuple,"CampaignCategory":campaign_category,"TotalMessages":count_msgs,"messagestxt": message_tuple,"CampaignStartDate":campaign_start_date,"CampaignEndDate":campaign_end_date,"CampaignDays":days_tuple,"CampaignDeliveryHours":time_tuple,"CampaignActive":campaign_rec.is_campaign_active}
                          level_one_json_counter=level_one_json_counter+1 # After getting the first record add 1 to the counter	
                          
 
@@ -1644,16 +1723,13 @@ class ManageCampaign:
                     dbconn.close()
                     return (json.JSONEncoder().encode(result)) 
 
-
-
-
-    
      
 #myjson={"campaign_name":"Birthday Greetings","campaign_descr":"This campaign has been dedicated for birthday greetings to customers","campaign_category":"Individual Best Wishes","target_level":"Individual","frequency_in_days":"Selective Days","is_it_life_time":"1","is_annual_delivery_date_constant":"1","messages":[[3,"We wish you happy birthday. Thank you for being our loyal customer"],[2,"Happy birthday. We value you as our esteemed customer"],[1,"As you celebrate your birthday, we wish you more success in business. Thank for being with us all this time."]]}
 #myjson={"CampaignName":"Birthday Greetings","CampaignDescr":"This campaign has been dedicated for birthday greetings to customers","CampaignCategory":"Individual Best Wishes","TargetLevel":"Individual","Frequency_in_Days":"Selective Days","is_it_life_time":"1","is_annual_delivery_date_constant":"1","NumMessages":3,"Messages":{"Message0":"Hello there. We wish you happy birthday. Thank you for being our loyal customer","Message1":"Happy birthday. We value you as our esteemed customer","Message2":"As you celebrate your birthday, we wish you more success in business. Thank for being with us all this time."}}
 #myjson={"CampaignID":"21","Action":"Deactivate"}
-#myjson={"CompanyID":9}
+#myjson={"CompanyID":1}
 #obj=ManageCampaign(myjson)
+#msg=obj.retrieveAllMessages()
 #msg=obj.scheduleMessages()
 #msg=obj.triggerCampaignStatus()
 #msg=obj.retrieveCampaignDetailsFromDB()

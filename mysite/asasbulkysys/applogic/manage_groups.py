@@ -221,7 +221,7 @@ class GroupsManager:
                          
                         
 
-                         group_tuple[key1+"%d"%level_one_json_counter]={"GroupID":group_rec.id, "group_name":group_rec.group_name, "group_description":group_rec.group_description,"NumMembers":retrieved_members_counter}
+                         group_tuple[key1+"%d"%level_one_json_counter]={"GroupID":group_rec.id, "GroupName":group_rec.group_name, "group_description":group_rec.group_description,"NumMembers":retrieved_members_counter}
                          level_one_json_counter=level_one_json_counter+1 # After getting the first record add 1 to the counter	
 
                          
