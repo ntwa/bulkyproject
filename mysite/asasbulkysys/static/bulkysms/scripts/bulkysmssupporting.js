@@ -2456,7 +2456,7 @@ var retrieveCampaignsContent=function ()
 
 var chartData;
 var report_displayed;
-var createChart=function(){
+var createPieChart=function(){
 
 
 	var chart = new CanvasJS.Chart("chartContainer", {
@@ -2501,6 +2501,131 @@ var createChart=function(){
 
 
 };
+
+
+var createBarChart=function(){
+
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	theme: "light2", // "light1", "light2", "dark1", "dark2"
+	title: {
+		text: report_displayed
+	},
+	subtitles: [{
+		text: "In Number of Messages Sent",
+		fontSize: 16
+	}],
+	axisY: {
+		prefix: ""
+		/*scaleBreaks: {
+			customBreaks: [{
+				startValue: 10000,
+				endValue: 35000
+			}]
+		}*/
+	},
+	data: [{
+		type: "column",
+		//yValueFormatString: "$#,##0.00",
+		dataPoints: chartData
+	}]
+});
+chart.render();
+
+
+};
+
+var createLineChart= function () {
+
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+        theme: "light3",
+	title:{
+		text: report_displayed
+	},
+	axisX:{
+		valueFormatString: "DD MMM",
+                crosshair: {
+			enabled: true,
+			snapToDataPoint: true
+		 }
+	},
+	axisY: {
+		title: "Number of Messages",
+		includeZero: false
+	},
+	data: [{
+		type: "area",
+		xValueFormatString: "DD MMM",
+		//color: "orange2",
+		dataPoints: chartData
+	}]
+});
+chart.render();
+
+}
+
+var getTodayDate=function(){
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth() + 1; //January is 0!
+
+var yyyy = today.getFullYear();
+if (dd < 10) {
+  dd = '0' + dd;
+} 
+if (mm < 10) {
+  mm = '0' + mm;
+} 
+var today = yyyy  + '-' + mm + '-' + dd;
+return today;
+
+};
+
+
+//begining of a month
+var getFirstDateCurrentMonth=function(){
+var today = new Date();
+var dd = '01';
+var mm = today.getMonth() + 1; //January is 0!
+
+var yyyy = today.getFullYear();
+
+if (mm < 10) {
+  mm = '0' + mm;
+} 
+var first_day_of_month_date = yyyy  + '-' + mm + '-' + dd;
+return first_day_of_month_date;
+
+};
+
+
+var getFirstDateCurrentWeek=function(){
+
+  var d = new Date();
+  var n = d.getDay();//get day of a week
+ 
+
+  d.setDate(d.getDate() - n);//subtract to get the date of the first day of a week
+
+ var dd = d.getDate();
+
+ var mm = d.getMonth() + 1; //January is 0!
+
+ var yyyy = d.getFullYear();
+ if (dd < 10) {
+  dd = '0' + dd;
+} 
+if (mm < 10) {
+  mm = '0' + mm;
+} 
+var first_week_day = yyyy  + '-' + mm + '-' + dd;
+
+return first_week_day;
+
+};
+
+
 var content_type;
 var displayDashboard=function(type)
 {
@@ -2532,14 +2657,110 @@ setTimeout(function(){
 	var array_items_counter=0;
 	var array_posn=0;
         var checked_not_group_nor_campaign=true;//for keeping track the number of outside iterations for group or campaign
+        var message_counter=0;
         var not_for_group_or_camp_counter=0;
-       
 	//var array_pos_init=false; //This checks if the counter for a campaign has already 
 
-		if(type=="Campaigns")
+
+                var interval_choice=$('input[name=visualizationinterval]:checked').val(); //important in knowing the dates to be used in filtering
+                 var chart_type=$('input[name=visualizationtype]:checked').val();
+                var start_date,end_date;
+
+                switch(interval_choice)
+                {
+                 case "Today":start_date=getTodayDate();end_date=start_date;break;
+                 case "ThisWeek":start_date=getFirstDateCurrentWeek();end_date=getTodayDate();break;
+                 case "ThisMonth":start_date=getFirstDateCurrentMonth();end_date=getTodayDate();break;
+                 case "Specify":start_date=$("#hidden_dashboard_date_picker_1").val();end_date=$("#hidden_dashboard_date_picker_2").val();break;
+                 default:alert("The Interval you have specified is invalid");return;
+
+
+
+               }
+                if((start_date=="")||(end_date=="")||(start_date==undefined)||(end_date==undefined))
+                {
+                  alert("Error: No dates specified!!");
+                  return;
+
+                 }
+               var dd1=new Date(start_date);
+               var dd2=new Date(end_date);
+               if(dd1.getTime()>dd2.getTime()){
+
+                 alert("Invalid Date: The Start Date has to be before The End Date");
+                 return;
+
+
+
+
+                }
+                  
+
+                if(type=="Trend")
+                {
+                 var dates_array=new Array();
+                 var date_counter=0;
+                 var date1=new Date(start_date)
+                 var date2=new Date(end_date)
+                 while(true){
+		         
+
+		         if(date1.getTime()>date2.getTime())
+		         {
+		          break; //stop the loop
+
+		         }
+                         
+                         //now iterate through all messages to count the number of times date 1 appears. That is the number of messages sent on date1
+                         date_messages_counter=0;
+                         for(var y in resmessages){
+		                 
+		         
+		                 message_scheduled_date=new Date(resmessages[""+y+""]["ScheduledDate"]);
+                                 //console.log(date1+"--"+message_scheduled_date)
+                                 if(date1.getTime()==message_scheduled_date.getTime())
+                                  {//count a message.
+                                   date_messages_counter++;
+                                   message_counter++;
+                                   
+                                  }
+                                
+
+                          }
+                         
+                         jsonObj={x:new Date(date1),y:date_messages_counter};
+                         data_array[array_posn]=jsonObj; 
+                         array_posn++;
+		         
+		         date1.setDate(date1.getDate()+1);//add one day to date
+		         
+                 
+
+                 }//end of while loop
+
+                 //now iterate through dates array
+                   d1=new Date(start_date);
+                   d2=new Date(end_date);
+
+                   report_displayed="General Trend for Messages: Total="+message_counter+". From "+(d1.getDate()<10? "0"+d1.getDate():d1.getDate())+"-"+(d1.getMonth()+1)+"-"+d1.getFullYear()+" To "+(d2.getDate()<10? "0"+d2.getDate():d2.getDate())+"-"+(d2.getMonth()+1)+"-"+d2.getFullYear(); 
+                   //console.log(data_array[8]["x"]);
+                   chartData=data_array;
+                   
+                   createLineChart();
+                
+                  
+                 
+
+                }
+               
+		else if(type=="Campaigns")
 		{
+                   d1=new Date(start_date);
+                   d2=new Date(end_date);
+
+                 
 		   
-                          report_displayed="Campaigns' Messages Report";
+                          report_displayed="Campaigns : Total=";
 			  for(var x in rescampaigns){
 		            
 		           array_items_counter=0; 
@@ -2549,18 +2770,20 @@ setTimeout(function(){
 		              for(var y in resmessages){
 		                 
 		                 message_camp_name=resmessages[""+y+""]["CampaignName"];
-		               
-		                 if(campaign_name==message_camp_name)
+		                 message_scheduled_date=resmessages[""+y+""]["ScheduledDate"];
+		                 if((campaign_name==message_camp_name)&&(message_scheduled_date>=start_date)&&(message_scheduled_date<=end_date))
 		                   {
 		                    array_items_counter++;
+                                    message_counter++;
 
 		                   }
                                     else
                                       {
-                                         if ((message_camp_name=="Not for Campaign")&&(checked_not_group_nor_campaign))//We only check in the first round. When moving to the next campaign in the out loop we don't check again
+                                         if ((message_camp_name=="Not for Campaign")&&(message_scheduled_date>=start_date)&&(message_scheduled_date<=end_date)&&(checked_not_group_nor_campaign))//We only check in the first round. When moving to the next campaign in the out loop we don't check again. Also ensure it with specified date range
                                            {
                                            
                                              not_for_group_or_camp_counter++;
+                                             message_counter++;
                                       
 
                                            }
@@ -2568,50 +2791,84 @@ setTimeout(function(){
 
 
                                       }
-                                 
+                                  
 
 		                } //end inner for loop
 		                if(array_items_counter>0)
 		                {
 		                  //then this campaign has some messages
-		                  jsonObj={ y: array_items_counter, name: campaign_name};
+
+                                  //now
+                                  if(chart_type=="piechart")
+		                      jsonObj={ y: array_items_counter, name: campaign_name};
+                                  else if(chart_type=="barchart") 
+                                       jsonObj={label: campaign_name, y: array_items_counter};
+                                  else
+                                      jsonObj={ y: array_items_counter, name: campaign_name};
 		                  data_array[array_posn]=jsonObj;//here we are initializing data to be used during plotting
 		                  
 		                  array_posn++; //increment position by one
 		                  
 		                }
                                 checked_not_group_nor_campaign=false; //Check only once for messages not belonging to campaign
-	 
+	                   
 
 			 }//end outer for loop
 
-		     //now check possibility of plotting if we have at least two campaigns
-
-		       if(array_posn>=1){
 
                          //Now check not for campaign and if it exists add to the array
                          if(not_for_group_or_camp_counter>0)
                            {
                                   
-                                  jsonObj={ y: not_for_group_or_camp_counter, name:"Messages not belonging to Campaigns"};
-		                  data_array[array_posn]=jsonObj;//here we are initializing data to be used during plotting
+                                  if(chart_type=="piechart")
+                                        jsonObj={ y: not_for_group_or_camp_counter, name:"Messages not belonging to Campaigns"};
+                                  else if(chart_type=="barchart") 
+                                         jsonObj={label:"Non-Campaign Messages", y: not_for_group_or_camp_counter};
+                                  else
+                                       jsonObj={ y: not_for_group_or_camp_counter, name:"Messages not belonging to Campaigns"};
 
+		                  data_array[array_posn]=jsonObj;//here we are initializing data to be used during plotting
+                              array_posn++;
 
                            }
 
-		         chartData=data_array;
-		         array_posn++;
+		     //now check possibility of plotting if we have at some data
 
-		         createChart();
+		       if(array_posn>=1){
+                           report_displayed=report_displayed+message_counter+". From "+(d1.getDate()<10? "0"+d1.getDate():d1.getDate())+"-"+(d1.getMonth()+1)+"-"+d1.getFullYear()+" To "+(d2.getDate()<10? "0"+d2.getDate():d2.getDate())+"-"+(d2.getMonth()+1)+"-"+d2.getFullYear();
+
+
+		         chartData=data_array;
+		        
+
+		         if(chart_type=="piechart")
+                             createPieChart();
+                         else if(chart_type=="barchart")
+                            createBarChart();
+                         else
+                            createPieChart();
 		         
 
 		       }
+                       else
+                          {
+                           $("#chartContainer").html("<h1 style='color:#4588cc;'>No data to be visualized in the specified period:"+(d1.getDate()<10? "0"+d1.getDate():d1.getDate()) +"-"+(d1.getMonth()+1)+"-"+d1.getFullYear()+" <i>to</i> "+(d2.getDate()<10? "0"+d2.getDate():d2.getDate())+"-"+(d2.getMonth()+1)+"-"+d2.getFullYear() +"</h1>");
 
+                          }
 
+                
 		}//end if statement for checking if type is campaign
 		else if(type=="Groups"){
 
-		       report_displayed="Groups' Messages Report";
+
+                   d1=new Date(start_date);
+                   d2=new Date(end_date);
+
+                 
+		   
+                          
+
+		       report_displayed="Groups: Total=";
 			  for(var x in resgroups){
 		            
 		           array_items_counter=0;    
@@ -2620,29 +2877,41 @@ setTimeout(function(){
 		              for(var y in resmessages){
 		                 
 		                 message_group_name=resmessages[""+y+""]["GroupName"];
+                                 //console.log(message_group_name);
+                                 message_scheduled_date=resmessages[""+y+""]["ScheduledDate"];
 		                 
-		                 if(group_name==message_group_name)
+		                 if((group_name==message_group_name)&&(message_scheduled_date>=start_date)&&(message_scheduled_date<=end_date))
 		                   {
 		                    array_items_counter++;
+                                      //console.log("Scheduled: "+message_scheduled_date+". Start: "+start_date+". End: "+end_date);
+                                    message_counter++;
 
 		                   }
                                     else
                                       {
-                                         if ((message_group_name=="Not for Group")&&(checked_not_group_nor_campaign))//We only check in the first round. When moving to the next campaign in the out loop we don't check again
+                                         if ((message_group_name=="Not for Group")&&(message_scheduled_date>=start_date)&&(message_scheduled_date<=end_date)&&(checked_not_group_nor_campaign))//We only check in the first round. When moving to the next campaign in the out loop we don't check again
                                            {
                                              not_for_group_or_camp_counter++;
+                                             //console.log("Scheduled: "+message_scheduled_date+". Start: "+start_date+". End: "+end_date);
+                                             message_counter++;
 
                                            }
 
 
 
                                       }
+                                  
 
 		                } //end inner for loop
 		                if(array_items_counter>0)
 		                {
 		                  //then this campaign has some messages
-		                  jsonObj={ y: array_items_counter, name: group_name};
+                                  if(chart_type=="piechart")
+		                        jsonObj={ y: array_items_counter, name: group_name};
+                                  else if(chart_type=="barchart")
+                                        jsonObj={ label: group_name,y: array_items_counter};
+                                  else
+                                        jsonObj={ y: array_items_counter, name: group_name};
 		                  data_array[array_posn]=jsonObj;//here we are initializing data to be used during plotting
 
                                   
@@ -2652,30 +2921,46 @@ setTimeout(function(){
                                    //Now check not for group but only once
 		                  
 		                }
-                                checked_not_group_nor_campaign=false //check only once for messages not belonging to any group
-	 
+                                checked_not_group_nor_campaign=false; //check only once for messages not belonging to any group
+	                  
 
 			 }//end outer for loop
+
+                         //Now check not for group and if it exists add to the array
+                         if(not_for_group_or_camp_counter>0)
+                           {      if(chart_type=="piechart")
+                                       jsonObj={ y: not_for_group_or_camp_counter, name:"Messages not belonging to groups"};
+                                  else if(chart_type=="barchart")
+                                        jsonObj={label :"Non-Group Messages", y: not_for_group_or_camp_counter};
+                                  else
+                                        jsonObj={ y: not_for_group_or_camp_counter, name:"Messages not belonging to groups"};
+		                  data_array[array_posn]=jsonObj;//here we are initializing data to be used during plotting
+                            array_posn++;
+
+                           }
 
 		     //now check possibility of plotting if we have at least one campaign
 
 		       if(array_posn>=1){
-                         //Now check not for group and if it exists add to the array
-                         if(not_for_group_or_camp_counter>0)
-                           {
-                                  jsonObj={ y: not_for_group_or_camp_counter, name:"Messages not belonging to groups"};
-		                  data_array[array_posn]=jsonObj;//here we are initializing data to be used during plotting
-
-
-                           }
-                         array_posn++;
+                          report_displayed=report_displayed+message_counter+". From "+(d1.getDate()<10? "0"+d1.getDate():d1.getDate())+"-"+(d1.getMonth()+1)+"-"+d1.getFullYear()+" To "+(d2.getDate()<10? "0"+d2.getDate():d2.getDate())+"-"+(d2.getMonth()+1)+"-"+d2.getFullYear();
+                         
 		         chartData=data_array;
 		        
 
-		         createChart();
+		         if(chart_type=="piechart")
+                             createPieChart();
+                         else if(chart_type=="barchart")
+                            createBarChart();
+                         else
+                            createPieChart();
 		         
 
 		       }
+                       else{
+                           $("#chartContainer").html("<h1 style='color:#4588cc;'>No data to be visualized in the specified period:"+(d1.getDate()<10? "0"+d1.getDate():d1.getDate()) +"-"+(d1.getMonth()+1)+"-"+d1.getFullYear()+" <i>to</i> "+(d2.getDate()<10? "0"+d2.getDate():d2.getDate())+"-"+(d2.getMonth()+1)+"-"+d2.getFullYear() +"</h1>");
+
+                          }
+
 
 
 
@@ -2683,7 +2968,16 @@ setTimeout(function(){
 		}
                else{//for category
 
-                         report_displayed="Campaigns Categories' Messages Report";
+
+
+                      d1=new Date(start_date);
+                      d2=new Date(end_date);
+
+                 
+		   
+                         
+
+                         report_displayed="Campaigns Categories: Total=";
                           campaign_categories=["Personalized Reminders","Birthday Greetings","General Reminders","Holidays Greetings and Wishes","Holidays Deals","General Deals, and Discounts"];
 			  for(var i=0;i<campaign_categories.length;i++){
 		            
@@ -2695,41 +2989,91 @@ setTimeout(function(){
 		              for(var y in resmessages){
 		                 
 		                 message_category_name=resmessages[""+y+""]["CampaignCategory"];
-		               
-		                 if(campaign_category==message_category_name)
+		                 message_scheduled_date=resmessages[""+y+""]["ScheduledDate"];
+                                 //console.log("Scheduled: "+message_scheduled_date+". Start: "+start_date+". End: "+end_date);
+		                 if((campaign_category==message_category_name)&&(message_scheduled_date>=start_date)&&(message_scheduled_date<=end_date))
 		                   {
 		                    array_items_counter++;
+                                    message_counter++;
 
 		                   }
+                                   else if ((message_category_name=="Not Belonging to Campaign")&&(message_scheduled_date>=start_date)&&(message_scheduled_date<=end_date)&&(checked_not_group_nor_campaign))//We only check in the first round. When moving to the next campaign in the out loop we don't check again. Also ensure it with specified date range
+                                           {
+                                           
+                                             not_for_group_or_camp_counter++;
+                                             message_counter++;
+                                      
+
+                                           }
+
+
+
+
+
+                      
+                                   
+
                              
-                                 
+                                  
 
 		                } //end inner for loop
 		                if(array_items_counter>0)
 		                {
 		                  //then this campaign has some messages
-		                  jsonObj={ y: array_items_counter, name: campaign_category};
+                                  if(chart_type=="piechart")
+		                       jsonObj={ y: array_items_counter, name: campaign_category};
+                                  else if(chart_type=="barchart")
+                                       jsonObj={ label: campaign_category, y: array_items_counter};
+                                  else
+                                      jsonObj={ y: array_items_counter, name: campaign_category};
 		                  data_array[array_posn]=jsonObj;//here we are initializing data to be used during plotting
 		                  
 		                  array_posn++; //increment position by one
 		                  
 		                }
                                
-	 
-
+	                   checked_not_group_nor_campaign=false;
+                         
 			 }//end outer for loop
+
+                         // incase you have message not tied to any campaign
+                         if(not_for_group_or_camp_counter>0)
+                           {
+                                  if(chart_type=="piechart")
+                                      jsonObj={ y: not_for_group_or_camp_counter, name:"Messages not belonging to Campaigns"};
+                                  else if(chart_type=="barchart")
+                                       jsonObj={label:"Non-Campaign Messages", y: not_for_group_or_camp_counter};
+                                  else
+                                       jsonObj={ y: not_for_group_or_camp_counter, name:"Messages not belonging to Campaigns"};
+		                  data_array[array_posn]=jsonObj;//here we are initializing data to be used during plotting
+
+                            array_posn++;
+                           }
 
 		     //now check possibility of plotting if we have at least one campaign
 
 		       if(array_posn>=1){
+                         report_displayed=report_displayed+message_counter+". From "+(d1.getDate()<10? "0"+d1.getDate():d1.getDate())+"-"+(d1.getMonth()+1)+"-"+d1.getFullYear()+" To "+(d2.getDate()<10? "0"+d2.getDate():d2.getDate())+"-"+(d2.getMonth()+1)+"-"+d2.getFullYear(); 
+
+
 
                          chartData=data_array;
-		         array_posn++;
+		         
 
-		         createChart();
+		         if(chart_type=="piechart")
+                             createPieChart();
+                         else if(chart_type=="barchart")
+                            createBarChart();
+                         else
+                            createPieChart();
 		         
 
 		       }
+                       else{
+                           $("#chartContainer").html("<h1 style='color:#4588cc;'>No data to be visualized in the specified period:"+(d1.getDate()<10? "0"+d1.getDate():d1.getDate()) +"-"+(d1.getMonth()+1)+"-"+d1.getFullYear()+" <i>to</i> "+(d2.getDate()<10? "0"+d2.getDate():d2.getDate())+"-"+(d2.getMonth()+1)+"-"+d2.getFullYear() +"</h1>");
+
+                          }
+
 
 
 
@@ -3187,7 +3531,7 @@ var bindEventsToCampaignDateFields=function(){
     var yyyy=picked_date.substring(second_slash+1,picked_date.length);
     $(this).val(dd+" "+mm+" "+yyyy);
 
-    //$('#date_eaten').val(yyyy+"-"+month+"-"+dd);
+  
 
    });
 
@@ -3353,6 +3697,118 @@ var retrieveDashBoardTemplate=function(){
             .done(function( html ) {
             
               $("#main-content").html(html);
+
+
+                $("#dashboard_date_picker_1" ).datepicker();
+                $("#dashboard_date_picker_2" ).datepicker();
+
+                $("#dashboard_date_picker_1" ).prop( "disabled", true);
+                 $("#dashboard_date_picker_2" ).prop( "disabled", true);
+                 //
+                 //By default General Trend is disabled
+
+                 $("#viewbycampaigncategory" ).prop( "disabled", false);
+                 $("#viewbycampaign" ).prop( "disabled", false);
+                 $("#viewbygroup" ).prop( "disabled", false);
+                 $("#generaltrend" ).prop( "disabled", true);
+
+
+       
+
+
+              $(".messages_interval_class").unbind( "change" ); // Remove the previous click handlers.
+              $(".messages_interval_class").bind('change',function(){
+              var selected_radio_id=$(this).attr('id');
+              if(selected_radio_id=="specifyinterval"){
+                // if(("#dashboard_date_picker_1").val()=="")
+                //        $("#hidden_dashboard_date_picker_1").val("");//reset
+
+                 $("#dashboard_date_picker_1" ).prop( "disabled", false);
+                 $("#dashboard_date_picker_2" ).prop( "disabled", false);
+                 
+               }
+              else
+                 {
+                 $("#dashboard_date_picker_1" ).prop( "disabled", true);
+                 $("#dashboard_date_picker_2" ).prop( "disabled", true);
+                
+
+                  $("#dashboard_date_picker_1" ).val( "");
+                 $("#dashboard_date_picker_2" ).val( "");
+                 }
+
+
+              });
+
+
+
+
+              $(".vizualization").unbind( "change" ); // Remove the previous click handlers.
+              $(".visualization").bind('change',function(){
+              selected_radio_id=$(this).attr('id');
+              if(selected_radio_id=="linechart"){
+                 $("#viewbycampaigncategory" ).prop( "disabled", true);
+                 $("#viewbycampaign" ).prop( "disabled", true);
+                 $("#viewbygroup" ).prop( "disabled", true);
+                 $("#generaltrend" ).prop( "disabled", false);
+                 
+               }
+              else
+                 {
+                 $("#viewbycampaigncategory" ).prop( "disabled", false);
+                 $("#viewbycampaign" ).prop( "disabled", false);
+                 $("#viewbygroup" ).prop( "disabled", false);
+                 $("#generaltrend" ).prop( "disabled", true);
+                  
+                 }
+
+
+              });
+
+	
+	$('#main-content').delegate(".datepickers", "change", function () {
+       
+	  
+		var picked_date=""+$(this).val();
+		var first_slash=picked_date.indexOf("/");
+		var second_slash=picked_date.lastIndexOf("/");
+		
+		var mm=picked_date.substring(0,first_slash);
+		var month=mm;
+		switch(mm)
+		{
+		case "01":mm="Jan";break;
+		case "02":mm="Feb";break;
+		case "03":mm="Mar";break;
+		case "04":mm="Apr";break;
+		case "05":mm="May";break;
+		case "06":mm="June";break;
+		case "07":mm="July";break;
+		case "08":mm="Aug";break;
+		case "09":mm="Sept";break;
+		case "10":mm="Oct";break;
+		case "11":mm="Nov";break;
+		case "12":mm="Dec";break;
+		
+		}
+		var dd=picked_date.substring(first_slash+1,second_slash);
+		var yyyy=picked_date.substring(second_slash+1,picked_date.length);
+		$(this).val(dd+" "+mm+" "+yyyy);
+                var id_hidden="#hidden_"+$(this).attr('id')
+
+		$(id_hidden).val(yyyy+"-"+month+"-"+dd);
+		
+		
+	});
+
+
+
+
+
+
+
+
+
               $("#viewbycampaign").unbind( "click" ); // Remove the previous click handlers.
               $("#viewbycampaign").bind('click',function(){
               
@@ -3360,8 +3816,9 @@ var retrieveDashBoardTemplate=function(){
 
                 setTimeout(function(){
 
-	   
+	       
                 displayDashboard('Campaigns');
+            
 
                },100);
 
@@ -3399,8 +3856,45 @@ var retrieveDashBoardTemplate=function(){
 
               
                 });
+
+
+              $("#generaltrend").unbind( "click" ); // Remove the previous click handlers.
+              $("#generaltrend").bind('click',function(){
+              
+                
+
+		        setTimeout(function(){
+
+		       
+		        displayDashboard('Trend');
+		    
+
+		       },100);
+
+              
+                });
+
+
+              $("#viewbygroup").unbind( "click" ); // Remove the previous click handlers.
+              $("#viewbygroup").bind('click',function(){
+              
+                
+
+		        setTimeout(function(){
+
+		   
+		        displayDashboard('Groups');
+
+		       },100);
+
+              
+                });
            
              });
+
+
+
+
 
 
 

@@ -74,12 +74,14 @@ class ManageCampaign:
                          #find campaign name
                          if campaign_id is None:
                               tuple_message_details["CampaignName"]="Not for Campaign"
+                              tuple_message_details["CampaignCategory"]="Not Belonging to Campaign"
                               #print tuple_message_details["CampaignName"]
                          else:
                               #Find name for this Campaign
                               res_campaign=session.query(Campaign).filter(Campaign.id==campaign_id).first()
                               if res_campaign is None:
                                    tuple_message_details["CampaignName"]="Not for Campaign"
+                                   tuple_message_details["CampaignCategory"]="Not Belonging to Campaign"
                                    #print tuple_message_details["CampaignName"]
                               else:
                                    category=res_campaign.campaign_category
@@ -110,7 +112,7 @@ class ManageCampaign:
                                    tuple_message_details["GroupName"]=res_group.group_name
                          scheduled_date=message.scheduled_date
                          date_str=scheduled_date.strftime('%Y-%m-%d')
-                         tuple_message_details["ScheduleDate"]=date_str
+                         tuple_message_details["ScheduledDate"]=date_str
                          tuple_message_details["ISDATAAVAILABLE"]=1
                          tuple_message_details["Error"]="None"
                          if pos<10:

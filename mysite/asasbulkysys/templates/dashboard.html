@@ -1,12 +1,61 @@
      <div id="groupcontainer" align="center">
            <button type="button" class="btn btn-info" id="viewbygroup">View by Group</button>  
            <button type="button" class="btn btn-info" id="viewbycampaign">View by Campaign</button>  
-           <button type="button" class="btn btn-info" id="viewbycampaigncategory">View by Campaign Categories</button>  
+           <button type="button" class="btn btn-info" id="viewbycampaigncategory">View by Campaign Categories</button>
+           <button type="button" class="btn btn-info" id="generaltrend">General Trend</button>
+     <h2>Sent Messages Dashboard </h2> 
 
-        <div style="height:600px;border:solid 2px orange;overflow:scroll;overflow-x:hidden;overflow-y:scroll;">
-       <h2>Sent Messages Dashboard </h2>
-	  <table border=0 width="100%">
-		   <tr class="progressboxchart_tr"><td class="progressboxchart" align="center" colspan=6 hidden>
+
+    <table>
+       <tr><td>
+            <table border=0 width="100%" class="table-forms">
+                   <tr>
+                    <td style="color:black" colspan=3 align="center">
+                    Visualization type:
+                    </td>
+                   </tr>
+                   <tr>
+
+		   <td><input type="radio" name="visualizationtype" class="visualization" value="piechart"  id="piechart" checked>Pie Chart</td>
+
+		   <td><input type="radio" name="visualizationtype" class="visualization" value="barchart" id="barchart">Bar Chart</td>
+
+                   <td><input type="radio" name="visualizationtype" class="visualization" value="linechart" id="linechart">Line Chart</td>
+                   </tr>
+           </table>
+
+
+            </td>
+            <td>
+            <table border=0 width="100%" class="table-forms">
+                   <tr>
+                    <td style="color:black" colspan=5 align="center">
+                    Filter:
+                    </td>
+                    </tr>
+                   <tr>
+
+		   <td><input type="radio" name="visualizationinterval" value="Today" class="messages_interval_class" id="dailyinterval" checked>Today</td>
+
+		   <td><input type="radio" name="visualizationinterval" value="ThisWeek" class="messages_interval_class" id="weeklyinterval">This Week</td>
+
+		   <td><input type="radio"  name="visualizationinterval" value="ThisMonth" class="messages_interval_class" id="monthlyinterval">This Month</td>
+
+                   <td><input type="radio"  name="visualizationinterval" value="Specify" class="messages_interval_class" id="specifyinterval">Specify: From<input type="text" size=10 id="dashboard_date_picker_1" readonly="true" class="datepickers"><input type=hidden id="hidden_dashboard_date_picker_1" value=''> To <input type="text" size=10 id="dashboard_date_picker_2" readonly="true" class="datepickers"><input type=hidden id="hidden_dashboard_date_picker_2" value=''></td>
+                   </tr>
+           </table>
+           </td>
+       </tr>
+
+   </table>
+    
+
+        <div style="height:400px;border:solid 2px orange;overflow:scroll;overflow-x:hidden;overflow-y:scroll;align:centre">
+
+	  <table border=0 width="30%">
+
+
+		   <tr class="progressboxchart_tr"><td class="progressboxchart" align="center" colspan=4 hidden>
 		      <div class="nothing" id="myprogressbar_chart">&nbsp;</div>
 		      <div>Loading....</div>
 		     </td>
